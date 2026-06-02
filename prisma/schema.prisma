@@ -1,0 +1,95 @@
+// Schéma Prisma — OhMyBuild.
+// Convention : tables au singulier (User, Build), colonnes en camelCase.
+// IDs : CUID (préfixe lexico-trié, URL-safe, ~25 chars).
+// Timestamps : createdAt + updatedAt sur toutes les tables métier.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Utilisateur — adapté pour NextAuth + auth credentials maison.
+// ─────────────────────────────────────────────────────────────────────────────
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  // NULL si l'utilisateur s'est inscrit via OAuth (futur). Hash bcrypt cost 12.
+  passwordHash  String?
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts Account[]
+  sessions Session[]
+  builds   Build[]
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Tables NextAuth Prisma Adapter — permettent d'ajouter Google/GitHub sans
+// migration future. Inutiles aujourd'hui (on n'utilise que credentials) mais
+// le coût de les avoir est nul et ça verrouille moins la suite.
+// ─────────────────────────────────────────────────────────────────────────────
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Configuration PC sauvegardée par un utilisateur.
+// ─────────────────────────────────────────────────────────────────────────────
+model Build {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  // Sérialisation JSON de la `Selection` (clé composant -> id).
+  // Validation côté serveur via Zod avant insert/update.
+  selection Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, createdAt(sort: Desc)])
+}
