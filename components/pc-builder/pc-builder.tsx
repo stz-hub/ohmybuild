@@ -25,6 +25,12 @@ export function PCBuilder() {
   const buildIdFromQuery = searchParams.get("build");
   const session = useSession();
 
+  // `mounted` évite les hydration mismatch sur la sidebar dont le contenu
+  // dépend de useSession() (status passe de "loading" à "authenticated"/"unauth"
+  // après hydratation côté client).
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   const [selection, setSelection] = useState<Selection>({});
   const [loadedBuild, setLoadedBuild] = useState<{ id: string; name: string } | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -153,6 +159,7 @@ export function PCBuilder() {
                 <Label>Composants</Label>
                 {selectedCount > 0 && (
                   <button
+                    type="button"
                     onClick={handleClearAll}
                     className="text-xs text-zinc-400 hover:text-zinc-700 transition-colors"
                   >
@@ -184,18 +191,28 @@ export function PCBuilder() {
             </section>
           </div>
 
-          <aside className="hidden lg:block space-y-3">
-            <SummarySidebar selection={selection} onClear={handleClearAll} onCopy={handleCopy} />
-            <div className="rounded-xl border border-[#e8e8e4] bg-white p-4">
-              <SaveBuildButton
+          {/* Sidebar : Récap + Save dans UN SEUL bloc sticky pour qu'ils
+              défilent ensemble et restent visibles quand on scrolle. */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-20 space-y-3">
+              <SummarySidebar
                 selection={selection}
-                selectedCount={selectedCount}
-                hasErrors={errors.length > 0}
-                isAuthed={session.status === "authenticated"}
-                authStatus={session.status}
-                initialName={loadedBuild?.name}
-                initialBuildId={loadedBuild?.id}
+                onClear={handleClearAll}
+                onCopy={handleCopy}
               />
+              {mounted && (
+                <div className="rounded-xl border border-[#e8e8e4] bg-white p-4">
+                  <SaveBuildButton
+                    selection={selection}
+                    selectedCount={selectedCount}
+                    hasErrors={errors.length > 0}
+                    isAuthed={session.status === "authenticated"}
+                    authStatus={session.status}
+                    initialName={loadedBuild?.name}
+                    initialBuildId={loadedBuild?.id}
+                  />
+                </div>
+              )}
             </div>
           </aside>
         </div>
@@ -209,6 +226,7 @@ export function PCBuilder() {
           </p>
         </div>
         <button
+          type="button"
           onClick={handleCopy}
           disabled={selectedCount === 0}
           className="px-5 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold disabled:opacity-40 transition-opacity"
