@@ -125,6 +125,28 @@ export const GROUPS: ComponentGroup[] = [
   { key: "cooling", label: "Refroidissement", items: COOLINGS },
 ];
 
+/**
+ * Clés ordonnées du catalogue. Source de vérité pour Zod et le rendu.
+ */
+export const COMPONENT_KEYS = [
+  "cpu",
+  "mobo",
+  "ram",
+  "gpu",
+  "storage",
+  "psu",
+  "case",
+  "cooling",
+] as const satisfies readonly ComponentKey[];
+
+/**
+ * Set de tous les ids de composants existants. Utilisé par Zod pour rejeter
+ * un id de composant inexistant dans une `Selection` reçue côté serveur.
+ */
+export const ALL_COMPONENT_IDS: ReadonlySet<string> = new Set(
+  GROUPS.flatMap((g) => g.items.map((i) => i.id)),
+);
+
 export const PRESETS: Preset[] = [
   {
     name: "Budget Gaming", description: "1080p Ultra fluide", target: "1080p",
