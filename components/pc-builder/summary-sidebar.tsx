@@ -3,7 +3,13 @@
 import { cn } from "@/lib/utils";
 import { Copy, RotateCcw, ExternalLink, Youtube } from "lucide-react";
 import type { Selection } from "@/lib/pc-data";
-import { GROUPS, IDEALO_URLS, calculateTotal, getSelectedCount, getYouTubeUrl } from "@/lib/pc-data";
+import {
+  GROUPS,
+  IDEALO_URLS,
+  calculateTotal,
+  getSelectedCount,
+  getYouTubeUrl,
+} from "@/lib/pc-data";
 
 interface Props {
   selection: Selection;
@@ -11,16 +17,16 @@ interface Props {
   onCopy: () => void;
 }
 
+// Pas de `sticky` ici : le parent <aside> dans pc-builder.tsx applique le
+// sticky sur tout le bloc (Récap + Save) pour qu'ils défilent ensemble.
 export function SummarySidebar({ selection, onClear, onCopy }: Props) {
-  const total         = calculateTotal(selection);
+  const total = calculateTotal(selection);
   const selectedCount = getSelectedCount(selection);
-  const youtubeUrl    = selection.cpu && selection.gpu
-    ? getYouTubeUrl(selection.cpu, selection.gpu)
-    : null;
+  const youtubeUrl =
+    selection.cpu && selection.gpu ? getYouTubeUrl(selection.cpu, selection.gpu) : null;
 
   return (
-    <div className="sticky top-20 rounded-xl border border-[#e8e8e4] bg-white overflow-hidden">
-
+    <div className="rounded-xl border border-[#e8e8e4] bg-white overflow-hidden">
       <div className="bg-blue-600 px-4 py-3 flex items-center justify-between">
         <span className="text-xs font-bold uppercase tracking-wider text-blue-100">
           Récapitulatif · {selectedCount}/{GROUPS.length}
@@ -31,13 +37,23 @@ export function SummarySidebar({ selection, onClear, onCopy }: Props) {
       </div>
 
       <div className="divide-y divide-[#f0f0ec]">
-        {GROUPS.map(group => {
-          const item = group.items.find(i => i.id === selection[group.key]);
+        {GROUPS.map((group) => {
+          const item = group.items.find((i) => i.id === selection[group.key]);
           return (
-            <div key={group.key} className={cn("flex items-center justify-between px-4 py-2.5", !item && "opacity-50")}>
+            <div
+              key={group.key}
+              className={cn("flex items-center justify-between px-4 py-2.5", !item && "opacity-50")}
+            >
               <div className="min-w-0">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">{group.label}</p>
-                <p className={cn("text-xs truncate", item ? "text-zinc-800" : "text-zinc-400 italic")}>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
+                  {group.label}
+                </p>
+                <p
+                  className={cn(
+                    "text-xs truncate",
+                    item ? "text-zinc-800" : "text-zinc-400 italic",
+                  )}
+                >
                   {item ? item.name : "Non sélectionné"}
                 </p>
               </div>
@@ -53,6 +69,7 @@ export function SummarySidebar({ selection, onClear, onCopy }: Props) {
 
       <div className="p-4 border-t border-[#e8e8e4] space-y-2">
         <button
+          type="button"
           onClick={onCopy}
           disabled={selectedCount === 0}
           className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold disabled:opacity-40 hover:bg-blue-700 transition-colors"
@@ -62,6 +79,7 @@ export function SummarySidebar({ selection, onClear, onCopy }: Props) {
         </button>
 
         <button
+          type="button"
           onClick={onClear}
           disabled={selectedCount === 0}
           className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-[#e8e8e4] text-zinc-600 text-sm font-medium disabled:opacity-40 hover:bg-zinc-50 transition-colors"
@@ -85,10 +103,12 @@ export function SummarySidebar({ selection, onClear, onCopy }: Props) {
 
       {selectedCount > 0 && (
         <div className="px-4 pb-4">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 mb-2">Comparer sur Idealo</p>
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 mb-2">
+            Comparer sur Idealo
+          </p>
           <div className="flex flex-wrap gap-1.5">
-            {GROUPS.map(group => {
-              const item = group.items.find(i => i.id === selection[group.key]);
+            {GROUPS.map((group) => {
+              const item = group.items.find((i) => i.id === selection[group.key]);
               if (!item || !IDEALO_URLS[item.id]) return null;
               return (
                 <a
@@ -106,7 +126,6 @@ export function SummarySidebar({ selection, onClear, onCopy }: Props) {
           </div>
         </div>
       )}
-
     </div>
   );
 }
