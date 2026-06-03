@@ -1,307 +1,217 @@
 @import "tailwindcss";
 
 @theme {
-  /* ── Palette arcade Y2K / newgrounds ──────────────────────────────────
-     Deep teal + néons sobres + cream. Pas de primary cartoon.
-  ──────────────────────────────────────────────────────────────────── */
-  --color-deep: #0a0e27;          /* fond très foncé, presque noir bleu */
-  --color-night: #102441;          /* navy nocturne */
-  --color-teal: #0d2a3a;
-  --color-teal-light: #14405a;
-
-  --color-cream: #fff4d6;          /* cream papier vintage */
-  --color-cream-2: #ffe8a8;
-  --color-cream-3: #f6e4b0;
-
-  --color-cyan: #00d4ff;           /* néon cyan principal */
-  --color-cyan-dark: #0098bd;
-  --color-mint: #00ff9d;           /* arcade green / pickup */
-  --color-mint-dark: #00cc7d;
-  --color-amber: #ffb800;          /* "coin" amber */
-  --color-amber-dark: #d99700;
-  --color-magenta: #ff3d8a;        /* accent agressif */
-  --color-magenta-dark: #cc2e6f;
-  --color-violet: #8b5cf6;
-
-  --color-ink: #0a0e27;            /* trait/bordure */
-  --color-paper: #fff4d6;
-  --color-text: #0a0e27;
-  --color-muted: #4a5878;
-  --color-line: #1a2745;
-
-  /* Aliases pour compat existante */
-  --color-background: var(--color-paper);
-  --color-surface: #ffffff;
-  --color-border: var(--color-ink);
-  --color-blue: var(--color-cyan-dark);
-  --color-blue-light: #d6f3ff;
-  --color-green: var(--color-mint-dark);
-  --color-red: var(--color-magenta-dark);
-
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Bricolage Grotesque", "Inter", ui-sans-serif, sans-serif;
-  --font-mono: ui-monospace, "Cascadia Code", "Fira Code", Menlo, monospace;
+  /* N64/Mario Kart Era Color Palette - Bright & Cheerful */
+  --color-sky-blue: #4da6ff;
+  --color-sky-light: #87ceeb;
+  --color-sky-gradient-top: #1e90ff;
+  --color-sky-gradient-bottom: #87ceeb;
+  
+  /* Grass greens - like Yoshi's Island */
+  --color-grass-bright: #32cd32;
+  --color-grass-medium: #228b22;
+  --color-grass-dark: #006400;
+  
+  /* Warm sunny colors */
+  --color-sunny-yellow: #ffd700;
+  --color-sunny-orange: #ff8c00;
+  --color-cream: #fffacd;
+  
+  /* Character colors - Mario/Toad/Yoshi inspired */
+  --color-mario-red: #e52521;
+  --color-toad-spots: #e52521;
+  --color-yoshi-green: #00a550;
+  --color-coin-gold: #ffc107;
+  
+  /* UI Colors */
+  --color-white: #ffffff;
+  --color-off-white: #f8f8f0;
+  --color-light-cream: #fff8dc;
+  --color-text-dark: #2d3436;
+  --color-text-medium: #4a5568;
+  --color-border-light: #c0c0c0;
+  --color-border-dark: #808080;
+  
+  /* Shadows for 3D depth */
+  --color-shadow: #00000033;
+  --color-shadow-dark: #00000066;
+  
+  /* Font families */
+  --font-sans: "Fredoka", "Comic Sans MS", cursive, sans-serif;
+  --font-display: "Fredoka", "Comic Sans MS", cursive, sans-serif;
 }
 
 @layer base {
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { -webkit-font-smoothing: antialiased; }
-
-  body {
-    background:
-      radial-gradient(ellipse 900px 500px at 50% -5%, #1a3a5c 0%, transparent 60%),
-      linear-gradient(180deg, #0a0e27 0%, #102441 60%, #0d2a3a 100%);
+  
+  html {
+    background: linear-gradient(180deg, #1e90ff 0%, #87ceeb 50%, #32cd32 100%);
     background-attachment: fixed;
-    color: var(--color-cream);
-    font-family: var(--font-sans);
-    line-height: 1.55;
     min-height: 100vh;
   }
 
-  /* Scanlines CRT subtiles */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background-image: repeating-linear-gradient(
-      to bottom,
-      rgba(255, 244, 214, 0.025) 0,
-      rgba(255, 244, 214, 0.025) 1px,
-      transparent 1px,
-      transparent 3px
-    );
-    z-index: 1;
-  }
-
-  /* Vignette CRT — assombrit les bords */
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background: radial-gradient(ellipse 80% 70% at center, transparent 50%, rgba(0, 0, 0, 0.45) 100%);
-    z-index: 1;
-  }
-
-  ::-webkit-scrollbar { width: 10px; height: 10px; }
-  ::-webkit-scrollbar-track { background: var(--color-teal); }
-  ::-webkit-scrollbar-thumb {
-    background: var(--color-cyan);
-    border-radius: 0;
-    border: 1px solid var(--color-ink);
-  }
-  ::-webkit-scrollbar-thumb:hover { background: var(--color-mint); }
-
-  ::selection {
-    background: var(--color-amber);
-    color: var(--color-ink);
-  }
-
-  h1, h2, h3, h4 {
-    font-family: var(--font-display);
-    letter-spacing: -0.02em;
-    color: var(--color-cream);
-  }
-}
-
-@layer components {
-  /* Card crème style "manuel d'arcade" */
-  .retro-card {
-    background: linear-gradient(180deg, #fff4d6 0%, #f6e4b0 100%);
-    color: var(--color-ink);
-    border: 2.5px solid var(--color-ink);
-    border-radius: 6px;
-    box-shadow:
-      0 0 0 1px rgba(255, 244, 214, 0.15),
-      6px 6px 0 0 var(--color-ink),
-      inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    transition: transform 120ms cubic-bezier(0.25, 1, 0.5, 1),
-                box-shadow 120ms cubic-bezier(0.25, 1, 0.5, 1);
-  }
-
-  .retro-card:hover {
-    transform: translate(-2px, -2px);
-    box-shadow:
-      0 0 0 1px rgba(255, 244, 214, 0.2),
-      8px 8px 0 0 var(--color-ink),
-      inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  }
-
-  .retro-card-dark {
-    background: linear-gradient(180deg, #14405a 0%, #0d2a3a 100%);
-    color: var(--color-cream);
-    border-color: var(--color-cyan);
-    box-shadow:
-      0 0 0 1px rgba(0, 212, 255, 0.2),
-      6px 6px 0 0 var(--color-ink),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  }
-
-  /* Bouton chunky façon insert-coin */
-  .retro-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    border: 2.5px solid var(--color-ink);
-    border-radius: 6px;
-    background: var(--color-amber);
-    color: var(--color-ink);
-    font-weight: 800;
-    font-family: var(--font-display);
-    letter-spacing: 0.01em;
-    box-shadow:
-      4px 4px 0 0 var(--color-ink),
-      inset 0 1px 0 rgba(255, 255, 255, 0.4),
-      inset 0 -3px 0 rgba(0, 0, 0, 0.15);
-    transition: all 100ms cubic-bezier(0.25, 1, 0.5, 1);
-    cursor: pointer;
-    text-decoration: none;
-  }
-
-  .retro-btn:hover:not(:disabled) {
-    transform: translate(-1px, -1px);
-    box-shadow:
-      5px 5px 0 0 var(--color-ink),
-      inset 0 1px 0 rgba(255, 255, 255, 0.5),
-      inset 0 -3px 0 rgba(0, 0, 0, 0.15);
-  }
-
-  .retro-btn:active:not(:disabled) {
-    transform: translate(2px, 2px);
-    box-shadow:
-      2px 2px 0 0 var(--color-ink),
-      inset 0 1px 0 rgba(255, 255, 255, 0.4),
-      inset 0 -3px 0 rgba(0, 0, 0, 0.15);
-  }
-
-  .retro-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    box-shadow: 4px 4px 0 0 var(--color-ink);
-  }
-
-  .retro-btn-cyan {
-    background: linear-gradient(180deg, #00d4ff 0%, #0098bd 100%);
-    color: var(--color-ink);
-  }
-  .retro-btn-mint {
-    background: linear-gradient(180deg, #00ff9d 0%, #00cc7d 100%);
-    color: var(--color-ink);
-  }
-  .retro-btn-magenta {
-    background: linear-gradient(180deg, #ff3d8a 0%, #cc2e6f 100%);
-    color: var(--color-cream);
-  }
-  .retro-btn-amber {
-    background: linear-gradient(180deg, #ffb800 0%, #d99700 100%);
-  }
-  .retro-btn-ink {
-    background: linear-gradient(180deg, #102441 0%, #0a0e27 100%);
-    color: var(--color-cream);
-  }
-  .retro-btn-paper {
-    background: linear-gradient(180deg, #ffffff 0%, #fff4d6 100%);
-  }
-
-  /* Badge type LCD/insert-coin */
-  .retro-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.3rem 0.65rem;
-    border: 2px solid var(--color-ink);
-    border-radius: 4px;
-    background: var(--color-amber);
-    color: var(--color-ink);
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    box-shadow:
-      2px 2px 0 0 var(--color-ink),
-      inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  }
-
-  /* Input style "écran LCD" */
-  .retro-input {
-    width: 100%;
-    padding: 0.7rem 0.875rem;
-    border: 2.5px solid var(--color-ink);
-    border-radius: 4px;
-    background: #fff;
-    color: var(--color-ink);
+  body {
     font-family: var(--font-sans);
-    box-shadow:
-      3px 3px 0 0 var(--color-ink),
-      inset 0 2px 0 rgba(0, 0, 0, 0.06);
-    transition: all 100ms cubic-bezier(0.25, 1, 0.5, 1);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--color-text-dark);
   }
 
-  .retro-input:focus {
-    outline: none;
-    transform: translate(-1px, -1px);
-    box-shadow:
-      4px 4px 0 0 var(--color-ink),
-      0 0 0 2px var(--color-cyan),
-      inset 0 2px 0 rgba(0, 0, 0, 0.06);
-  }
-
-  /* Bandeau type "marquee" / titre arcade */
-  .retro-banner {
-    display: inline-block;
-    padding: 0.35rem 0.75rem;
-    background: var(--color-ink);
-    color: var(--color-amber);
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    border: 2px solid var(--color-ink);
-    border-radius: 4px;
-    box-shadow:
-      3px 3px 0 0 var(--color-amber),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  }
-
-  /* Glow néon */
-  .glow-cyan { text-shadow: 0 0 8px rgba(0, 212, 255, 0.6), 0 0 18px rgba(0, 212, 255, 0.35); }
-  .glow-mint { text-shadow: 0 0 8px rgba(0, 255, 157, 0.55), 0 0 18px rgba(0, 255, 157, 0.3); }
-  .glow-magenta { text-shadow: 0 0 8px rgba(255, 61, 138, 0.55), 0 0 18px rgba(255, 61, 138, 0.3); }
-  .glow-amber { text-shadow: 0 0 6px rgba(255, 184, 0, 0.55), 0 0 16px rgba(255, 184, 0, 0.3); }
-
-  /* "Stickers" type sticki-arcade */
-  .sticker {
-    border: 2.5px solid var(--color-ink);
+  /* Cheerful scrollbar */
+  ::-webkit-scrollbar { width: 12px; height: 12px; }
+  ::-webkit-scrollbar-track { background: #87ceeb; }
+  ::-webkit-scrollbar-thumb { 
+    background: linear-gradient(180deg, #32cd32 0%, #228b22 100%);
+    border: 2px solid #87ceeb;
     border-radius: 6px;
-    box-shadow:
-      3px 3px 0 0 var(--color-ink),
-      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+  ::-webkit-scrollbar-thumb:hover { 
+    background: linear-gradient(180deg, #00a550 0%, #006400 100%);
   }
 
-  /* Bandeau bas façon marquee défilante (statique pour perf) */
-  .marquee-strip {
-    background:
-      repeating-linear-gradient(
-        135deg,
-        var(--color-ink) 0,
-        var(--color-ink) 12px,
-        var(--color-amber) 12px,
-        var(--color-amber) 24px
-      );
+  /* Rounded cartoon-style cards */
+  .game-card {
+    background: linear-gradient(180deg, #ffffff 0%, #f0f0e8 100%);
+    border: 4px solid var(--color-border-dark);
+    border-radius: 16px;
+    box-shadow: 
+      4px 4px 0px var(--color-border-dark),
+      inset 0 2px 0 rgba(255,255,255,0.8);
+  }
+
+  .game-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      6px 6px 0px var(--color-border-dark),
+      inset 0 2px 0 rgba(255,255,255,0.8);
+  }
+
+  /* Cartoon buttons */
+  .game-btn {
+    background: linear-gradient(180deg, #ffd700 0%, #ff8c00 100%);
+    border: 4px solid #b8860b;
+    border-radius: 12px;
+    color: #2d3436;
+    font-weight: bold;
+    box-shadow: 
+      0 4px 0 #8b6914,
+      inset 0 2px 0 rgba(255,255,255,0.4);
+    transition: all 0.1s;
+  }
+
+  .game-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 6px 0 #8b6914,
+      inset 0 2px 0 rgba(255,255,255,0.4);
+  }
+
+  .game-btn:active {
+    transform: translateY(2px);
+    box-shadow: 
+      0 2px 0 #8b6914,
+      inset 0 2px 0 rgba(255,255,255,0.4);
+  }
+
+  /* Green button variant */
+  .game-btn-green {
+    background: linear-gradient(180deg, #32cd32 0%, #228b22 100%);
+    border-color: #006400;
+    color: white;
+    box-shadow: 
+      0 4px 0 #004d00,
+      inset 0 2px 0 rgba(255,255,255,0.3);
+  }
+
+  .game-btn-green:hover {
+    box-shadow: 
+      0 6px 0 #004d00,
+      inset 0 2px 0 rgba(255,255,255,0.3);
+  }
+
+  /* Red button variant */
+  .game-btn-red {
+    background: linear-gradient(180deg, #ff6b6b 0%, #e52521 100%);
+    border-color: #a01a17;
+    color: white;
+    box-shadow: 
+      0 4px 0 #7a1410,
+      inset 0 2px 0 rgba(255,255,255,0.3);
+  }
+
+  /* Blue button variant */
+  .game-btn-blue {
+    background: linear-gradient(180deg, #4da6ff 0%, #1e90ff 100%);
+    border-color: #0066cc;
+    color: white;
+    box-shadow: 
+      0 4px 0 #004d99,
+      inset 0 2px 0 rgba(255,255,255,0.3);
+  }
+
+  /* Speech bubble style */
+  .speech-bubble {
+    background: white;
+    border: 3px solid #2d3436;
+    border-radius: 20px;
+    position: relative;
+  }
+
+  .speech-bubble::after {
+    content: "";
+    position: absolute;
+    bottom: -12px;
+    left: 24px;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 12px solid white;
+  }
+
+  /* Clouds background pattern */
+  .clouds-bg {
+    background-image: 
+      radial-gradient(ellipse 100px 60px at 10% 20%, rgba(255,255,255,0.6) 0%, transparent 70%),
+      radial-gradient(ellipse 80px 50px at 85% 15%, rgba(255,255,255,0.5) 0%, transparent 70%),
+      radial-gradient(ellipse 120px 70px at 50% 30%, rgba(255,255,255,0.4) 0%, transparent 70%),
+      radial-gradient(ellipse 60px 40px at 30% 60%, rgba(255,255,255,0.3) 0%, transparent 70%),
+      radial-gradient(ellipse 90px 55px at 70% 70%, rgba(255,255,255,0.35) 0%, transparent 70%);
+  }
+
+  /* Grass strip at bottom */
+  .grass-strip {
+    background: linear-gradient(180deg, 
+      #32cd32 0%, 
+      #228b22 40%, 
+      #006400 100%
+    );
+    border-top: 4px solid #228b22;
+  }
+
+  /* Selection highlight */
+  ::selection {
+    background: #ffd700;
+    color: #2d3436;
+  }
+
+  /* Coin shine animation */
+  @keyframes shine {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+  }
+
+  .coin-shine {
+    animation: shine 2s ease-in-out infinite;
+  }
+
+  /* Bounce animation */
+  @keyframes bounce-soft {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  .bounce-hover:hover {
+    animation: bounce-soft 0.5s ease-in-out;
   }
 }
-
-@keyframes blink { 50% { opacity: 0; } }
-.blink { animation: blink 1s steps(2) infinite; }
-
-@keyframes float-y { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-.float-y { animation: float-y 3s ease-in-out infinite; }
-
-/* Wrapper z-index sur le contenu pour passer au-dessus des scanlines */
-.content-layer { position: relative; z-index: 2; }

@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Copy, RotateCcw, ExternalLink, Youtube } from "lucide-react";
+import { Copy, RotateCcw, ExternalLink, Youtube, Star, Zap } from "lucide-react";
 import type { Selection } from "@/lib/pc-data";
 import {
   GROUPS,
@@ -17,8 +17,6 @@ interface Props {
   onCopy: () => void;
 }
 
-// Pas de `sticky` ici : le parent <aside> dans pc-builder.tsx applique le
-// sticky sur tout le bloc (Récap + Save) pour qu'ils défilent ensemble.
 export function SummarySidebar({ selection, onClear, onCopy }: Props) {
   const total = calculateTotal(selection);
   const selectedCount = getSelectedCount(selection);
@@ -26,40 +24,46 @@ export function SummarySidebar({ selection, onClear, onCopy }: Props) {
     selection.cpu && selection.gpu ? getYouTubeUrl(selection.cpu, selection.gpu) : null;
 
   return (
-    <div className="rounded-xl border border-[#e8e8e4] bg-white overflow-hidden">
-      <div className="bg-blue-600 px-4 py-3 flex items-center justify-between">
-        <span className="text-xs font-bold uppercase tracking-wider text-blue-100">
-          Récapitulatif · {selectedCount}/{GROUPS.length}
-        </span>
-        <span className="text-lg font-bold text-white tabular-nums">
-          {total > 0 ? `${total.toLocaleString("fr-FR")} €` : "—"}
+    <div className="bg-white border-4 border-[#ffd700] rounded-2xl overflow-hidden shadow-[0_6px_0_#b8860b]">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#ffd700] to-[#ff8c00] px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Star className="w-5 h-5 text-white fill-white" />
+          <span className="font-bold text-white">
+            Your Build ({selectedCount}/{GROUPS.length})
+          </span>
+        </div>
+        <span className="font-bold text-white text-lg">
+          {total > 0 ? `${total.toLocaleString("fr-FR")} EUR` : "---"}
         </span>
       </div>
 
-      <div className="divide-y divide-[#f0f0ec]">
+      {/* Items list */}
+      <div className="divide-y-2 divide-[#e0e0e0]">
         {GROUPS.map((group) => {
           const item = group.items.find((i) => i.id === selection[group.key]);
           return (
             <div
               key={group.key}
-              className={cn("flex items-center justify-between px-4 py-2.5", !item && "opacity-50")}
+              className={cn("flex items-center justify-between px-4 py-3", !item && "opacity-40")}
             >
               <div className="min-w-0">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
+                <p className="text-[10px] font-bold text-[#808080] uppercase">
                   {group.label}
                 </p>
                 <p
                   className={cn(
-                    "text-xs truncate",
-                    item ? "text-zinc-800" : "text-zinc-400 italic",
+                    "text-sm truncate",
+                    item ? "text-[#2d3436] font-medium" : "text-[#a0a0a0] italic",
                   )}
                 >
-                  {item ? item.name : "Non sélectionné"}
+                  {item ? item.name : "Not selected"}
                 </p>
               </div>
               {item && (
-                <span className="text-xs font-bold text-blue-600 tabular-nums ml-3 shrink-0">
-                  {item.price > 0 ? `${item.price} €` : "Inclus"}
+                <span className="font-bold text-[#ff8c00] ml-3 shrink-0 flex items-center gap-1">
+                  <Zap className="w-3 h-3" />
+                  {item.price > 0 ? item.price : "Inc"}
                 </span>
               )}
             </div>
@@ -67,25 +71,26 @@ export function SummarySidebar({ selection, onClear, onCopy }: Props) {
         })}
       </div>
 
-      <div className="p-4 border-t border-[#e8e8e4] space-y-2">
+      {/* Action buttons */}
+      <div className="p-4 border-t-2 border-[#e0e0e0] space-y-3 bg-gradient-to-b from-[#f8f8f8] to-[#f0f0f0]">
         <button
           type="button"
           onClick={onCopy}
           disabled={selectedCount === 0}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold disabled:opacity-40 hover:bg-blue-700 transition-colors"
+          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-b from-[#32cd32] to-[#228b22] border-4 border-[#006400] text-white font-bold rounded-xl shadow-[0_4px_0_#004d00] disabled:opacity-40 disabled:cursor-not-allowed hover:translate-y-[-2px] hover:shadow-[0_6px_0_#004d00] active:translate-y-[1px] active:shadow-[0_2px_0_#004d00] transition-all"
         >
-          <Copy className="w-3.5 h-3.5" />
-          Copier la configuration
+          <Copy className="w-4 h-4" />
+          Copy Build
         </button>
 
         <button
           type="button"
           onClick={onClear}
           disabled={selectedCount === 0}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-[#e8e8e4] text-zinc-600 text-sm font-medium disabled:opacity-40 hover:bg-zinc-50 transition-colors"
+          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white border-4 border-[#c0c0c0] text-[#4a5568] font-semibold rounded-xl shadow-[0_3px_0_#808080] disabled:opacity-40 disabled:cursor-not-allowed hover:border-[#e52521] hover:text-[#e52521] transition-all"
         >
-          <RotateCcw className="w-3.5 h-3.5" />
-          Réinitialiser
+          <RotateCcw className="w-4 h-4" />
+          Reset
         </button>
 
         {youtubeUrl && (
@@ -93,20 +98,21 @@ export function SummarySidebar({ selection, onClear, onCopy }: Props) {
             href={youtubeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-b from-[#ff6b6b] to-[#e52521] border-4 border-[#a01a17] text-white font-bold rounded-xl shadow-[0_4px_0_#7a1410] hover:translate-y-[-2px] hover:shadow-[0_6px_0_#7a1410] transition-all"
           >
-            <Youtube className="w-3.5 h-3.5" />
-            Voir benchmarks
+            <Youtube className="w-4 h-4" />
+            Watch Benchmarks
           </a>
         )}
       </div>
 
+      {/* Idealo links */}
       {selectedCount > 0 && (
-        <div className="px-4 pb-4">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 mb-2">
-            Comparer sur Idealo
+        <div className="px-4 pb-4 bg-gradient-to-b from-[#f0f0f0] to-[#e8e8e8]">
+          <p className="text-[10px] font-bold text-[#808080] uppercase mb-3">
+            Compare on Idealo
           </p>
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-2">
             {GROUPS.map((group) => {
               const item = group.items.find((i) => i.id === selection[group.key]);
               if (!item || !IDEALO_URLS[item.id]) return null;
@@ -116,9 +122,9 @@ export function SummarySidebar({ selection, onClear, onCopy }: Props) {
                   href={IDEALO_URLS[item.id]}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 px-2 py-1 text-[10px] rounded-md bg-zinc-100 hover:bg-blue-50 hover:text-blue-600 text-zinc-600 transition-colors"
+                  className="inline-flex items-center gap-1 px-2 py-1 text-[10px] bg-white border-2 border-[#c0c0c0] text-[#4a5568] rounded-lg font-semibold hover:border-[#1e90ff] hover:text-[#1e90ff] transition-colors"
                 >
-                  <ExternalLink className="w-2.5 h-2.5" />
+                  <ExternalLink className="w-3 h-3" />
                   {group.label}
                 </a>
               );

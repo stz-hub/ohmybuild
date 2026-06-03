@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { AlertTriangle, CheckCircle2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Gamepad2, Sparkles, Star } from "lucide-react";
 
 import { ComponentGroup } from "./component-group";
 import { PresetCards } from "./preset-cards";
@@ -25,9 +25,6 @@ export function PCBuilder() {
   const buildIdFromQuery = searchParams.get("build");
   const session = useSession();
 
-  // `mounted` évite les hydration mismatch sur la sidebar dont le contenu
-  // dépend de useSession() (status passe de "loading" à "authenticated"/"unauth"
-  // après hydratation côté client).
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -43,7 +40,7 @@ export function PCBuilder() {
       try {
         const res = await fetch(`/api/builds/${buildIdFromQuery}`);
         if (!res.ok) {
-          if (!cancelled) setLoadError("Impossible de charger cette configuration.");
+          if (!cancelled) setLoadError("Failed to load this configuration.");
           return;
         }
         const json = (await res.json()) as {
@@ -53,7 +50,7 @@ export function PCBuilder() {
         setSelection(json.data.selection ?? {});
         setLoadedBuild({ id: json.data.id, name: json.data.name });
       } catch {
-        if (!cancelled) setLoadError("Erreur réseau lors du chargement.");
+        if (!cancelled) setLoadError("Network error while loading.");
       }
     })();
     return () => {
@@ -92,36 +89,49 @@ export function PCBuilder() {
   const handleCopy = useCallback(() => {
     const lines = GROUPS.map((g) => {
       const item = g.items.find((i) => i.id === selection[g.key]);
-      return item ? `${g.label}: ${item.name} — ${item.price} €` : null;
+      return item ? `${g.label}: ${item.name} — ${item.price} EUR` : null;
     }).filter(Boolean);
     if (!lines.length) return;
-    lines.push(`\nTotal: ${total.toLocaleString("fr-FR")} €`, `\nVia OhMyBuild.fr`);
+    lines.push(`\nTotal: ${total.toLocaleString("fr-FR")} EUR`, `\nBuilt with OhMyBuild.fr`);
     navigator.clipboard?.writeText(lines.join("\n"));
   }, [selection, total]);
 
   return (
-    <div className="min-h-screen bg-[#f9f9f7]">
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-6">
-        <h1 className="text-3xl font-bold tracking-tight mb-1">
-          {loadedBuild ? loadedBuild.name : "Configurateur PC"}
-        </h1>
-        <p className="text-zinc-500 text-sm">
-          {loadedBuild
-            ? "Modifiez les composants puis sauvegardez pour mettre à jour la config."
-            : "Sélectionnez vos composants · Compatibilité vérifiée en temps réel"}
-        </p>
+    <div className="min-h-screen">
+      {/* Sky gradient background */}
+      <div className="fixed inset-0 bg-gradient-to-b from-[#1e90ff] via-[#87ceeb] to-[#32cd32] -z-10" />
+      <div className="fixed inset-0 clouds-bg -z-10" />
+
+      {/* Header */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-4">
+        <div className="flex items-center gap-4 mb-2">
+          <div className="w-14 h-14 bg-gradient-to-br from-[#ffd700] to-[#ff8c00] border-4 border-[#b8860b] rounded-2xl flex items-center justify-center shadow-[0_4px_0_#8b6914]">
+            <Gamepad2 className="w-7 h-7 text-white drop-shadow-md" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-white drop-shadow-[2px_2px_0_#0066cc]">
+              {loadedBuild ? loadedBuild.name : "PC Builder"}
+            </h1>
+            <p className="text-sm text-white/80 drop-shadow-md">
+              {loadedBuild
+                ? "Modify components then save to update"
+                : "Select your components - Real-time compatibility check"}
+            </p>
+          </div>
+        </div>
         {loadError && (
-          <p className="mt-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 inline-block">
+          <div className="mt-4 px-4 py-3 bg-white border-4 border-[#e52521] rounded-xl text-sm text-[#e52521] font-medium">
             {loadError}
-          </p>
+          </div>
         )}
       </section>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
           <div className="space-y-6">
+            {/* Presets */}
             <section>
-              <Label>Configurations prédéfinies</Label>
+              <Label icon={Star} color="#ffd700">Quick Start Builds</Label>
               <PresetCards
                 presets={PRESETS}
                 currentSelection={selection}
@@ -129,45 +139,51 @@ export function PCBuilder() {
               />
             </section>
 
+            {/* Compatibility Status */}
             {selectedCount > 1 &&
               (errors.length > 0 ? (
-                <div className="rounded-xl border border-red-200 bg-red-50 p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
-                    <span className="text-sm font-semibold text-red-700">
-                      Incompatibilité détectée
+                <div className="bg-white border-4 border-[#e52521] p-4 rounded-2xl shadow-[0_4px_0_#a01a17]">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-[#fce4ec] border-3 border-[#e52521] rounded-full flex items-center justify-center">
+                      <AlertTriangle className="w-5 h-5 text-[#e52521]" />
+                    </div>
+                    <span className="font-bold text-[#e52521]">
+                      Incompatibility Detected!
                     </span>
                   </div>
                   {errors.map((err, i) => (
-                    <p key={i} className="text-sm text-red-600 flex gap-2 pl-6">
-                      <span>—</span>
+                    <p key={i} className="text-sm text-[#c62828] flex gap-2 pl-12">
+                      <span className="text-[#e52521]">&bull;</span>
                       <span>{err}</span>
                     </p>
                   ))}
                 </div>
               ) : (
-                <div className="flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 px-4 py-3">
-                  <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" />
-                  <span className="text-sm font-medium text-green-700">
-                    Compatibilité : aucun problème détecté.
+                <div className="flex items-center gap-3 bg-white border-4 border-[#32cd32] px-4 py-3 rounded-2xl shadow-[0_4px_0_#228b22]">
+                  <div className="w-10 h-10 bg-[#e8f5e9] border-3 border-[#32cd32] rounded-full flex items-center justify-center">
+                    <CheckCircle2 className="w-5 h-5 text-[#32cd32]" />
+                  </div>
+                  <span className="font-bold text-[#32cd32]">
+                    All Systems Go - No Issues Detected!
                   </span>
                 </div>
               ))}
 
+            {/* Components */}
             <section>
               <div className="flex items-center justify-between mb-4">
-                <Label>Composants</Label>
+                <Label icon={Sparkles} color="#1e90ff">Components</Label>
                 {selectedCount > 0 && (
                   <button
                     type="button"
                     onClick={handleClearAll}
-                    className="text-xs text-zinc-400 hover:text-zinc-700 transition-colors"
+                    className="text-sm text-white font-medium hover:text-[#ffd700] transition-colors px-3 py-1 bg-white/20 backdrop-blur-sm rounded-lg border-2 border-white/30"
                   >
-                    Tout effacer
+                    Clear All
                   </button>
                 )}
               </div>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {GROUPS.map((group) => (
                   <ComponentGroup
                     key={group.key}
@@ -180,28 +196,28 @@ export function PCBuilder() {
               </div>
             </section>
 
+            {/* FPS Display */}
             <section>
               <div className="flex items-center justify-between mb-4">
-                <Label>Performances estimées</Label>
-                <span className="text-xs text-zinc-400">
-                  Cyberpunk 2077 · Ultra · Natif
+                <Label icon={Gamepad2} color="#e52521">Performance Stats</Label>
+                <span className="text-xs text-white font-medium bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-lg border-2 border-white/30">
+                  Cyberpunk 2077 - Ultra
                 </span>
               </div>
               <FpsDisplay gpu={selectedGpu} cpu={selectedCpu} />
             </section>
           </div>
 
-          {/* Sidebar : Récap + Save dans UN SEUL bloc sticky pour qu'ils
-              défilent ensemble et restent visibles quand on scrolle. */}
+          {/* Sidebar */}
           <aside className="hidden lg:block">
-            <div className="sticky top-20 space-y-3">
+            <div className="sticky top-20 space-y-4">
               <SummarySidebar
                 selection={selection}
                 onClear={handleClearAll}
                 onCopy={handleCopy}
               />
               {mounted && (
-                <div className="rounded-xl border border-[#e8e8e4] bg-white p-4">
+                <div className="bg-white border-4 border-[#c0c0c0] p-4 rounded-2xl shadow-[0_4px_0_#808080]">
                   <SaveBuildButton
                     selection={selection}
                     selectedCount={selectedCount}
@@ -218,30 +234,34 @@ export function PCBuilder() {
         </div>
       </main>
 
-      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur border-t border-[#e8e8e4] px-4 py-3 flex items-center justify-between z-50">
+      {/* Mobile Bottom Bar */}
+      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur border-t-4 border-[#c0c0c0] px-4 py-3 flex items-center justify-between z-50">
         <div>
-          <p className="text-xs text-zinc-400">Total estimé</p>
-          <p className="text-xl font-bold text-blue-600 tabular-nums">
-            {total > 0 ? `${total.toLocaleString("fr-FR")} €` : "—"}
+          <p className="text-xs text-[#4a5568] font-medium">Total Cost</p>
+          <p className="text-xl font-bold text-[#1e90ff]">
+            {total > 0 ? `${total.toLocaleString("fr-FR")} EUR` : "---"}
           </p>
         </div>
         <button
           type="button"
           onClick={handleCopy}
           disabled={selectedCount === 0}
-          className="px-5 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold disabled:opacity-40 transition-opacity"
+          className="px-6 py-3 bg-gradient-to-b from-[#ffd700] to-[#ff8c00] border-4 border-[#b8860b] text-[#2d3436] font-bold rounded-xl shadow-[0_4px_0_#8b6914] disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          Copier
+          Copy List
         </button>
       </div>
 
-      <footer className="border-t border-[#e8e8e4] py-6">
+      {/* Footer - Grass strip */}
+      <footer className="grass-strip py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="text-sm font-bold">
-            Oh<span className="text-blue-600">My</span>Build
+          <span className="text-lg font-bold">
+            <span className="text-white drop-shadow-[1px_1px_0_#006400]">Oh</span>
+            <span className="text-[#ffd700] drop-shadow-[1px_1px_0_#b8860b]">My</span>
+            <span className="text-[#87ceeb] drop-shadow-[1px_1px_0_#0066cc]">Build</span>
           </span>
-          <p className="text-xs text-zinc-400">
-            FPS : TechPowerUp · Hardware Unboxed · Digital Foundry · Prix indicatifs
+          <p className="text-xs text-white/80">
+            FPS: TechPowerUp - Hardware Unboxed - Digital Foundry | Indicative prices
           </p>
         </div>
       </footer>
@@ -249,9 +269,15 @@ export function PCBuilder() {
   );
 }
 
-function Label({ children }: { children: React.ReactNode }) {
+function Label({ children, icon: Icon, color }: { children: React.ReactNode; icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>; color: string }) {
   return (
-    <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-4">
+    <h2 className="text-lg font-bold text-white drop-shadow-[1px_1px_0_#0066cc] mb-4 flex items-center gap-2">
+      <div 
+        className="w-8 h-8 rounded-lg flex items-center justify-center border-2"
+        style={{ backgroundColor: `${color}30`, borderColor: color }}
+      >
+        <Icon className="w-4 h-4" style={{ color }} />
+      </div>
       {children}
     </h2>
   );

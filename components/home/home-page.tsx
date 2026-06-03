@@ -1,227 +1,193 @@
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, Zap, TrendingUp, Cpu, Sparkles, Gamepad2 } from "lucide-react";
-
+import { ArrowRight, CheckCircle2, Zap, ShieldCheck, TrendingUp, Gamepad2, Cpu, Monitor, Star, Sparkles } from "lucide-react";
 import { PRESETS, GROUPS, calculateTotal } from "@/lib/pc-data";
 
 const features = [
   {
     icon: ShieldCheck,
-    accent: "var(--color-mint)",
-    label: "ZERO-MISTAKE",
-    title: "Compat-Check temps réel",
-    description:
-      "Socket CPU, génération RAM, watts PSU — chaque pièce est validée pendant que tu joues avec le configurateur. Pas de panique au montage.",
+    title: "Compatibility Check",
+    description: "CPU socket, RAM generation, PSU power - everything is verified before you confirm your build.",
+    color: "#32cd32",
+    bgColor: "#e8f5e9",
   },
   {
     icon: TrendingUp,
-    accent: "var(--color-cyan)",
-    label: "TRUE FPS",
-    title: "Performances benchmarkées",
-    description:
-      "Les FPS viennent de TechPowerUp, Hardware Unboxed et Digital Foundry. Cyberpunk Ultra, natif, sans bluff marketing.",
+    title: "Real FPS Data",
+    description: "Performance data from real benchmarks on Cyberpunk 2077 Ultra settings.",
+    color: "#1e90ff",
+    bgColor: "#e3f2fd",
   },
   {
     icon: Zap,
-    accent: "var(--color-magenta)",
-    label: "BEST PRICE",
-    title: "Idealo en un clic",
-    description:
-      "Chaque composant te renvoie sur sa page Idealo. Tu compares les prix réels et tu commandes où c'est le moins cher.",
+    title: "Best Prices",
+    description: "Each component links directly to Idealo for real-time price comparison.",
+    color: "#ff8c00",
+    bgColor: "#fff3e0",
   },
-];
-
-const stats = [
-  { value: "8", label: "categories", color: "var(--color-mint)" },
-  { value: "100%", label: "compat", color: "var(--color-cyan)" },
-  { value: "0 €", label: "no cost", color: "var(--color-amber)" },
-  { value: "1-Click", label: "presets", color: "var(--color-magenta)" },
 ];
 
 export function HomePage() {
   return (
-    <main className="content-layer">
-      {/* Hero ──────────────────────────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-10">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-10 items-center">
-          <div>
-            <div className="flex items-center gap-2 mb-6">
-              <span className="retro-banner">★ READY PLAYER 1</span>
-              <span className="text-[11px] font-mono uppercase tracking-widest text-[var(--color-cream)]/50">
-                <span className="blink">●</span> insert coin
-              </span>
-            </div>
+    <main className="min-h-screen">
+      {/* Sky gradient background with clouds */}
+      <div className="fixed inset-0 bg-gradient-to-b from-[#1e90ff] via-[#87ceeb] to-[#32cd32] -z-10" />
+      <div className="fixed inset-0 clouds-bg -z-10" />
 
-            <h1 className="font-[var(--font-display)] text-5xl sm:text-7xl font-extrabold leading-[0.92] tracking-tight mb-6">
-              <span className="block text-[var(--color-cream)]">Compose ton</span>
-              <span className="block text-[var(--color-cyan)] glow-cyan">PC gaming</span>
-              <span className="block text-[var(--color-amber)] glow-amber">pièce par pièce.</span>
-            </h1>
-
-            <p className="text-lg text-[var(--color-cream)]/80 leading-relaxed mb-8 max-w-xl">
-              Compat-check temps réel, FPS benchmarkés, prix Idealo.{" "}
-              <span className="font-semibold text-[var(--color-cream)] bg-[var(--color-magenta)]/30 px-1.5 rounded-sm">
-                Sans inscription
-              </span>
-              . Sans bullshit marketing.
-            </p>
-
-            <div className="flex flex-wrap items-center gap-4">
-              <Link href="/configurateur" className="retro-btn retro-btn-magenta text-base px-6 py-3">
-                <Gamepad2 className="w-4 h-4" />
-                Start Game
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link href="/register" className="retro-btn retro-btn-paper text-base px-6 py-3">
-                Create profile
-              </Link>
-            </div>
+      {/* Hero Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-8">
+        <div className="max-w-3xl">
+          {/* Fun badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border-4 border-[#ffd700] rounded-full mb-6 shadow-lg">
+            <Star className="w-5 h-5 text-[#ffd700] fill-[#ffd700]" />
+            <span className="text-sm font-bold text-[#2d3436]">
+              Free PC Builder - France
+            </span>
+            <Star className="w-5 h-5 text-[#ffd700] fill-[#ffd700]" />
           </div>
 
-          {/* Artwork SVG : niveau bord d'écran arcade */}
-          <div className="hidden lg:block">
-            <HeroArtwork />
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6">
+            <span className="block text-white drop-shadow-[3px_3px_0_#0066cc]">Build Your</span>
+            <span className="block text-[#ffd700] drop-shadow-[3px_3px_0_#b8860b]">Dream PC</span>
+            <span className="block text-[#32cd32] drop-shadow-[3px_3px_0_#006400]">Piece by Piece!</span>
+          </h1>
+
+          <p className="text-xl text-white/90 leading-relaxed mb-8 max-w-xl drop-shadow-md">
+            Real-time compatibility verification, performance estimates by resolution, best Idealo prices. No signup required!
+          </p>
+
+          <div className="flex flex-wrap items-center gap-4">
+            <Link
+              href="/configurateur"
+              className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-b from-[#ffd700] to-[#ff8c00] border-4 border-[#b8860b] text-[#2d3436] font-bold text-lg rounded-2xl shadow-[0_6px_0_#8b6914] hover:translate-y-[-2px] hover:shadow-[0_8px_0_#8b6914] active:translate-y-[2px] active:shadow-[0_4px_0_#8b6914] transition-all"
+            >
+              <Gamepad2 className="w-6 h-6" />
+              Start Building!
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <span className="text-sm text-white flex items-center gap-2 drop-shadow-md">
+              <Sparkles className="w-5 h-5 text-[#ffd700]" />
+              100% Free - No Account Needed
+            </span>
           </div>
         </div>
       </section>
 
-      {/* Stats bar — façon LCD ──────────────────────────────────── */}
-      <section className="border-y-[3px] border-[var(--color-ink)] bg-[var(--color-deep)] relative overflow-hidden">
-        <div className="absolute inset-0 marquee-strip opacity-10" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-7 grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {stats.map(({ value, label, color }) => (
-            <div key={label} className="text-center">
-              <div
-                className="font-[var(--font-display)] text-3xl sm:text-4xl font-extrabold tabular-nums"
-                style={{ color }}
+      {/* Stats Bar */}
+      <section className="bg-white/90 backdrop-blur-sm border-y-4 border-[#c0c0c0]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-3 gap-4">
+          {[
+            { value: "8", label: "Component Categories", icon: Cpu, color: "#e52521" },
+            { value: "100%", label: "Compatibility Check", icon: ShieldCheck, color: "#32cd32" },
+            { value: "0 EUR", label: "Usage Cost", icon: Monitor, color: "#1e90ff" },
+          ].map(({ value, label, icon: Icon, color }) => (
+            <div key={label} className="text-center px-4 py-3 bg-gradient-to-b from-[#f8f8f0] to-[#e8e8e0] border-4 border-[#c0c0c0] rounded-2xl shadow-[0_4px_0_#808080]">
+              <div 
+                className="w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center border-4"
+                style={{ backgroundColor: `${color}20`, borderColor: color }}
               >
-                {value}
+                <Icon className="w-6 h-6" style={{ color }} />
               </div>
-              <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--color-cream)]/55 mt-1">
-                — {label} —
-              </div>
+              <div className="text-2xl font-bold" style={{ color }}>{value}</div>
+              <div className="text-xs text-[#4a5568] mt-1 font-medium">{label}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Features ──────────────────────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-20">
-        <div className="mb-10 max-w-2xl">
-          <span className="retro-banner mb-4 inline-block">— STAGE 01 —</span>
-          <h2 className="font-[var(--font-display)] text-3xl sm:text-4xl font-extrabold tracking-tight mt-4 mb-3 text-[var(--color-cream)]">
-            Pourquoi <span className="text-[var(--color-cyan)] glow-cyan">OhMyBuild</span> ?
+      {/* Features Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-bold text-white drop-shadow-[2px_2px_0_#0066cc] mb-2">
+            Why OhMyBuild?
           </h2>
-          <p className="text-[var(--color-cream)]/70">
-            Les autres configurateurs te noient dans mille options. Ici : simple, rapide, honnête. Et tu gardes ton historique si tu te connectes.
+          <p className="text-white/80 max-w-md mx-auto drop-shadow-md">
+            Other configurators drown you in options. Here, it&apos;s simple, fast, and honest!
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {features.map(({ icon: Icon, title, description, accent, label }) => (
-            <div key={title} className="retro-card p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div
-                  className="w-11 h-11 rounded-md flex items-center justify-center border-2 border-[var(--color-ink)] shadow-[3px_3px_0_var(--color-ink)]"
-                  style={{ background: accent }}
-                >
-                  <Icon className="w-5 h-5 text-[var(--color-ink)]" strokeWidth={2.5} />
-                </div>
-                <span
-                  className="text-[10px] font-mono font-bold uppercase tracking-widest text-[var(--color-ink)]/55"
-                  style={{ color: "var(--color-ink)" }}
-                >
-                  {label}
-                </span>
+          {features.map(({ icon: Icon, title, description, color, bgColor }) => (
+            <div
+              key={title}
+              className="bg-white border-4 border-[#c0c0c0] p-6 rounded-2xl shadow-[0_6px_0_#808080] hover:translate-y-[-4px] hover:shadow-[0_10px_0_#808080] transition-all"
+            >
+              <div
+                className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 border-4"
+                style={{ backgroundColor: bgColor, borderColor: color }}
+              >
+                <Icon className="w-8 h-8" style={{ color }} />
               </div>
-              <h3 className="font-[var(--font-display)] font-extrabold text-lg mb-2 text-[var(--color-ink)]">
-                {title}
-              </h3>
-              <p className="text-sm text-[var(--color-ink)]/75 leading-relaxed">{description}</p>
+              <h3 className="text-lg font-bold text-[#2d3436] mb-2">{title}</h3>
+              <p className="text-sm text-[#4a5568] leading-relaxed">{description}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Presets ───────────────────────────────────────────────── */}
-      <section className="relative border-y-[3px] border-[var(--color-ink)] bg-[var(--color-teal)]">
-        <div className="absolute inset-0 opacity-30 mix-blend-overlay">
-          <div
-            className="w-full h-full"
-            style={{
-              backgroundImage:
-                "linear-gradient(45deg, var(--color-cyan) 1px, transparent 1px), linear-gradient(-45deg, var(--color-cyan) 1px, transparent 1px)",
-              backgroundSize: "24px 24px",
-              opacity: 0.15,
-            }}
-          />
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-16">
-          <div className="mb-8 max-w-2xl">
-            <span className="retro-banner mb-4 inline-block">— STAGE 02 —</span>
-            <h2 className="font-[var(--font-display)] text-3xl sm:text-4xl font-extrabold tracking-tight mt-4 mb-3 text-[var(--color-cream)]">
-              Configs <span className="text-[var(--color-amber)] glow-amber">prêtes à play</span>
+      {/* Presets Section */}
+      <section className="bg-gradient-to-b from-[#32cd32] to-[#228b22] border-t-4 border-[#006400]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold text-white drop-shadow-[2px_2px_0_#006400] mb-2">
+              Choose Your Build!
             </h2>
-            <p className="text-[var(--color-cream)]/70">
-              Un clic pour charger une config complète et équilibrée. Tu modifies après si tu veux.
-            </p>
+            <p className="text-white/90 drop-shadow-md">One click to load a complete, balanced configuration.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {PRESETS.map((preset, i) => {
+            {PRESETS.map((preset, index) => {
               const total = calculateTotal(preset.selection);
               const count = Object.keys(preset.selection).length;
-              const accents = ["var(--color-mint)", "var(--color-cyan)", "var(--color-magenta)"];
-              const accent = accents[i] ?? "var(--color-amber)";
+              const colors = [
+                { bg: "from-[#e8f5e9] to-[#c8e6c9]", border: "#32cd32", badge: "#32cd32" },
+                { bg: "from-[#e3f2fd] to-[#bbdefb]", border: "#1e90ff", badge: "#1e90ff" },
+                { bg: "from-[#fce4ec] to-[#f8bbd9]", border: "#e91e63", badge: "#e91e63" },
+              ];
+              const style = colors[index % colors.length];
+
               return (
                 <Link
                   key={preset.name}
                   href="/configurateur"
-                  className="retro-card p-6 block group"
+                  className="group bg-white border-4 rounded-2xl p-6 shadow-[0_6px_0_#808080] hover:translate-y-[-4px] hover:shadow-[0_10px_0_#808080] transition-all"
+                  style={{ borderColor: style.border }}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <span
-                      className="retro-tag"
-                      style={{ background: accent, color: "var(--color-ink)" }}
+                      className="px-3 py-1 text-xs font-bold text-white rounded-full"
+                      style={{ backgroundColor: style.badge }}
                     >
-                      <Cpu className="w-3 h-3" />
                       {preset.target}
                     </span>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/50">
-                      {count} parts
-                    </span>
+                    <span className="text-xs text-[#4a5568] font-medium">{count} parts</span>
                   </div>
 
-                  <h3 className="font-[var(--font-display)] font-extrabold text-xl mb-1 text-[var(--color-ink)]">
+                  <h3 className="text-lg font-bold text-[#2d3436] mb-2">
                     {preset.name}
                   </h3>
-                  <p className="text-sm text-[var(--color-ink)]/65 mb-4">{preset.description}</p>
+                  <p className="text-sm text-[#4a5568] mb-4">{preset.description}</p>
 
-                  <ul className="space-y-1 mb-5 border-t-2 border-dashed border-[var(--color-ink)]/20 pt-4">
-                    {GROUPS.slice(0, 4).map((group) => {
-                      const item = group.items.find((i) => i.id === preset.selection[group.key]);
+                  <div className="space-y-2 mb-4">
+                    {GROUPS.slice(0, 3).map(group => {
+                      const item = group.items.find(i => i.id === preset.selection[group.key]);
                       if (!item) return null;
                       return (
-                        <li key={group.key} className="flex items-center gap-2 text-xs text-[var(--color-ink)]/75">
-                          <span className="w-2 h-2 rounded-sm" style={{ background: accent }} />
-                          <span className="font-medium truncate">{item.name}</span>
-                        </li>
+                        <div key={group.key} className="flex items-center gap-2 text-xs text-[#4a5568]">
+                          <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: style.badge }} />
+                          <span className="truncate">{item.name}</span>
+                        </div>
                       );
                     })}
-                    <li className="text-[11px] text-[var(--color-ink)]/40 pl-4 italic">
-                      + {count - 4} autres pièces…
-                    </li>
-                  </ul>
+                    <div className="text-xs text-[#808080] pl-6">+ {count - 3} more parts</div>
+                  </div>
 
-                  <div className="flex items-center justify-between border-t-2 border-[var(--color-ink)] pt-4">
-                    <span className="font-[var(--font-display)] text-2xl font-extrabold text-[var(--color-ink)] tabular-nums">
-                      {total.toLocaleString("fr-FR")} €
+                  <div className="flex items-center justify-between pt-4 border-t-2 border-[#e0e0e0]">
+                    <span className="text-xl font-bold" style={{ color: style.badge }}>
+                      {total.toLocaleString("fr-FR")} EUR
                     </span>
-                    <span
-                      className="inline-flex items-center gap-1 text-[11px] font-mono font-bold uppercase tracking-widest group-hover:translate-x-1 transition-transform"
-                      style={{ color: "var(--color-ink)" }}
-                    >
-                      load <ArrowRight className="w-3.5 h-3.5" />
+                    <span className="text-sm font-semibold text-[#4a5568] group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                      Select
+                      <ArrowRight className="w-4 h-4" />
                     </span>
                   </div>
                 </Link>
@@ -231,164 +197,49 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* CTA final ─────────────────────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-20">
-        <div className="relative retro-card retro-card-dark overflow-hidden px-8 py-14 text-center">
-          <div
-            aria-hidden
-            className="absolute inset-0 opacity-25"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(45deg, var(--color-cyan) 0, var(--color-cyan) 1px, transparent 1px, transparent 14px), repeating-linear-gradient(-45deg, var(--color-magenta) 0, var(--color-magenta) 1px, transparent 1px, transparent 14px)",
-            }}
-          />
-          <div className="relative">
-            <span className="retro-banner mb-5 inline-block">— FINAL BOSS —</span>
-            <h2 className="font-[var(--font-display)] text-3xl sm:text-5xl font-extrabold mb-4 mt-4 text-[var(--color-cream)]">
-              Prêt à <span className="text-[var(--color-mint)] glow-mint">power up</span> ton PC ?
-            </h2>
-            <p className="text-[var(--color-cream)]/75 mb-8 max-w-md mx-auto">
-              Configure chaque pièce, vérifie la compat, sauvegarde ta config. 5 minutes chrono.
-            </p>
-            <Link href="/configurateur" className="retro-btn retro-btn-cyan text-base px-7 py-3.5">
-              <Sparkles className="w-4 h-4" />
-              Press Start
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+      {/* CTA Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div className="bg-white border-4 border-[#ffd700] p-10 rounded-3xl text-center shadow-[0_8px_0_#b8860b]">
+          <div className="flex justify-center gap-2 mb-4">
+            {[1,2,3].map(i => (
+              <Star key={i} className="w-8 h-8 text-[#ffd700] fill-[#ffd700]" />
+            ))}
           </div>
+          <h2 className="text-2xl md:text-3xl font-bold text-[#2d3436] mb-4">
+            Ready to Level Up?
+          </h2>
+          <p className="text-[#4a5568] mb-8 max-w-md mx-auto">
+            Configure each part, verify compatibility, export the list. In just 5 minutes!
+          </p>
+          <Link
+            href="/configurateur"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-b from-[#32cd32] to-[#228b22] border-4 border-[#006400] text-white font-bold text-lg rounded-2xl shadow-[0_6px_0_#004d00] hover:translate-y-[-2px] hover:shadow-[0_8px_0_#004d00] active:translate-y-[2px] active:shadow-[0_4px_0_#004d00] transition-all"
+          >
+            <Gamepad2 className="w-6 h-6" />
+            Launch Builder!
+            <ArrowRight className="w-5 h-5" />
+          </Link>
         </div>
       </section>
 
-      {/* Footer ────────────────────────────────────────────────── */}
-      <footer className="border-t-[3px] border-[var(--color-ink)] bg-[var(--color-deep)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="font-[var(--font-display)] text-sm font-extrabold text-[var(--color-cream)]">
-            Oh<span className="text-[var(--color-cyan)] glow-cyan">My</span>Build
+      {/* Footer - Grass strip */}
+      <footer className="grass-strip py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span className="text-lg font-bold">
+            <span className="text-white drop-shadow-[1px_1px_0_#006400]">Oh</span>
+            <span className="text-[#ffd700] drop-shadow-[1px_1px_0_#b8860b]">My</span>
+            <span className="text-[#87ceeb] drop-shadow-[1px_1px_0_#0066cc]">Build</span>
           </span>
-          <p className="text-[10px] font-mono uppercase tracking-widest text-[var(--color-cream)]/50 text-center">
-            ★ Benchmarks · TechPowerUp · Hardware Unboxed · Digital Foundry ★
+          <p className="text-xs text-white/80 text-center">
+            Benchmarks: TechPowerUp - Hardware Unboxed - Digital Foundry | Prices via Idealo
           </p>
+          <div className="flex gap-2">
+            {["#e52521", "#ffd700", "#32cd32", "#1e90ff"].map((c, i) => (
+              <div key={i} className="w-4 h-4 rounded-full border-2 border-white/50" style={{ backgroundColor: c }} />
+            ))}
+          </div>
         </div>
       </footer>
     </main>
-  );
-}
-
-/** Décor SVG du hero : "borne d'arcade" avec écran CRT et badges flottants. */
-function HeroArtwork() {
-  return (
-    <div className="relative aspect-square max-w-md mx-auto">
-      <svg viewBox="0 0 400 400" className="w-full h-full drop-shadow-[0_20px_60px_rgba(0,212,255,0.25)]">
-        <defs>
-          <linearGradient id="crt" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#102441" />
-            <stop offset="60%" stopColor="#0d2a3a" />
-            <stop offset="100%" stopColor="#0a0e27" />
-          </linearGradient>
-          <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#0d2a3a" />
-            <stop offset="100%" stopColor="#0a0e27" />
-          </linearGradient>
-          <linearGradient id="amberGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#ffd24d" />
-            <stop offset="100%" stopColor="#d99700" />
-          </linearGradient>
-          <pattern id="scan" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
-            <rect width="4" height="2" fill="rgba(0,212,255,0.0)" />
-            <rect y="2" width="4" height="1" fill="rgba(0,212,255,0.18)" />
-          </pattern>
-        </defs>
-
-        {/* Borne d'arcade — bord */}
-        <rect x="20" y="20" width="360" height="360" rx="14" fill="url(#crt)" stroke="#0a0e27" strokeWidth="5" />
-
-        {/* Écran CRT */}
-        <rect x="50" y="60" width="300" height="220" rx="10" fill="url(#screen)" stroke="#0a0e27" strokeWidth="4" />
-        {/* Glow autour de l'écran */}
-        <rect x="50" y="60" width="300" height="220" rx="10" fill="none" stroke="#00d4ff" strokeWidth="1.5" opacity="0.55" />
-
-        {/* Grille perspective rétro à l'intérieur de l'écran */}
-        <g clipPath="url(#screenClip)">
-          {/* Horizon */}
-          <line x1="50" y1="190" x2="350" y2="190" stroke="#00d4ff" strokeWidth="1.2" opacity="0.55" />
-          {/* Soleil */}
-          <circle cx="200" cy="185" r="42" fill="url(#amberGrad)" opacity="0.95" />
-          <rect x="158" y="172" width="84" height="2.5" fill="#0a0e27" opacity="0.7" />
-          <rect x="158" y="180" width="84" height="2" fill="#0a0e27" opacity="0.55" />
-          <rect x="158" y="187" width="84" height="1.5" fill="#0a0e27" opacity="0.4" />
-
-          {/* Grille au sol qui converge */}
-          {Array.from({ length: 8 }).map((_, i) => {
-            const y = 200 + (i + 1) * 12;
-            return <line key={`h${i}`} x1="50" y1={y} x2="350" y2={y} stroke="#ff3d8a" strokeWidth="1" opacity={0.5 - i * 0.04} />;
-          })}
-          {Array.from({ length: 11 }).map((_, i) => {
-            const x = 50 + (i * 30);
-            return (
-              <line
-                key={`v${i}`}
-                x1={x}
-                y1="200"
-                x2={200 + (x - 200) * 3.2}
-                y2="280"
-                stroke="#ff3d8a"
-                strokeWidth="1"
-                opacity="0.45"
-              />
-            );
-          })}
-
-          {/* Texte arcade "OMB" stylisé */}
-          <text
-            x="200"
-            y="135"
-            textAnchor="middle"
-            fontFamily="'Bricolage Grotesque', sans-serif"
-            fontWeight="900"
-            fontSize="44"
-            fill="#00d4ff"
-            opacity="0.95"
-          >
-            OMB
-          </text>
-          <text
-            x="200"
-            y="158"
-            textAnchor="middle"
-            fontFamily="ui-monospace, monospace"
-            fontWeight="700"
-            fontSize="9"
-            letterSpacing="3"
-            fill="#fff4d6"
-            opacity="0.55"
-          >
-            PRESS START
-          </text>
-        </g>
-
-        {/* Scanlines overlay sur l'écran */}
-        <rect x="50" y="60" width="300" height="220" rx="10" fill="url(#scan)" opacity="0.4" />
-
-        {/* Panneau de contrôle (en bas) */}
-        <rect x="50" y="298" width="300" height="60" rx="6" fill="#0d2a3a" stroke="#0a0e27" strokeWidth="3" />
-
-        {/* Joystick */}
-        <circle cx="100" cy="328" r="12" fill="#ff3d8a" stroke="#0a0e27" strokeWidth="3" />
-        <line x1="100" y1="328" x2="100" y2="310" stroke="#0a0e27" strokeWidth="6" strokeLinecap="round" />
-        <circle cx="100" cy="308" r="8" fill="#0a0e27" />
-
-        {/* Boutons */}
-        <circle cx="265" cy="328" r="11" fill="#00d4ff" stroke="#0a0e27" strokeWidth="3" />
-        <circle cx="295" cy="328" r="11" fill="#00ff9d" stroke="#0a0e27" strokeWidth="3" />
-        <circle cx="325" cy="328" r="11" fill="#ffb800" stroke="#0a0e27" strokeWidth="3" />
-
-        {/* Coin slot */}
-        <rect x="175" y="335" width="50" height="6" rx="2" fill="#0a0e27" />
-
-        <clipPath id="screenClip">
-          <rect x="50" y="60" width="300" height="220" rx="10" />
-        </clipPath>
-      </svg>
-    </div>
   );
 }
