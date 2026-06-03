@@ -17,11 +17,6 @@ type Props = {
   initialBuildId?: string;
 };
 
-/**
- * Bouton "Sauvegarder ma config" — variantes :
- * - Non connecté : invite à se connecter.
- * - Connecté : ouvre un inline form qui POST /api/builds (ou PUT si initialBuildId).
- */
 export function SaveBuildButton({
   selection,
   selectedCount,
@@ -42,10 +37,10 @@ export function SaveBuildButton({
     return (
       <button
         disabled
-        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-[#e8e8e4] text-zinc-400 text-sm font-medium"
+        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#0d0d1a] border-4 border-[#2d2d5a] text-[#6060a0] font-bold"
       >
-        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-        Chargement…
+        <Loader2 className="w-4 h-4 animate-spin" />
+        LOADING...
       </button>
     );
   }
@@ -54,10 +49,10 @@ export function SaveBuildButton({
     return (
       <Link
         href={`/login?callbackUrl=${encodeURIComponent("/configurateur")}`}
-        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-[#e8e8e4] text-zinc-700 text-sm font-medium hover:bg-zinc-50 transition-colors"
+        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#0d0d1a] border-4 border-[#ffdd00] text-[#ffdd00] font-bold hover:bg-[#ffdd00] hover:text-[#0d0d1a] hover:shadow-[0_0_20px_rgba(255,221,0,0.4)] transition-all"
       >
-        <Bookmark className="w-3.5 h-3.5" />
-        Se connecter pour sauvegarder
+        <Bookmark className="w-4 h-4" />
+        LOGIN TO SAVE
       </Link>
     );
   }
@@ -76,7 +71,7 @@ export function SaveBuildButton({
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        setError(body?.error?.message ?? "Impossible d'enregistrer.");
+        setError(body?.error?.message ?? "Failed to save.");
         return;
       }
       setSavedAt(new Date());
@@ -89,23 +84,23 @@ export function SaveBuildButton({
 
   if (open) {
     return (
-      <form onSubmit={handleSave} className="space-y-2">
-        <label htmlFor="build-name" className="block text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
-          Nom de la config
+      <form onSubmit={handleSave} className="space-y-3">
+        <label htmlFor="build-name" className="block font-[var(--font-pixel)] text-xs text-[#9090c0]">
+          BUILD NAME
         </label>
         <input
           id="build-name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="ex: Build perso 1440p"
+          placeholder="e.g. My 1440p Build"
           maxLength={80}
           required
           autoFocus
-          className="w-full px-3 py-2 rounded-lg border border-[#e8e8e4] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400"
+          className="w-full px-4 py-3 bg-[#0d0d1a] border-4 border-[#2d2d5a] text-[#e8e8ff] text-sm focus:outline-none focus:border-[#00ff88] focus:shadow-[0_0_15px_rgba(0,255,136,0.3)] transition-all"
         />
         {error && (
-          <p role="alert" className="text-xs text-red-600">
+          <p className="text-xs text-[#ff3366] px-2">
             {error}
           </p>
         )}
@@ -113,16 +108,16 @@ export function SaveBuildButton({
           <button
             type="submit"
             disabled={loading || !name.trim() || selectedCount === 0}
-            className="flex-1 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            className="flex-1 px-4 py-3 bg-[#00ff88] border-4 border-[#00ff88] text-[#0d0d1a] font-bold disabled:opacity-50 hover:shadow-[0_0_20px_rgba(0,255,136,0.4)] transition-all"
           >
-            {loading ? "Enregistrement…" : initialBuildId ? "Mettre à jour" : "Enregistrer"}
+            {loading ? "SAVING..." : initialBuildId ? "UPDATE" : "SAVE"}
           </button>
           <button
             type="button"
             onClick={() => setOpen(false)}
-            className="px-3 py-2 rounded-lg border border-[#e8e8e4] text-sm text-zinc-600 hover:bg-zinc-50 transition-colors"
+            className="px-4 py-3 bg-[#0d0d1a] border-4 border-[#2d2d5a] text-[#9090c0] hover:border-[#ff3366] hover:text-[#ff3366] transition-all"
           >
-            Annuler
+            CANCEL
           </button>
         </div>
       </form>
@@ -133,17 +128,17 @@ export function SaveBuildButton({
     <button
       onClick={() => setOpen(true)}
       disabled={selectedCount === 0 || hasErrors}
-      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-green-600 text-white text-sm font-semibold disabled:opacity-40 hover:bg-green-700 transition-colors"
+      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#00ff88] border-4 border-[#00ff88] text-[#0d0d1a] font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-[0_0_20px_rgba(0,255,136,0.4)] transition-all"
       title={
         selectedCount === 0
-          ? "Sélectionnez au moins un composant"
+          ? "Select at least one component"
           : hasErrors
-            ? "Corrigez les incompatibilités avant de sauvegarder"
+            ? "Fix compatibility issues first"
             : undefined
       }
     >
-      <Bookmark className="w-3.5 h-3.5" />
-      {savedAt ? "Sauvegardée ✓" : initialBuildId ? "Mettre à jour la config" : "Sauvegarder ma config"}
+      <Bookmark className="w-4 h-4" />
+      {savedAt ? "SAVED!" : initialBuildId ? "UPDATE BUILD" : "SAVE BUILD"}
     </button>
   );
 }
