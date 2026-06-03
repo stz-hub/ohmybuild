@@ -1,10 +1,8 @@
-/**
- * Middleware Next.js — protège `/mes-configs` en redirigeant les visiteurs
- * non connectés vers `/login`. Les routes API gèrent leur auth eux-mêmes.
- */
 import { NextResponse } from "next/server";
+import NextAuth from "next-auth";
+import { authConfig } from "./auth.config";
 
-import { auth } from "@/auth";
+const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const isAuthed = !!req.auth?.user;
