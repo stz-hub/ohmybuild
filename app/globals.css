@@ -1,34 +1,217 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #f9f9f7;
+  /* ── Palette rétro arcade ──────────────────────────────────────────── */
+  --color-background: #fff9e8;
   --color-surface: #ffffff;
-  --color-border: #e8e8e4;
-  --color-text: #0f0f0e;
-  --color-muted: #6b6b68;
-  --color-blue: #2563eb;
-  --color-blue-light: #eff6ff;
-  --color-green: #16a34a;
-  --color-red: #dc2626;
+  --color-ink: #0b1020;
+  --color-border: #0b1020;
+  --color-text: #0b1020;
+  --color-muted: #545878;
+
+  /* Palette principale rétro */
+  --color-grass: #1eb053;        /* vert herbe */
+  --color-grass-dark: #149242;
+  --color-grass-light: #b8f5cb;
+  --color-sky: #2dadff;          /* bleu ciel */
+  --color-sky-dark: #1b7fc6;
+  --color-sky-light: #d9efff;
+  --color-ring: #ffcc00;         /* jaune ring */
+  --color-ring-dark: #d99e00;
+  --color-sunset: #ff7a2a;       /* orange sunset */
+  --color-cherry: #ff3868;       /* rose cerise */
+  --color-violet: #8b5cf6;
+
+  /* Aliases utilitaires */
+  --color-blue: #2dadff;
+  --color-blue-light: #d9efff;
+  --color-green: #1eb053;
+  --color-red: #ff3868;
 
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Bricolage Grotesque", ui-sans-serif, sans-serif;
+  --font-display: "Bricolage Grotesque", "Inter", ui-sans-serif, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
 @layer base {
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
   html { -webkit-font-smoothing: antialiased; }
 
   body {
-    background: var(--color-background);
+    background:
+      radial-gradient(ellipse 1100px 600px at 50% -10%, #ffe070 0%, transparent 60%),
+      linear-gradient(180deg, #fff9e8 0%, #ffe9c2 100%);
+    background-attachment: fixed;
     color: var(--color-text);
     font-family: var(--font-sans);
     line-height: 1.5;
+    min-height: 100vh;
   }
 
-  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  /* Damier de fond subtil pour rappeler les niveaux rétro */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(45deg, rgba(11, 16, 32, 0.025) 25%, transparent 25%, transparent 75%, rgba(11, 16, 32, 0.025) 75%),
+      linear-gradient(45deg, rgba(11, 16, 32, 0.025) 25%, transparent 25%, transparent 75%, rgba(11, 16, 32, 0.025) 75%);
+    background-size: 24px 24px;
+    background-position: 0 0, 12px 12px;
+    z-index: 0;
+  }
+
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink);
+    border-radius: 4px;
+    border: 2px solid var(--color-background);
+  }
+
+  ::selection {
+    background: var(--color-ring);
+    color: var(--color-ink);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
 }
+
+/* ── Composants utilitaires rétro ─────────────────────────────────────── */
+@layer components {
+  /* Card avec bordure épaisse + shadow décalée (style chunky arcade) */
+  .retro-card {
+    background: var(--color-surface);
+    border: 2.5px solid var(--color-ink);
+    border-radius: 16px;
+    box-shadow: 5px 5px 0 0 var(--color-ink);
+    transition: transform 120ms ease, box-shadow 120ms ease;
+  }
+
+  .retro-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 0 var(--color-ink);
+  }
+
+  .retro-card-active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 0 var(--color-ink);
+  }
+
+  /* Bouton chunky */
+  .retro-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border: 2.5px solid var(--color-ink);
+    border-radius: 14px;
+    background: var(--color-ring);
+    color: var(--color-ink);
+    font-weight: 700;
+    font-family: var(--font-display);
+    box-shadow: 4px 4px 0 0 var(--color-ink);
+    transition: all 100ms ease;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .retro-btn:hover:not(:disabled) {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 0 var(--color-ink);
+  }
+
+  .retro-btn:active:not(:disabled) {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 0 var(--color-ink);
+  }
+
+  .retro-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: 4px 4px 0 0 var(--color-ink);
+  }
+
+  .retro-btn-blue { background: var(--color-sky); color: white; }
+  .retro-btn-green { background: var(--color-grass); color: white; }
+  .retro-btn-cherry { background: var(--color-cherry); color: white; }
+  .retro-btn-ink { background: var(--color-ink); color: white; }
+  .retro-btn-white { background: white; }
+
+  /* Tag/badge rétro */
+  .retro-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.625rem;
+    border: 2px solid var(--color-ink);
+    border-radius: 999px;
+    background: var(--color-ring);
+    color: var(--color-ink);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    box-shadow: 2px 2px 0 0 var(--color-ink);
+  }
+
+  /* Input rétro */
+  .retro-input {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border: 2.5px solid var(--color-ink);
+    border-radius: 12px;
+    background: white;
+    font-family: var(--font-sans);
+    box-shadow: 3px 3px 0 0 var(--color-ink);
+    transition: all 100ms ease;
+  }
+
+  .retro-input:focus {
+    outline: none;
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 0 var(--color-ink);
+  }
+
+  /* Banner rétro (titres encadrés) */
+  .retro-banner {
+    display: inline-block;
+    padding: 0.375rem 0.875rem;
+    background: var(--color-ink);
+    color: var(--color-ring);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-radius: 6px;
+  }
+}
+
+/* ── Pixel ring SVG (anneau Sonic-like) ────────────────────────────── */
+.ring {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, transparent 30%, var(--color-ring) 30%, var(--color-ring) 65%, var(--color-ring-dark) 65%);
+  filter: drop-shadow(2px 2px 0 var(--color-ink));
+}
+
+/* Anim spin pour ring/star */
+@keyframes ring-spin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+.ring-anim { animation: ring-spin 2s linear infinite; }
+
+/* Wrapper pour que body::before n'écrase pas le contenu */
+.content-layer { position: relative; z-index: 1; }
