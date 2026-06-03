@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
 import { buildService } from "@/lib/services/build.service";
@@ -14,8 +15,7 @@ export const dynamic = "force-dynamic";
 export default async function MyBuildsPage() {
   const session = await auth();
   if (!session?.user?.id) {
-    // Le middleware a normalement déjà redirigé, garde-fou serveur.
-    return null;
+    redirect("/login?callbackUrl=/mes-configs");
   }
 
   const { data } = await buildService.listForUser(session.user.id, {
