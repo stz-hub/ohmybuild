@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { AlertTriangle, CheckCircle2, Gamepad2, Sparkles, Star } from "lucide-react";
+import Image from "next/image";
 
 import { ComponentGroup } from "./component-group";
 import { PresetCards } from "./preset-cards";
@@ -97,136 +97,205 @@ export function PCBuilder() {
   }, [selection, total]);
 
   return (
-    <div className="min-h-screen">
-      {/* Sky gradient background */}
-      <div className="fixed inset-0 bg-gradient-to-b from-[#1e90ff] via-[#87ceeb] to-[#32cd32] -z-10" />
-      <div className="fixed inset-0 clouds-bg -z-10" />
-
-      {/* Header */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-4">
-        <div className="flex items-center gap-4 mb-2">
-          <div className="w-14 h-14 bg-gradient-to-br from-[#ffd700] to-[#ff8c00] border-4 border-[#b8860b] rounded-2xl flex items-center justify-center shadow-[0_4px_0_#8b6914]">
-            <Gamepad2 className="w-7 h-7 text-white drop-shadow-md" />
+    <div className="min-h-screen p-4 md:p-6">
+      <main className="max-w-7xl mx-auto">
+        {/* Header Window */}
+        <div className="xp-window mb-4">
+          <div className="xp-titlebar">
+            <div className="xp-titlebar-text">
+              <Image src="/xp-icons/System Properties.ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+              <span>{loadedBuild ? loadedBuild.name : "PC Configuration Wizard"}</span>
+            </div>
+            <div className="xp-window-controls">
+              <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+              <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+              <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-white drop-shadow-[2px_2px_0_#0066cc]">
-              {loadedBuild ? loadedBuild.name : "PC Builder"}
-            </h1>
-            <p className="text-sm text-white/80 drop-shadow-md">
-              {loadedBuild
-                ? "Modify components then save to update"
-                : "Select your components - Real-time compatibility check"}
-            </p>
+          <div className="xp-window-content p-4">
+            <div className="flex items-center gap-4">
+              <Image src="/xp-icons/My Computer.ico" alt="" width={48} height={48} />
+              <div>
+                <h1 className="text-[16px] font-bold text-[#003399]">
+                  {loadedBuild ? loadedBuild.name : "New PC Configuration"}
+                </h1>
+                <p className="text-[11px] text-[#808080]">
+                  {loadedBuild
+                    ? "Modify components then click Save to update your configuration."
+                    : "Select your components below. The wizard will verify compatibility in real-time."}
+                </p>
+              </div>
+            </div>
+            {loadError && (
+              <div className="xp-error-box mt-4">
+                <span className="text-[14px]">&#9888;</span>
+                <span className="text-[11px]">{loadError}</span>
+              </div>
+            )}
           </div>
         </div>
-        {loadError && (
-          <div className="mt-4 px-4 py-3 bg-white border-4 border-[#e52521] rounded-xl text-sm text-[#e52521] font-medium">
-            {loadError}
-          </div>
-        )}
-      </section>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
-          <div className="space-y-6">
-            {/* Presets */}
-            <section>
-              <Label icon={Star} color="#ffd700">Quick Start Builds</Label>
-              <PresetCards
-                presets={PRESETS}
-                currentSelection={selection}
-                onApply={handleApplyPreset}
-              />
-            </section>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4">
+          <div className="space-y-4">
+            {/* Presets Window */}
+            <div className="xp-window">
+              <div className="xp-titlebar">
+                <div className="xp-titlebar-text">
+                  <Image src="/xp-icons/Folder Open.ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+                  <span>Quick Start - Preset Configurations</span>
+                </div>
+                <div className="xp-window-controls">
+                  <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+                  <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+                  <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+                </div>
+              </div>
+              <div className="xp-window-content p-3">
+                <PresetCards
+                  presets={PRESETS}
+                  currentSelection={selection}
+                  onApply={handleApplyPreset}
+                />
+              </div>
+            </div>
 
             {/* Compatibility Status */}
-            {selectedCount > 1 &&
-              (errors.length > 0 ? (
-                <div className="bg-white border-4 border-[#e52521] p-4 rounded-2xl shadow-[0_4px_0_#a01a17]">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 bg-[#fce4ec] border-3 border-[#e52521] rounded-full flex items-center justify-center">
-                      <AlertTriangle className="w-5 h-5 text-[#e52521]" />
-                    </div>
-                    <span className="font-bold text-[#e52521]">
-                      Incompatibility Detected!
-                    </span>
+            {selectedCount > 1 && (
+              <div className="xp-window">
+                <div className="xp-titlebar">
+                  <div className="xp-titlebar-text">
+                    <Image 
+                      src={errors.length > 0 ? "/xp-icons/Activate Windows.ico" : "/xp-icons/Activate Windows.ico"} 
+                      alt="" 
+                      width={16} 
+                      height={16} 
+                      className="xp-titlebar-icon" 
+                    />
+                    <span>Compatibility Check</span>
                   </div>
-                  {errors.map((err, i) => (
-                    <p key={i} className="text-sm text-[#c62828] flex gap-2 pl-12">
-                      <span className="text-[#e52521]">&bull;</span>
-                      <span>{err}</span>
-                    </p>
+                  <div className="xp-window-controls">
+                    <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+                    <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+                    <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+                  </div>
+                </div>
+                <div className="xp-window-content p-3">
+                  {errors.length > 0 ? (
+                    <div className="xp-error-box">
+                      <span className="text-[18px]">&#9888;</span>
+                      <div>
+                        <strong className="text-[11px]">Incompatibility Detected!</strong>
+                        {errors.map((err, i) => (
+                          <p key={i} className="text-[11px] mt-1">&#8226; {err}</p>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="xp-success-box">
+                      <span className="text-[18px] text-[#008000]">&#10003;</span>
+                      <div>
+                        <strong className="text-[11px] text-[#008000]">All Systems Go!</strong>
+                        <p className="text-[11px] mt-1">All selected components are compatible.</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Components Window */}
+            <div className="xp-window">
+              <div className="xp-titlebar">
+                <div className="xp-titlebar-text">
+                  <Image src="/xp-icons/System Properties.ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+                  <span>Select Components ({selectedCount}/{GROUPS.length})</span>
+                </div>
+                <div className="xp-window-controls">
+                  <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+                  <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+                  <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+                </div>
+              </div>
+              <div className="xp-window-content p-3">
+                <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#919B9C]">
+                  <p className="text-[11px] text-[#808080]">
+                    Click on a component to select it. Click again to deselect.
+                  </p>
+                  {selectedCount > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleClearAll}
+                      className="xp-button text-[11px] px-2 py-0.5"
+                    >
+                      Clear All
+                    </button>
+                  )}
+                </div>
+                <div className="space-y-3">
+                  {GROUPS.map((group) => (
+                    <ComponentGroup
+                      key={group.key}
+                      group={group}
+                      selection={selection}
+                      onSelect={handleSelect}
+                      onClear={handleClear}
+                    />
                   ))}
                 </div>
-              ) : (
-                <div className="flex items-center gap-3 bg-white border-4 border-[#32cd32] px-4 py-3 rounded-2xl shadow-[0_4px_0_#228b22]">
-                  <div className="w-10 h-10 bg-[#e8f5e9] border-3 border-[#32cd32] rounded-full flex items-center justify-center">
-                    <CheckCircle2 className="w-5 h-5 text-[#32cd32]" />
-                  </div>
-                  <span className="font-bold text-[#32cd32]">
-                    All Systems Go - No Issues Detected!
-                  </span>
+              </div>
+            </div>
+
+            {/* FPS Display Window */}
+            <div className="xp-window">
+              <div className="xp-titlebar">
+                <div className="xp-titlebar-text">
+                  <Image src="/xp-icons/Game Controller.ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+                  <span>Performance Estimates - Cyberpunk 2077 Ultra</span>
                 </div>
-              ))}
-
-            {/* Components */}
-            <section>
-              <div className="flex items-center justify-between mb-4">
-                <Label icon={Sparkles} color="#1e90ff">Components</Label>
-                {selectedCount > 0 && (
-                  <button
-                    type="button"
-                    onClick={handleClearAll}
-                    className="text-sm text-white font-medium hover:text-[#ffd700] transition-colors px-3 py-1 bg-white/20 backdrop-blur-sm rounded-lg border-2 border-white/30"
-                  >
-                    Clear All
-                  </button>
-                )}
+                <div className="xp-window-controls">
+                  <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+                  <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+                  <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+                </div>
               </div>
-              <div className="space-y-4">
-                {GROUPS.map((group) => (
-                  <ComponentGroup
-                    key={group.key}
-                    group={group}
-                    selection={selection}
-                    onSelect={handleSelect}
-                    onClear={handleClear}
-                  />
-                ))}
+              <div className="xp-window-content p-3">
+                <FpsDisplay gpu={selectedGpu} cpu={selectedCpu} />
               </div>
-            </section>
-
-            {/* FPS Display */}
-            <section>
-              <div className="flex items-center justify-between mb-4">
-                <Label icon={Gamepad2} color="#e52521">Performance Stats</Label>
-                <span className="text-xs text-white font-medium bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-lg border-2 border-white/30">
-                  Cyberpunk 2077 - Ultra
-                </span>
-              </div>
-              <FpsDisplay gpu={selectedGpu} cpu={selectedCpu} />
-            </section>
+            </div>
           </div>
 
           {/* Sidebar */}
           <aside className="hidden lg:block">
-            <div className="sticky top-20 space-y-4">
+            <div className="sticky top-12 space-y-4">
               <SummarySidebar
                 selection={selection}
                 onClear={handleClearAll}
                 onCopy={handleCopy}
               />
               {mounted && (
-                <div className="bg-white border-4 border-[#c0c0c0] p-4 rounded-2xl shadow-[0_4px_0_#808080]">
-                  <SaveBuildButton
-                    selection={selection}
-                    selectedCount={selectedCount}
-                    hasErrors={errors.length > 0}
-                    isAuthed={session.status === "authenticated"}
-                    authStatus={session.status}
-                    initialName={loadedBuild?.name}
-                    initialBuildId={loadedBuild?.id}
-                  />
+                <div className="xp-window">
+                  <div className="xp-titlebar">
+                    <div className="xp-titlebar-text">
+                      <Image src="/xp-icons/Folder Closed.ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+                      <span>Save Configuration</span>
+                    </div>
+                    <div className="xp-window-controls">
+                      <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+                      <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+                      <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+                    </div>
+                  </div>
+                  <div className="xp-window-content p-3">
+                    <SaveBuildButton
+                      selection={selection}
+                      selectedCount={selectedCount}
+                      hasErrors={errors.length > 0}
+                      isAuthed={session.status === "authenticated"}
+                      authStatus={session.status}
+                      initialName={loadedBuild?.name}
+                      initialBuildId={loadedBuild?.id}
+                    />
+                  </div>
                 </div>
               )}
             </div>
@@ -235,10 +304,10 @@ export function PCBuilder() {
       </main>
 
       {/* Mobile Bottom Bar */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur border-t-4 border-[#c0c0c0] px-4 py-3 flex items-center justify-between z-50">
-        <div>
-          <p className="text-xs text-[#4a5568] font-medium">Total Cost</p>
-          <p className="text-xl font-bold text-[#1e90ff]">
+      <div className="lg:hidden fixed bottom-0 inset-x-0 xp-taskbar px-4 py-2 flex items-center justify-between z-50">
+        <div className="text-white">
+          <p className="text-[10px]">Total Cost</p>
+          <p className="text-[14px] font-bold">
             {total > 0 ? `${total.toLocaleString("fr-FR")} EUR` : "---"}
           </p>
         </div>
@@ -246,39 +315,40 @@ export function PCBuilder() {
           type="button"
           onClick={handleCopy}
           disabled={selectedCount === 0}
-          className="px-6 py-3 bg-gradient-to-b from-[#ffd700] to-[#ff8c00] border-4 border-[#b8860b] text-[#2d3436] font-bold rounded-xl shadow-[0_4px_0_#8b6914] disabled:opacity-40 disabled:cursor-not-allowed"
+          className="xp-button text-[11px] px-4 py-1 disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          Copy List
+          Copy Build List
         </button>
       </div>
 
-      {/* Footer - Grass strip */}
-      <footer className="grass-strip py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="text-lg font-bold">
-            <span className="text-white drop-shadow-[1px_1px_0_#006400]">Oh</span>
-            <span className="text-[#ffd700] drop-shadow-[1px_1px_0_#b8860b]">My</span>
-            <span className="text-[#87ceeb] drop-shadow-[1px_1px_0_#0066cc]">Build</span>
-          </span>
-          <p className="text-xs text-white/80">
-            FPS: TechPowerUp - Hardware Unboxed - Digital Foundry | Indicative prices
-          </p>
+      {/* Footer */}
+      <footer className="max-w-7xl mx-auto mt-6">
+        <div className="xp-window">
+          <div className="xp-titlebar">
+            <div className="xp-titlebar-text">
+              <Image src="/xp-icons/Earth (fixed).ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+              <span>About</span>
+            </div>
+            <div className="xp-window-controls">
+              <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+              <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+              <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+            </div>
+          </div>
+          <div className="xp-window-content p-3">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px]">
+              <div className="flex items-center gap-2">
+                <Image src="/xp-logo.png" alt="" width={20} height={20} />
+                <span className="font-bold text-[#003399]">OhMyBuild</span>
+                <span className="text-[#808080]">XP Edition</span>
+              </div>
+              <p className="text-[#808080]">
+                FPS: TechPowerUp - Hardware Unboxed - Digital Foundry | Indicative prices
+              </p>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
-  );
-}
-
-function Label({ children, icon: Icon, color }: { children: React.ReactNode; icon: React.ComponentType<{ className?: string }>; color: string }) {
-  return (
-    <h2 className="text-lg font-bold text-white drop-shadow-[1px_1px_0_#0066cc] mb-4 flex items-center gap-2">
-      <div 
-        className="w-8 h-8 rounded-lg flex items-center justify-center border-2"
-        style={{ backgroundColor: `${color}30`, borderColor: color }}
-      >
-        <Icon className="w-4 h-4" style={{ color }} />
-      </div>
-      {children}
-    </h2>
   );
 }

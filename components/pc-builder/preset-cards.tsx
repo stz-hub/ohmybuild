@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Star, Check } from "lucide-react";
+import Image from "next/image";
 import type { Preset, Selection } from "@/lib/pc-data";
 import { GROUPS, calculateTotal } from "@/lib/pc-data";
 
@@ -16,77 +16,63 @@ export function PresetCards({ presets, currentSelection, onApply }: Props) {
     return GROUPS.every(g => (currentSelection[g.key] ?? null) === (preset.selection[g.key] ?? null));
   }
 
-  const styles = [
-    { bg: "from-[#e8f5e9] to-[#c8e6c9]", border: "#32cd32", shadow: "#228b22", badge: "#32cd32" },
-    { bg: "from-[#e3f2fd] to-[#bbdefb]", border: "#1e90ff", shadow: "#0066cc", badge: "#1e90ff" },
-    { bg: "from-[#fff3e0] to-[#ffe0b2]", border: "#ff8c00", shadow: "#cc7000", badge: "#ff8c00" },
+  const icons = [
+    "/xp-icons/Laptop.ico",
+    "/xp-icons/My Computer.ico",
+    "/xp-icons/Network Computers.ico",
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
       {presets.map((preset, index) => {
         const active = isActive(preset);
-        const total  = calculateTotal(preset.selection);
-        const style  = styles[index % styles.length];
+        const total = calculateTotal(preset.selection);
 
         return (
           <button
             key={preset.name}
             onClick={() => onApply(preset)}
             className={cn(
-              "relative text-left p-5 border-4 rounded-2xl transition-all overflow-hidden",
+              "text-left p-3 border transition-all",
               active
-                ? `bg-gradient-to-b ${style.bg}`
-                : "bg-white hover:translate-y-[-2px]"
+                ? "bg-[#C1D2EE] border-[#316AC5]"
+                : "bg-white border-[#7F9DB9] hover:bg-[#E8EEF7] hover:border-[#316AC5]"
             )}
-            style={{ 
-              borderColor: active ? style.border : '#c0c0c0',
-              boxShadow: active 
-                ? `0 6px 0 ${style.shadow}` 
-                : '0 4px 0 #808080'
-            }}
           >
-            {/* Active checkmark */}
-            {active && (
-              <div 
-                className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center border-3"
-                style={{ backgroundColor: style.badge, borderColor: style.shadow }}
-              >
-                <Check className="w-5 h-5 text-white" />
+            <div className="flex items-start gap-3 mb-2">
+              <Image src={icons[index]} alt="" width={32} height={32} />
+              <div className="flex-1 min-w-0">
+                <div className="text-[9px] font-bold text-white bg-[#316AC5] px-2 py-0.5 inline-block mb-1">
+                  {preset.target}
+                </div>
+                <h3 className="text-[12px] font-bold text-[#003399] truncate">
+                  {preset.name}
+                </h3>
               </div>
-            )}
+              {active && (
+                <span className="text-[14px] text-[#008000] font-bold">&#10003;</span>
+              )}
+            </div>
 
-            {/* Target badge */}
-            <span 
-              className="inline-block px-3 py-1 text-[10px] font-bold rounded-full mb-3 text-white"
-              style={{ backgroundColor: style.badge }}
-            >
-              {preset.target}
-            </span>
+            <p className="text-[10px] text-[#808080] mb-2 line-clamp-2">{preset.description}</p>
 
-            <h3 className="text-lg font-bold text-[#2d3436] mb-1">
-              {preset.name}
-            </h3>
-            <p className="text-xs text-[#4a5568] mb-4">{preset.description}</p>
-
-            <div className="flex items-center justify-between">
-              <span 
-                className="text-xl font-bold"
-                style={{ color: style.badge }}
-              >
+            <div className="flex items-center justify-between border-t border-[#C0C0C0] pt-2">
+              <span className="text-[13px] font-bold text-[#003399]">
                 {total.toLocaleString("fr-FR")} EUR
               </span>
               <div className="flex gap-0.5">
                 {[1, 2, 3].map(n => (
-                  <Star 
+                  <span 
                     key={n} 
                     className={cn(
-                      "w-4 h-4",
+                      "text-[10px]",
                       n <= index + 1 
-                        ? "text-[#ffd700] fill-[#ffd700]" 
-                        : "text-[#c0c0c0]"
-                    )} 
-                  />
+                        ? "text-[#FFD700]" 
+                        : "text-[#C0C0C0]"
+                    )}
+                  >
+                    &#9733;
+                  </span>
                 ))}
               </div>
             </div>

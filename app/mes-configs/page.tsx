@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 
 import { auth } from "@/auth";
 import { buildService } from "@/lib/services/build.service";
 import { MyBuildsList } from "@/components/builds/my-builds-list";
 import type { Selection } from "@/lib/pc-data";
-import { Gamepad2 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "My Builds - OhMyBuild",
+  title: "My Configurations - OhMyBuild",
 };
 
 export const dynamic = "force-dynamic";
@@ -32,44 +33,75 @@ export default async function MyBuildsPage() {
   }));
 
   return (
-    <main className="min-h-screen bg-[#0d0d1a] pixel-grid-bg">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-        <header className="mb-10">
-          <div className="flex items-center gap-4 mb-2">
-            <div className="w-12 h-12 bg-[#1a1a2e] border-4 border-[#ff00aa] flex items-center justify-center shadow-[0_0_20px_rgba(255,0,170,0.4)]">
-              <Gamepad2 className="w-6 h-6 text-[#ff00aa]" />
+    <main className="min-h-screen p-4 md:p-6">
+      <div className="max-w-5xl mx-auto">
+        {/* Header Window */}
+        <div className="xp-window mb-4">
+          <div className="xp-titlebar">
+            <div className="xp-titlebar-text">
+              <Image src="/xp-icons/Folder Closed.ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+              <span>My Saved Configurations</span>
             </div>
-            <div>
-              <h1 className="font-[var(--font-pixel)] text-xl text-[#e8e8ff]">
-                MY BUILDS
-              </h1>
-              <p className="text-sm text-[#9090c0]">
-                {builds.length === 0
-                  ? "No saved builds yet."
-                  : `${builds.length} saved build${builds.length > 1 ? "s" : ""}.`}
-              </p>
+            <div className="xp-window-controls">
+              <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+              <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+              <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
             </div>
           </div>
-        </header>
-
-        <MyBuildsList initialBuilds={builds} />
-      </div>
-
-      {/* Footer */}
-      <footer className="border-t-4 border-[#2d2d5a] py-6 bg-[#1a1a2e] mt-10">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="font-[var(--font-pixel)] text-xs">
-            <span className="text-[#e8e8ff]">Oh</span>
-            <span className="text-[#00d4ff]">My</span>
-            <span className="text-[#ff00aa]">Build</span>
-          </span>
-          <div className="flex gap-2">
-            {["#00d4ff", "#ff00aa", "#ffdd00", "#00ff88"].map((c, i) => (
-              <div key={i} className="w-3 h-3" style={{ backgroundColor: c }} />
-            ))}
+          <div className="xp-window-content p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Image src="/xp-icons/My Profile Folder.ico" alt="" width={48} height={48} />
+                <div>
+                  <h1 className="text-[16px] font-bold text-[#003399]">
+                    My Configurations
+                  </h1>
+                  <p className="text-[11px] text-[#808080]">
+                    {builds.length === 0
+                      ? "No saved configurations yet."
+                      : `${builds.length} saved configuration${builds.length > 1 ? "s" : ""}.`}
+                  </p>
+                </div>
+              </div>
+              <Link href="/configurateur" className="xp-button text-[11px] px-3 py-1 flex items-center gap-1">
+                <span>+</span>
+                New Configuration
+              </Link>
+            </div>
           </div>
         </div>
-      </footer>
+
+        <MyBuildsList initialBuilds={builds} />
+
+        {/* Footer */}
+        <footer className="xp-window mt-6">
+          <div className="xp-titlebar">
+            <div className="xp-titlebar-text">
+              <Image src="/xp-icons/Earth (fixed).ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+              <span>About OhMyBuild</span>
+            </div>
+            <div className="xp-window-controls">
+              <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+              <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+              <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+            </div>
+          </div>
+          <div className="xp-window-content p-3">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px]">
+              <div className="flex items-center gap-2">
+                <Image src="/xp-logo.png" alt="" width={20} height={20} />
+                <span className="font-bold text-[#003399]">OhMyBuild</span>
+                <span className="text-[#808080]">XP Edition</span>
+              </div>
+              <div className="flex gap-1">
+                {["#0054E3", "#3C9A40", "#FF6600", "#FF0000"].map((c, i) => (
+                  <div key={i} className="w-3 h-3 border border-[#808080]" style={{ backgroundColor: c }} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
     </main>
   );
 }

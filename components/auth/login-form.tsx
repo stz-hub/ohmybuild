@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { Gamepad2, Star } from "lucide-react";
+import Image from "next/image";
 
 export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
   const router = useRouter();
@@ -34,98 +34,103 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      {/* Sky gradient background */}
-      <div className="fixed inset-0 bg-gradient-to-b from-[#1e90ff] via-[#87ceeb] to-[#32cd32] -z-10" />
-      <div className="fixed inset-0 clouds-bg -z-10" />
-      
       <div className="w-full max-w-md">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-gradient-to-br from-[#ffd700] to-[#ff8c00] border-4 border-[#b8860b] rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_6px_0_#8b6914]">
-            <Gamepad2 className="w-10 h-10 text-white drop-shadow-md" />
-          </div>
-          <h1 className="text-3xl font-bold text-white drop-shadow-[2px_2px_0_#0066cc] mb-2">
-            Welcome Back!
-          </h1>
-          <p className="text-white/80 drop-shadow-md">Enter your credentials to continue</p>
-        </div>
-
-        {/* Form */}
-        <form onSubmit={onSubmit} className="bg-white border-4 border-[#c0c0c0] rounded-2xl p-6 space-y-5 shadow-[0_6px_0_#808080]" noValidate>
-          <Field
-            label="Email"
-            type="email"
-            value={email}
-            onChange={setEmail}
-            autoComplete="email"
-            required
-          />
-          <Field
-            label="Password"
-            type="password"
-            value={password}
-            onChange={setPassword}
-            autoComplete="current-password"
-            required
-          />
-
-          {error && (
-            <div className="px-4 py-3 bg-[#fce4ec] border-4 border-[#e52521] rounded-xl text-sm text-[#e52521] font-medium">
-              {error}
+        {/* Login Window */}
+        <div className="xp-window">
+          <div className="xp-titlebar">
+            <div className="xp-titlebar-text">
+              <Image src="/xp-icons/User Accounts.ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+              <span>Log On to OhMyBuild</span>
             </div>
-          )}
+            <div className="xp-window-controls">
+              <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+              <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+              <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+            </div>
+          </div>
+          <div className="xp-window-content p-6">
+            {/* Header */}
+            <div className="flex items-center gap-4 mb-6">
+              <Image 
+                src="/xp-icons/User 1.ico" 
+                alt="User" 
+                width={48} 
+                height={48}
+              />
+              <div>
+                <h1 className="text-[16px] font-bold text-[#003399]">
+                  Welcome Back!
+                </h1>
+                <p className="text-[11px] text-[#808080]">Enter your credentials to continue</p>
+              </div>
+            </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full px-4 py-3 bg-gradient-to-b from-[#32cd32] to-[#228b22] border-4 border-[#006400] text-white font-bold rounded-xl shadow-[0_4px_0_#004d00] disabled:opacity-50 hover:translate-y-[-2px] hover:shadow-[0_6px_0_#004d00] active:translate-y-[1px] active:shadow-[0_2px_0_#004d00] transition-all"
-          >
-            {loading ? "Loading..." : "Login"}
-          </button>
+            {/* Form */}
+            <form onSubmit={onSubmit} className="space-y-4" noValidate>
+              <div>
+                <label htmlFor="email" className="block text-[11px] font-bold text-[#000] mb-1">
+                  Email Address:
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                  required
+                  className="xp-input w-full"
+                />
+              </div>
 
-          <p className="text-sm text-[#4a5568] text-center pt-2">
-            New player?{" "}
-            <Link href="/register" className="text-[#1e90ff] font-bold hover:underline flex items-center gap-1 justify-center mt-1">
-              <Star className="w-4 h-4 text-[#ffd700] fill-[#ffd700]" />
-              Create Account
-            </Link>
-          </p>
-        </form>
+              <div>
+                <label htmlFor="password" className="block text-[11px] font-bold text-[#000] mb-1">
+                  Password:
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
+                  required
+                  className="xp-input w-full"
+                />
+              </div>
+
+              {error && (
+                <div className="xp-error-box">
+                  <span className="text-[14px]">&#9888;</span>
+                  <span className="text-[11px]">{error}</span>
+                </div>
+              )}
+
+              <div className="flex items-center justify-end gap-2 pt-4 border-t border-[#919B9C]">
+                <Link href="/" className="xp-button text-[11px] px-4 py-1">
+                  Cancel
+                </Link>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="xp-button xp-button-primary text-[11px] px-4 py-1 disabled:opacity-50"
+                >
+                  {loading ? "Please wait..." : "Log On"}
+                </button>
+              </div>
+            </form>
+
+            {/* Info */}
+            <div className="xp-info-box mt-4">
+              <Image src="/xp-icons/User Accounts.ico" alt="" width={24} height={24} />
+              <div className="text-[10px]">
+                <span>New user? </span>
+                <Link href="/register" className="text-[#0066CC] hover:underline">
+                  Click here to create a new account
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  );
-}
-
-function Field({
-  label,
-  type,
-  value,
-  onChange,
-  autoComplete,
-  required,
-}: {
-  label: string;
-  type: string;
-  value: string;
-  onChange: (v: string) => void;
-  autoComplete: string;
-  required?: boolean;
-}) {
-  const id = label.toLowerCase().replace(/\s+/g, "-");
-  return (
-    <div>
-      <label htmlFor={id} className="block font-semibold text-[#2d3436] mb-2">
-        {label}
-      </label>
-      <input
-        id={id}
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        autoComplete={autoComplete}
-        required={required}
-        className="w-full px-4 py-3 bg-[#f8f8f8] border-4 border-[#c0c0c0] rounded-xl text-[#2d3436] text-sm focus:outline-none focus:border-[#1e90ff] focus:shadow-[0_0_0_4px_rgba(30,144,255,0.2)] transition-all"
-      />
     </div>
   );
 }

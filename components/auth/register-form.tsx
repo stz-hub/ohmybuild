@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { Gamepad2 } from "lucide-react";
+import Image from "next/image";
 
 type FieldError = { field?: string; message: string };
 
@@ -66,128 +66,135 @@ export function RegisterForm() {
   const generalErrors = errors.filter((e) => !e.field);
 
   return (
-    <div className="min-h-screen bg-[#0d0d1a] pixel-grid-bg flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-[#1a1a2e] border-4 border-[#ff00aa] flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(255,0,170,0.5)]">
-            <Gamepad2 className="w-8 h-8 text-[#ff00aa]" />
-          </div>
-          <h1 className="font-[var(--font-pixel)] text-xl text-[#e8e8ff] mb-2">
-            NEW PLAYER
-          </h1>
-          <p className="text-sm text-[#9090c0]">Create your account to save builds</p>
-        </div>
-
-        {/* Form */}
-        <form onSubmit={onSubmit} className="bg-[#1a1a2e] border-4 border-[#2d2d5a] p-6 space-y-5" noValidate>
-          <Field
-            label="NAME"
-            type="text"
-            value={name}
-            onChange={setName}
-            autoComplete="name"
-            error={errorFor("name")}
-            required
-          />
-          <Field
-            label="EMAIL"
-            type="email"
-            value={email}
-            onChange={setEmail}
-            autoComplete="email"
-            error={errorFor("email")}
-            required
-          />
-          <Field
-            label="PASSWORD"
-            type="password"
-            value={password}
-            onChange={setPassword}
-            autoComplete="new-password"
-            error={errorFor("password")}
-            hint="Min 12 chars with uppercase, numbers, and special chars."
-            required
-          />
-
-          {generalErrors.length > 0 && (
-            <div className="px-4 py-3 bg-[#ff3366]/10 border-4 border-[#ff3366] text-sm text-[#ff3366] space-y-1">
-              {generalErrors.map((e, i) => (
-                <p key={i}>{e.message}</p>
-              ))}
+        {/* Registration Window */}
+        <div className="xp-window">
+          <div className="xp-titlebar">
+            <div className="xp-titlebar-text">
+              <Image src="/xp-icons/User Accounts.ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+              <span>Create New User Account</span>
             </div>
-          )}
+            <div className="xp-window-controls">
+              <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+              <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+              <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+            </div>
+          </div>
+          <div className="xp-window-content p-6">
+            {/* Header */}
+            <div className="flex items-center gap-4 mb-6">
+              <Image 
+                src="/xp-icons/User Personalization.ico" 
+                alt="New User" 
+                width={48} 
+                height={48}
+              />
+              <div>
+                <h1 className="text-[16px] font-bold text-[#003399]">
+                  New User Account
+                </h1>
+                <p className="text-[11px] text-[#808080]">Create your account to save and share builds</p>
+              </div>
+            </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full px-4 py-3 bg-[#ff00aa] border-4 border-[#ff00aa] text-[#e8e8ff] font-bold disabled:opacity-50 hover:bg-[#ff33bb] hover:shadow-[0_0_20px_rgba(255,0,170,0.4)] transition-all"
-          >
-            {loading ? "CREATING..." : "CREATE ACCOUNT"}
-          </button>
+            {/* Form */}
+            <form onSubmit={onSubmit} className="space-y-4" noValidate>
+              <div>
+                <label htmlFor="name" className="block text-[11px] font-bold text-[#000] mb-1">
+                  Display Name:
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  autoComplete="name"
+                  required
+                  className="xp-input w-full"
+                />
+                {errorFor("name") && (
+                  <p className="text-[10px] text-[#FF0000] mt-1">{errorFor("name")}</p>
+                )}
+              </div>
 
-          <p className="text-sm text-[#9090c0] text-center pt-2">
-            Already have an account?{" "}
-            <Link href="/login" className="text-[#00d4ff] font-bold hover:underline">
-              LOGIN
-            </Link>
-          </p>
-        </form>
+              <div>
+                <label htmlFor="email" className="block text-[11px] font-bold text-[#000] mb-1">
+                  Email Address:
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                  required
+                  className="xp-input w-full"
+                />
+                {errorFor("email") && (
+                  <p className="text-[10px] text-[#FF0000] mt-1">{errorFor("email")}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="password" className="block text-[11px] font-bold text-[#000] mb-1">
+                  Password:
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="new-password"
+                  required
+                  className="xp-input w-full"
+                />
+                <p className="text-[10px] text-[#808080] mt-1">
+                  Min 12 chars with uppercase, numbers, and special chars.
+                </p>
+                {errorFor("password") && (
+                  <p className="text-[10px] text-[#FF0000] mt-1">{errorFor("password")}</p>
+                )}
+              </div>
+
+              {generalErrors.length > 0 && (
+                <div className="xp-error-box">
+                  <span className="text-[14px]">&#9888;</span>
+                  <div className="text-[11px]">
+                    {generalErrors.map((e, i) => (
+                      <p key={i}>{e.message}</p>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex items-center justify-end gap-2 pt-4 border-t border-[#919B9C]">
+                <Link href="/" className="xp-button text-[11px] px-4 py-1">
+                  Cancel
+                </Link>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="xp-button xp-button-primary text-[11px] px-4 py-1 disabled:opacity-50"
+                >
+                  {loading ? "Please wait..." : "Create Account"}
+                </button>
+              </div>
+            </form>
+
+            {/* Info */}
+            <div className="xp-info-box mt-4">
+              <Image src="/xp-icons/User 1.ico" alt="" width={24} height={24} />
+              <div className="text-[10px]">
+                <span>Already have an account? </span>
+                <Link href="/login" className="text-[#0066CC] hover:underline">
+                  Click here to log on
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  );
-}
-
-function Field({
-  label,
-  type,
-  value,
-  onChange,
-  autoComplete,
-  error,
-  hint,
-  required,
-}: {
-  label: string;
-  type: string;
-  value: string;
-  onChange: (v: string) => void;
-  autoComplete: string;
-  error?: string;
-  hint?: string;
-  required?: boolean;
-}) {
-  const id = label.toLowerCase().replace(/\s+/g, "-");
-  return (
-    <div>
-      <label htmlFor={id} className="block font-[var(--font-pixel)] text-xs text-[#9090c0] mb-2">
-        {label}
-      </label>
-      <input
-        id={id}
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        autoComplete={autoComplete}
-        required={required}
-        aria-invalid={!!error}
-        aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}
-        className={`w-full px-4 py-3 bg-[#0d0d1a] border-4 text-[#e8e8ff] text-sm focus:outline-none transition-all ${
-          error 
-            ? "border-[#ff3366] shadow-[0_0_15px_rgba(255,51,102,0.3)]" 
-            : "border-[#2d2d5a] focus:border-[#ff00aa] focus:shadow-[0_0_15px_rgba(255,0,170,0.3)]"
-        }`}
-      />
-      {hint && !error && (
-        <p id={`${id}-hint`} className="text-[10px] text-[#6060a0] mt-2">
-          {hint}
-        </p>
-      )}
-      {error && (
-        <p id={`${id}-error`} className="text-[10px] text-[#ff3366] mt-2">
-          {error}
-        </p>
-      )}
     </div>
   );
 }

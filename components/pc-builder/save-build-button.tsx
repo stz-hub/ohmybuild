@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bookmark, Loader2 } from "lucide-react";
+import Image from "next/image";
 
 import type { Selection } from "@/lib/pc-data";
 
@@ -37,23 +37,30 @@ export function SaveBuildButton({
     return (
       <button
         disabled
-        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#0d0d1a] border-4 border-[#2d2d5a] text-[#6060a0] font-bold"
+        className="xp-button w-full text-[11px] py-1.5 opacity-50"
       >
-        <Loader2 className="w-4 h-4 animate-spin" />
-        LOADING...
+        Loading...
       </button>
     );
   }
 
   if (!isAuthed) {
     return (
-      <Link
-        href={`/login?callbackUrl=${encodeURIComponent("/configurateur")}`}
-        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#0d0d1a] border-4 border-[#ffdd00] text-[#ffdd00] font-bold hover:bg-[#ffdd00] hover:text-[#0d0d1a] hover:shadow-[0_0_20px_rgba(255,221,0,0.4)] transition-all"
-      >
-        <Bookmark className="w-4 h-4" />
-        LOGIN TO SAVE
-      </Link>
+      <div className="space-y-2">
+        <div className="xp-info-box">
+          <Image src="/xp-icons/User Accounts.ico" alt="" width={24} height={24} />
+          <div className="text-[10px]">
+            <strong>Log in required</strong>
+            <p>You must be logged in to save your configuration.</p>
+          </div>
+        </div>
+        <Link
+          href={`/login?callbackUrl=${encodeURIComponent("/configurateur")}`}
+          className="xp-button xp-button-primary w-full text-[11px] py-1.5 text-center block"
+        >
+          Log In to Save
+        </Link>
+      </div>
     );
   }
 
@@ -85,39 +92,42 @@ export function SaveBuildButton({
   if (open) {
     return (
       <form onSubmit={handleSave} className="space-y-3">
-        <label htmlFor="build-name" className="block font-[var(--font-pixel)] text-xs text-[#9090c0]">
-          BUILD NAME
-        </label>
-        <input
-          id="build-name"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="e.g. My 1440p Build"
-          maxLength={80}
-          required
-          autoFocus
-          className="w-full px-4 py-3 bg-[#0d0d1a] border-4 border-[#2d2d5a] text-[#e8e8ff] text-sm focus:outline-none focus:border-[#00ff88] focus:shadow-[0_0_15px_rgba(0,255,136,0.3)] transition-all"
-        />
+        <div>
+          <label htmlFor="build-name" className="block text-[11px] font-bold text-[#000] mb-1">
+            Configuration Name:
+          </label>
+          <input
+            id="build-name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="e.g. My 1440p Build"
+            maxLength={80}
+            required
+            autoFocus
+            className="xp-input w-full"
+          />
+        </div>
         {error && (
-          <p className="text-xs text-[#ff3366] px-2">
-            {error}
-          </p>
+          <div className="xp-error-box">
+            <span className="text-[12px]">&#9888;</span>
+            <span className="text-[10px]">{error}</span>
+          </div>
         )}
         <div className="flex gap-2">
           <button
             type="submit"
             disabled={loading || !name.trim() || selectedCount === 0}
-            className="flex-1 px-4 py-3 bg-[#00ff88] border-4 border-[#00ff88] text-[#0d0d1a] font-bold disabled:opacity-50 hover:shadow-[0_0_20px_rgba(0,255,136,0.4)] transition-all"
+            className="xp-button xp-button-primary flex-1 text-[11px] py-1 disabled:opacity-50"
           >
-            {loading ? "SAVING..." : initialBuildId ? "UPDATE" : "SAVE"}
+            {loading ? "Saving..." : initialBuildId ? "Update" : "Save"}
           </button>
           <button
             type="button"
             onClick={() => setOpen(false)}
-            className="px-4 py-3 bg-[#0d0d1a] border-4 border-[#2d2d5a] text-[#9090c0] hover:border-[#ff3366] hover:text-[#ff3366] transition-all"
+            className="xp-button text-[11px] py-1 px-3"
           >
-            CANCEL
+            Cancel
           </button>
         </div>
       </form>
@@ -125,20 +135,35 @@ export function SaveBuildButton({
   }
 
   return (
-    <button
-      onClick={() => setOpen(true)}
-      disabled={selectedCount === 0 || hasErrors}
-      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#00ff88] border-4 border-[#00ff88] text-[#0d0d1a] font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-[0_0_20px_rgba(0,255,136,0.4)] transition-all"
-      title={
-        selectedCount === 0
-          ? "Select at least one component"
-          : hasErrors
-            ? "Fix compatibility issues first"
-            : undefined
-      }
-    >
-      <Bookmark className="w-4 h-4" />
-      {savedAt ? "SAVED!" : initialBuildId ? "UPDATE BUILD" : "SAVE BUILD"}
-    </button>
+    <div className="space-y-2">
+      {savedAt && (
+        <div className="xp-success-box">
+          <span className="text-[12px] text-[#008000]">&#10003;</span>
+          <span className="text-[10px]">Configuration saved successfully!</span>
+        </div>
+      )}
+      <button
+        onClick={() => setOpen(true)}
+        disabled={selectedCount === 0 || hasErrors}
+        className="xp-button xp-button-primary w-full text-[11px] py-1.5 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+        title={
+          selectedCount === 0
+            ? "Select at least one component"
+            : hasErrors
+              ? "Fix compatibility issues first"
+              : undefined
+        }
+      >
+        <span>&#128190;</span>
+        {savedAt ? "Saved!" : initialBuildId ? "Update Configuration" : "Save Configuration"}
+      </button>
+      {(selectedCount === 0 || hasErrors) && (
+        <p className="text-[9px] text-[#808080] text-center">
+          {selectedCount === 0 
+            ? "Select at least one component to save" 
+            : "Fix compatibility issues before saving"}
+        </p>
+      )}
+    </div>
   );
 }

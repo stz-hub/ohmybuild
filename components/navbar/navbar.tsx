@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { LogOut, User, Gamepad2, Star } from "lucide-react";
+import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/", label: "Home" },
-  { href: "/configurateur", label: "Build PC" },
+  { href: "/", label: "Home", icon: "/xp-icons/My Computer.ico" },
+  { href: "/configurateur", label: "PC Builder", icon: "/xp-icons/System Properties.ico" },
 ];
 
 export function Navbar() {
@@ -18,88 +18,136 @@ export function Navbar() {
   const isAuthed = status === "authenticated";
 
   return (
-    <header className="sticky top-0 z-50 bg-gradient-to-r from-[#1e90ff] via-[#4da6ff] to-[#1e90ff] border-b-4 border-[#0066cc] shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-12 h-12 bg-gradient-to-br from-[#ffd700] to-[#ff8c00] border-4 border-[#b8860b] rounded-full flex items-center justify-center shadow-[0_4px_0_#8b6914] group-hover:scale-105 transition-transform">
-            <Gamepad2 className="w-6 h-6 text-white drop-shadow-md" />
-          </div>
-          <span className="text-xl font-bold tracking-tight">
-            <span className="text-white drop-shadow-[2px_2px_0_#0066cc]">Oh</span>
-            <span className="text-[#ffd700] drop-shadow-[2px_2px_0_#b8860b]">My</span>
-            <span className="text-[#32cd32] drop-shadow-[2px_2px_0_#006400]">Build</span>
-          </span>
+    <header className="xp-taskbar sticky top-0 z-50 shadow-lg">
+      <div className="max-w-7xl mx-auto px-2 flex items-center justify-between h-[30px]">
+        {/* Start Button / Logo */}
+        <Link href="/" className="xp-start-button flex items-center gap-2 h-[26px] -ml-2">
+          <Image 
+            src="/xp-logo.png" 
+            alt="Windows XP Logo" 
+            width={20} 
+            height={20}
+            className="drop-shadow-md"
+          />
+          <span>OhMyBuild</span>
         </Link>
 
-        {/* Navigation */}
-        <nav className="flex items-center gap-2">
-          {links.map(({ href, label }) => (
-            <NavLink key={href} href={href} active={pathname === href} label={label} />
+        {/* Navigation - Quick Launch */}
+        <nav className="flex items-center gap-1 ml-4">
+          {links.map(({ href, label, icon }) => (
+            <TaskbarButton 
+              key={href} 
+              href={href} 
+              active={pathname === href} 
+              label={label} 
+              icon={icon}
+            />
           ))}
           {isAuthed && (
-            <NavLink
+            <TaskbarButton
               href="/mes-configs"
               active={pathname === "/mes-configs"}
               label="My Builds"
+              icon="/xp-icons/Folder Closed.ico"
             />
           )}
         </nav>
 
-        {/* Auth Section */}
-        <div className="flex items-center gap-2">
+        {/* System Tray */}
+        <div className="flex items-center gap-2 ml-auto">
           {status === "loading" ? (
-            <span className="text-sm text-white/80 animate-pulse">Loading...</span>
+            <span className="text-[11px] text-white/80 animate-pulse px-2">Loading...</span>
           ) : isAuthed ? (
             <>
-              <span className="hidden sm:inline-flex items-center gap-2 text-sm text-white bg-white/20 backdrop-blur-sm border-2 border-white/30 px-3 py-1.5 rounded-full">
-                <User className="w-4 h-4" />
+              <div className="hidden sm:flex items-center gap-1 text-[11px] text-white bg-[#1D4EAC] px-2 py-0.5 rounded-sm border border-[#0D3E9C]">
+                <Image 
+                  src="/xp-icons/User 1.ico" 
+                  alt="User" 
+                  width={16} 
+                  height={16}
+                />
                 <span className="truncate max-w-24">{session?.user?.name ?? session?.user?.email}</span>
-              </span>
+              </div>
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
-                aria-label="Se deconnecter"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-b from-[#ff6b6b] to-[#e52521] border-4 border-[#a01a17] text-white text-sm font-bold rounded-xl shadow-[0_4px_0_#7a1410] hover:translate-y-[-2px] hover:shadow-[0_6px_0_#7a1410] active:translate-y-[2px] active:shadow-[0_2px_0_#7a1410] transition-all"
+                aria-label="Sign Out"
+                className="xp-button text-[11px] flex items-center gap-1 py-0.5 px-2"
               >
-                <LogOut className="w-4 h-4" />
-                <span className="hidden sm:inline">Logout</span>
+                <span className="text-red-600">X</span>
+                <span className="hidden sm:inline">Sign Out</span>
               </button>
             </>
           ) : (
             <>
               <Link
                 href="/login"
-                className="px-4 py-2 bg-white/20 backdrop-blur-sm border-2 border-white/40 text-white text-sm font-semibold rounded-xl hover:bg-white/30 transition-all"
+                className="xp-button text-[11px] py-0.5 px-2"
               >
-                Login
+                Log In
               </Link>
               <Link
                 href="/register"
-                className="px-4 py-2 bg-gradient-to-b from-[#ffd700] to-[#ff8c00] border-4 border-[#b8860b] text-[#2d3436] text-sm font-bold rounded-xl shadow-[0_4px_0_#8b6914] hover:translate-y-[-2px] hover:shadow-[0_6px_0_#8b6914] active:translate-y-[2px] active:shadow-[0_2px_0_#8b6914] transition-all flex items-center gap-1"
+                className="xp-button xp-button-primary text-[11px] py-0.5 px-2 flex items-center gap-1"
               >
-                <Star className="w-4 h-4" />
-                Join!
+                <Image 
+                  src="/xp-icons/User Accounts.ico" 
+                  alt="" 
+                  width={14} 
+                  height={14}
+                />
+                Register
               </Link>
             </>
           )}
+          
+          {/* Clock */}
+          <div className="bg-[#1D4EAC] border border-[#0D3E9C] px-2 py-0.5 text-[11px] text-white font-normal rounded-sm ml-2">
+            <Clock />
+          </div>
         </div>
       </div>
     </header>
   );
 }
 
-function NavLink({ href, active, label }: { href: string; active: boolean; label: string }) {
+function TaskbarButton({ 
+  href, 
+  active, 
+  label, 
+  icon 
+}: { 
+  href: string; 
+  active: boolean; 
+  label: string;
+  icon: string;
+}) {
   return (
     <Link
       href={href}
       className={cn(
-        "px-4 py-2 text-sm font-semibold transition-all rounded-xl border-4",
+        "flex items-center gap-1 px-2 py-0.5 text-[11px] font-normal text-white rounded-sm transition-all",
         active
-          ? "bg-white text-[#1e90ff] border-[#c0c0c0] shadow-[0_4px_0_#808080]"
-          : "bg-white/20 backdrop-blur-sm text-white border-white/30 hover:bg-white/30",
+          ? "bg-[#1D4EAC] border border-[#0D3E9C] shadow-inner"
+          : "hover:bg-[#3366CC] border border-transparent"
       )}
     >
-      {label}
+      <Image 
+        src={icon} 
+        alt="" 
+        width={16} 
+        height={16}
+        className="drop-shadow-sm"
+      />
+      <span className="hidden md:inline">{label}</span>
     </Link>
   );
+}
+
+function Clock() {
+  // Simple clock that updates via client
+  const time = new Date().toLocaleTimeString('fr-FR', { 
+    hour: '2-digit', 
+    minute: '2-digit' 
+  });
+  return <span suppressHydrationWarning>{time}</span>;
 }

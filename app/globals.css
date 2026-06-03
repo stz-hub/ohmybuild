@@ -1,217 +1,504 @@
 @import "tailwindcss";
 
 @theme {
-  /* N64/Mario Kart Era Color Palette - Bright & Cheerful */
-  --color-sky-blue: #4da6ff;
-  --color-sky-light: #87ceeb;
-  --color-sky-gradient-top: #1e90ff;
-  --color-sky-gradient-bottom: #87ceeb;
+  /* Windows XP Luna Blue Theme */
+  --color-xp-blue-dark: #003399;
+  --color-xp-blue: #0054E3;
+  --color-xp-blue-light: #2470E8;
+  --color-xp-taskbar: #245EDC;
+  --color-xp-start-green: #3C9A40;
+  --color-xp-start-green-dark: #1E5E1F;
   
-  /* Grass greens - like Yoshi's Island */
-  --color-grass-bright: #32cd32;
-  --color-grass-medium: #228b22;
-  --color-grass-dark: #006400;
+  /* Window chrome */
+  --color-xp-title-blue: #0054E3;
+  --color-xp-title-gradient-start: #0058E6;
+  --color-xp-title-gradient-end: #3C81F3;
+  --color-xp-inactive-title: #7A96DF;
   
-  /* Warm sunny colors */
-  --color-sunny-yellow: #ffd700;
-  --color-sunny-orange: #ff8c00;
-  --color-cream: #fffacd;
+  /* Window body */
+  --color-xp-window-bg: #ECE9D8;
+  --color-xp-window-border: #0054E3;
+  --color-xp-content-bg: #FFFFFF;
   
-  /* Character colors - Mario/Toad/Yoshi inspired */
-  --color-mario-red: #e52521;
-  --color-toad-spots: #e52521;
-  --color-yoshi-green: #00a550;
-  --color-coin-gold: #ffc107;
+  /* Button colors */
+  --color-xp-button-face: #ECE9D8;
+  --color-xp-button-highlight: #FFFFFF;
+  --color-xp-button-shadow: #ACA899;
+  --color-xp-button-dark-shadow: #716F64;
   
-  /* UI Colors */
-  --color-white: #ffffff;
-  --color-off-white: #f8f8f0;
-  --color-light-cream: #fff8dc;
-  --color-text-dark: #2d3436;
-  --color-text-medium: #4a5568;
-  --color-border-light: #c0c0c0;
-  --color-border-dark: #808080;
+  /* Text colors */
+  --color-xp-text: #000000;
+  --color-xp-text-disabled: #808080;
+  --color-xp-link: #0066CC;
+  --color-xp-title-text: #FFFFFF;
   
-  /* Shadows for 3D depth */
-  --color-shadow: #00000033;
-  --color-shadow-dark: #00000066;
+  /* Accent colors */
+  --color-xp-selection: #316AC5;
+  --color-xp-selection-light: #C1D2EE;
+  --color-xp-green: #008000;
+  --color-xp-red: #FF0000;
+  --color-xp-orange: #FF6600;
   
-  /* Font families */
-  --font-sans: "Fredoka", "Comic Sans MS", cursive, sans-serif;
-  --font-display: "Fredoka", "Comic Sans MS", cursive, sans-serif;
+  /* Font families - Tahoma was the XP system font */
+  --font-sans: "Tahoma", "Segoe UI", "Arial", sans-serif;
+  --font-display: "Trebuchet MS", "Tahoma", "Arial", sans-serif;
 }
 
 @layer base {
   * { box-sizing: border-box; margin: 0; padding: 0; }
   
   html {
-    background: linear-gradient(180deg, #1e90ff 0%, #87ceeb 50%, #32cd32 100%);
-    background-attachment: fixed;
+    background: url('/xp-background.jpg') no-repeat center center fixed;
+    background-size: cover;
     min-height: 100vh;
   }
 
   body {
     font-family: var(--font-sans);
-    font-size: 16px;
-    line-height: 1.6;
-    color: var(--color-text-dark);
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--color-xp-text);
   }
 
-  /* Cheerful scrollbar */
-  ::-webkit-scrollbar { width: 12px; height: 12px; }
-  ::-webkit-scrollbar-track { background: #87ceeb; }
+  /* Windows XP Scrollbar */
+  ::-webkit-scrollbar { width: 17px; height: 17px; }
+  ::-webkit-scrollbar-track { 
+    background: #D4D0C8;
+    border: 1px solid #808080;
+  }
   ::-webkit-scrollbar-thumb { 
-    background: linear-gradient(180deg, #32cd32 0%, #228b22 100%);
-    border: 2px solid #87ceeb;
-    border-radius: 6px;
+    background: linear-gradient(90deg, #ECE9D8 0%, #D4D0C8 50%, #B0ADA5 100%);
+    border: 1px solid #808080;
   }
   ::-webkit-scrollbar-thumb:hover { 
-    background: linear-gradient(180deg, #00a550 0%, #006400 100%);
+    background: linear-gradient(90deg, #F0EDE4 0%, #E4E0D8 50%, #C0BDB5 100%);
+  }
+  ::-webkit-scrollbar-button {
+    background: linear-gradient(180deg, #ECE9D8 0%, #D4D0C8 100%);
+    border: 1px solid #808080;
+    width: 17px;
+    height: 17px;
   }
 
-  /* Rounded cartoon-style cards */
-  .game-card {
-    background: linear-gradient(180deg, #ffffff 0%, #f0f0e8 100%);
-    border: 4px solid var(--color-border-dark);
-    border-radius: 16px;
+  /* Windows XP Classic Window */
+  .xp-window {
+    background: var(--color-xp-window-bg);
+    border: 1px solid #0054E3;
+    border-radius: 8px 8px 0 0;
     box-shadow: 
-      4px 4px 0px var(--color-border-dark),
-      inset 0 2px 0 rgba(255,255,255,0.8);
+      2px 2px 10px rgba(0, 0, 0, 0.3),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    overflow: hidden;
   }
 
-  .game-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-      6px 6px 0px var(--color-border-dark),
-      inset 0 2px 0 rgba(255,255,255,0.8);
+  .xp-window-content {
+    background: var(--color-xp-window-bg);
+    padding: 8px;
   }
 
-  /* Cartoon buttons */
-  .game-btn {
-    background: linear-gradient(180deg, #ffd700 0%, #ff8c00 100%);
-    border: 4px solid #b8860b;
-    border-radius: 12px;
-    color: #2d3436;
-    font-weight: bold;
-    box-shadow: 
-      0 4px 0 #8b6914,
-      inset 0 2px 0 rgba(255,255,255,0.4);
-    transition: all 0.1s;
-  }
-
-  .game-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-      0 6px 0 #8b6914,
-      inset 0 2px 0 rgba(255,255,255,0.4);
-  }
-
-  .game-btn:active {
-    transform: translateY(2px);
-    box-shadow: 
-      0 2px 0 #8b6914,
-      inset 0 2px 0 rgba(255,255,255,0.4);
-  }
-
-  /* Green button variant */
-  .game-btn-green {
-    background: linear-gradient(180deg, #32cd32 0%, #228b22 100%);
-    border-color: #006400;
-    color: white;
-    box-shadow: 
-      0 4px 0 #004d00,
-      inset 0 2px 0 rgba(255,255,255,0.3);
-  }
-
-  .game-btn-green:hover {
-    box-shadow: 
-      0 6px 0 #004d00,
-      inset 0 2px 0 rgba(255,255,255,0.3);
-  }
-
-  /* Red button variant */
-  .game-btn-red {
-    background: linear-gradient(180deg, #ff6b6b 0%, #e52521 100%);
-    border-color: #a01a17;
-    color: white;
-    box-shadow: 
-      0 4px 0 #7a1410,
-      inset 0 2px 0 rgba(255,255,255,0.3);
-  }
-
-  /* Blue button variant */
-  .game-btn-blue {
-    background: linear-gradient(180deg, #4da6ff 0%, #1e90ff 100%);
-    border-color: #0066cc;
-    color: white;
-    box-shadow: 
-      0 4px 0 #004d99,
-      inset 0 2px 0 rgba(255,255,255,0.3);
-  }
-
-  /* Speech bubble style */
-  .speech-bubble {
-    background: white;
-    border: 3px solid #2d3436;
-    border-radius: 20px;
-    position: relative;
-  }
-
-  .speech-bubble::after {
-    content: "";
-    position: absolute;
-    bottom: -12px;
-    left: 24px;
-    width: 0;
-    height: 0;
-    border-left: 12px solid transparent;
-    border-right: 12px solid transparent;
-    border-top: 12px solid white;
-  }
-
-  /* Clouds background pattern */
-  .clouds-bg {
-    background-image: 
-      radial-gradient(ellipse 100px 60px at 10% 20%, rgba(255,255,255,0.6) 0%, transparent 70%),
-      radial-gradient(ellipse 80px 50px at 85% 15%, rgba(255,255,255,0.5) 0%, transparent 70%),
-      radial-gradient(ellipse 120px 70px at 50% 30%, rgba(255,255,255,0.4) 0%, transparent 70%),
-      radial-gradient(ellipse 60px 40px at 30% 60%, rgba(255,255,255,0.3) 0%, transparent 70%),
-      radial-gradient(ellipse 90px 55px at 70% 70%, rgba(255,255,255,0.35) 0%, transparent 70%);
-  }
-
-  /* Grass strip at bottom */
-  .grass-strip {
+  /* Windows XP Title Bar */
+  .xp-titlebar {
     background: linear-gradient(180deg, 
-      #32cd32 0%, 
-      #228b22 40%, 
-      #006400 100%
+      #0058E6 0%, 
+      #3C81F3 3%, 
+      #2E72EF 6%, 
+      #0054E3 10%, 
+      #0054E3 90%, 
+      #3C81F3 97%, 
+      #0058E6 100%
     );
-    border-top: 4px solid #228b22;
+    color: white;
+    padding: 4px 6px;
+    font-weight: bold;
+    font-size: 13px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 8px 8px 0 0;
+    min-height: 28px;
   }
 
-  /* Selection highlight */
+  .xp-titlebar-text {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding-left: 2px;
+  }
+
+  .xp-titlebar-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Window Control Buttons */
+  .xp-window-controls {
+    display: flex;
+    gap: 2px;
+  }
+
+  .xp-control-btn {
+    width: 21px;
+    height: 21px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: "Marlett", sans-serif;
+  }
+
+  .xp-minimize-btn {
+    background: linear-gradient(180deg, #5790F5 0%, #2D6CE6 50%, #2768E3 100%);
+    border: 1px solid #3165C4;
+    color: white;
+    text-shadow: 1px 1px 0 #1A4AA6;
+  }
+
+  .xp-maximize-btn {
+    background: linear-gradient(180deg, #5790F5 0%, #2D6CE6 50%, #2768E3 100%);
+    border: 1px solid #3165C4;
+    color: white;
+    text-shadow: 1px 1px 0 #1A4AA6;
+  }
+
+  .xp-close-btn {
+    background: linear-gradient(180deg, #E68B73 0%, #D15745 50%, #C94635 100%);
+    border: 1px solid #9E3123;
+    color: white;
+    text-shadow: 1px 1px 0 #7C2213;
+  }
+
+  .xp-control-btn:hover {
+    filter: brightness(1.1);
+  }
+
+  .xp-control-btn:active {
+    filter: brightness(0.9);
+  }
+
+  /* Windows XP Button */
+  .xp-button {
+    background: linear-gradient(180deg, 
+      #FFFFFF 0%, 
+      #ECE9D8 15%, 
+      #D8D4C4 85%, 
+      #CECABA 100%
+    );
+    border: 1px solid #003C74;
+    border-radius: 3px;
+    padding: 4px 12px;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: #000000;
+    cursor: pointer;
+    text-shadow: none;
+    box-shadow: 
+      inset 1px 1px 0 #FFFFFF,
+      inset -1px -1px 0 #ACA899;
+  }
+
+  .xp-button:hover {
+    background: linear-gradient(180deg, 
+      #FFFFFF 0%, 
+      #F0EDE4 15%, 
+      #E4E0D8 85%, 
+      #DAD6CC 100%
+    );
+    border-color: #0057D8;
+    box-shadow: 
+      inset 1px 1px 0 #FFFFFF,
+      inset -1px -1px 0 #B0ADA5,
+      0 0 3px rgba(0, 87, 216, 0.3);
+  }
+
+  .xp-button:active {
+    background: linear-gradient(180deg, 
+      #CECABA 0%, 
+      #D8D4C4 15%, 
+      #ECE9D8 85%, 
+      #FFFFFF 100%
+    );
+    box-shadow: 
+      inset -1px -1px 0 #FFFFFF,
+      inset 1px 1px 0 #ACA899;
+  }
+
+  .xp-button:focus {
+    outline: 1px dotted #000;
+    outline-offset: -4px;
+  }
+
+  .xp-button:disabled {
+    color: #808080;
+    text-shadow: 1px 1px 0 #FFFFFF;
+    cursor: not-allowed;
+  }
+
+  /* Primary Button (like OK/Apply) */
+  .xp-button-primary {
+    border: 2px solid #003C74;
+  }
+
+  /* Windows XP Start Button Style */
+  .xp-start-button {
+    background: linear-gradient(180deg, 
+      #5EAC5E 0%, 
+      #3C9A40 20%, 
+      #328A35 50%, 
+      #2C7A2F 80%, 
+      #236B26 100%
+    );
+    border: none;
+    border-radius: 0 8px 8px 0;
+    padding: 6px 16px 6px 8px;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    font-style: italic;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    box-shadow: 
+      inset 1px 1px 0 rgba(255, 255, 255, 0.3),
+      1px 0 2px rgba(0, 0, 0, 0.2);
+  }
+
+  .xp-start-button:hover {
+    background: linear-gradient(180deg, 
+      #6EBC6E 0%, 
+      #4CAA50 20%, 
+      #429A45 50%, 
+      #3C8A3F 80%, 
+      #337B36 100%
+    );
+  }
+
+  /* Windows XP Taskbar */
+  .xp-taskbar {
+    background: linear-gradient(180deg, 
+      #245EDC 0%, 
+      #3063E2 3%, 
+      #245EDC 6%, 
+      #1C4EC0 100%
+    );
+    border-top: 1px solid #5990EF;
+  }
+
+  /* Windows XP Input Field */
+  .xp-input {
+    background: #FFFFFF;
+    border: 1px solid #7F9DB9;
+    padding: 3px 4px;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: #000000;
+  }
+
+  .xp-input:focus {
+    outline: none;
+    border-color: #316AC5;
+    box-shadow: 0 0 0 1px #316AC5;
+  }
+
+  /* Windows XP Selection */
   ::selection {
-    background: #ffd700;
-    color: #2d3436;
+    background: #316AC5;
+    color: #FFFFFF;
   }
 
-  /* Coin shine animation */
-  @keyframes shine {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.8; }
+  /* Windows XP Panel/Group Box */
+  .xp-panel {
+    background: #FFFFFF;
+    border: 1px solid #919B9C;
+    padding: 8px;
   }
 
-  .coin-shine {
-    animation: shine 2s ease-in-out infinite;
+  .xp-groupbox {
+    border: 1px solid #919B9C;
+    border-radius: 0;
+    padding: 12px 8px 8px;
+    margin-top: 8px;
+    position: relative;
+    background: transparent;
+  }
+
+  .xp-groupbox-title {
+    position: absolute;
+    top: -8px;
+    left: 8px;
+    background: var(--color-xp-window-bg);
+    padding: 0 4px;
+    font-size: 11px;
+    color: #003399;
+  }
+
+  /* Windows XP List View */
+  .xp-listview {
+    background: #FFFFFF;
+    border: 1px solid #7F9DB9;
+  }
+
+  .xp-listview-item {
+    padding: 2px 4px;
+    cursor: pointer;
+  }
+
+  .xp-listview-item:hover {
+    background: #E8EEF7;
+  }
+
+  .xp-listview-item.selected {
+    background: #316AC5;
+    color: white;
+  }
+
+  /* Windows XP Checkbox/Radio */
+  .xp-checkbox {
+    appearance: none;
+    width: 13px;
+    height: 13px;
+    background: white;
+    border: 1px solid #7F9DB9;
+    vertical-align: middle;
+    cursor: pointer;
+  }
+
+  .xp-checkbox:checked {
+    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 13 13'%3E%3Cpath d='M2 6l3 3 6-6' stroke='%23000' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  }
+
+  /* Windows XP Tab Control */
+  .xp-tabs {
+    display: flex;
+    border-bottom: 1px solid #919B9C;
+    background: var(--color-xp-window-bg);
+  }
+
+  .xp-tab {
+    background: linear-gradient(180deg, #F2F1EB 0%, #ECE9D8 100%);
+    border: 1px solid #919B9C;
+    border-bottom: none;
+    padding: 4px 12px;
+    margin-right: -1px;
+    cursor: pointer;
+    font-size: 11px;
+  }
+
+  .xp-tab.active {
+    background: #FFFFFF;
+    border-bottom: 1px solid #FFFFFF;
+    margin-bottom: -1px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .xp-tab-content {
+    background: #FFFFFF;
+    border: 1px solid #919B9C;
+    border-top: none;
+    padding: 12px;
+  }
+
+  /* Windows XP Progress Bar */
+  .xp-progress {
+    background: #FFFFFF;
+    border: 1px solid #919B9C;
+    height: 16px;
+    padding: 1px;
+  }
+
+  .xp-progress-bar {
+    background: linear-gradient(180deg, 
+      #38D738 0%, 
+      #19B319 50%, 
+      #0DA10D 100%
+    );
+    height: 100%;
+    background-size: 20px 100%;
+    animation: xp-progress-shine 1s linear infinite;
+  }
+
+  @keyframes xp-progress-shine {
+    0% { background-position: 0 0; }
+    100% { background-position: 20px 0; }
+  }
+
+  /* Windows XP Info/Alert Boxes */
+  .xp-info-box {
+    background: #FFFFCC;
+    border: 1px solid #CCCC66;
+    padding: 8px 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .xp-error-box {
+    background: #FFE0E0;
+    border: 1px solid #CC6666;
+    padding: 8px 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .xp-success-box {
+    background: #E0FFE0;
+    border: 1px solid #66CC66;
+    padding: 8px 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  /* Desktop icon style */
+  .xp-desktop-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    width: 72px;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .xp-desktop-icon:hover {
+    background: rgba(49, 106, 197, 0.3);
+  }
+
+  .xp-desktop-icon.selected {
+    background: rgba(49, 106, 197, 0.5);
+  }
+
+  .xp-desktop-icon img {
+    width: 48px;
+    height: 48px;
+    image-rendering: pixelated;
+  }
+
+  .xp-desktop-icon span {
+    color: white;
+    font-size: 11px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    word-wrap: break-word;
+    max-width: 68px;
   }
 
   /* Bounce animation */
-  @keyframes bounce-soft {
+  @keyframes xp-bounce {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
+    50% { transform: translateY(-3px); }
   }
 
-  .bounce-hover:hover {
-    animation: bounce-soft 0.5s ease-in-out;
+  .xp-bounce:hover {
+    animation: xp-bounce 0.3s ease-in-out;
+  }
+
+  /* Selection rectangle */
+  .xp-selection-rect {
+    border: 1px solid #316AC5;
+    background: rgba(49, 106, 197, 0.2);
   }
 }
