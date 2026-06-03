@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { Gamepad2 } from "lucide-react";
+import { Gamepad2, Star } from "lucide-react";
 
 export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
   const router = useRouter();
@@ -33,23 +33,27 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#0d0d1a] pixel-grid-bg flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
+      {/* Sky gradient background */}
+      <div className="fixed inset-0 bg-gradient-to-b from-[#1e90ff] via-[#87ceeb] to-[#32cd32] -z-10" />
+      <div className="fixed inset-0 clouds-bg -z-10" />
+      
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-[#1a1a2e] border-4 border-[#00d4ff] flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(0,212,255,0.5)]">
-            <Gamepad2 className="w-8 h-8 text-[#00d4ff]" />
+          <div className="w-20 h-20 bg-gradient-to-br from-[#ffd700] to-[#ff8c00] border-4 border-[#b8860b] rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_6px_0_#8b6914]">
+            <Gamepad2 className="w-10 h-10 text-white drop-shadow-md" />
           </div>
-          <h1 className="font-[var(--font-pixel)] text-xl text-[#e8e8ff] mb-2">
-            PLAYER LOGIN
+          <h1 className="text-3xl font-bold text-white drop-shadow-[2px_2px_0_#0066cc] mb-2">
+            Welcome Back!
           </h1>
-          <p className="text-sm text-[#9090c0]">Enter your credentials to continue</p>
+          <p className="text-white/80 drop-shadow-md">Enter your credentials to continue</p>
         </div>
 
         {/* Form */}
-        <form onSubmit={onSubmit} className="bg-[#1a1a2e] border-4 border-[#2d2d5a] p-6 space-y-5" noValidate>
+        <form onSubmit={onSubmit} className="bg-white border-4 border-[#c0c0c0] rounded-2xl p-6 space-y-5 shadow-[0_6px_0_#808080]" noValidate>
           <Field
-            label="EMAIL"
+            label="Email"
             type="email"
             value={email}
             onChange={setEmail}
@@ -57,7 +61,7 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
             required
           />
           <Field
-            label="PASSWORD"
+            label="Password"
             type="password"
             value={password}
             onChange={setPassword}
@@ -66,7 +70,7 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
           />
 
           {error && (
-            <div className="px-4 py-3 bg-[#ff3366]/10 border-4 border-[#ff3366] text-sm text-[#ff3366]">
+            <div className="px-4 py-3 bg-[#fce4ec] border-4 border-[#e52521] rounded-xl text-sm text-[#e52521] font-medium">
               {error}
             </div>
           )}
@@ -74,15 +78,16 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full px-4 py-3 bg-[#00d4ff] border-4 border-[#00d4ff] text-[#0d0d1a] font-bold disabled:opacity-50 hover:bg-[#00ffcc] hover:border-[#00ffcc] hover:shadow-[0_0_20px_rgba(0,255,204,0.4)] transition-all"
+            className="w-full px-4 py-3 bg-gradient-to-b from-[#32cd32] to-[#228b22] border-4 border-[#006400] text-white font-bold rounded-xl shadow-[0_4px_0_#004d00] disabled:opacity-50 hover:translate-y-[-2px] hover:shadow-[0_6px_0_#004d00] active:translate-y-[1px] active:shadow-[0_2px_0_#004d00] transition-all"
           >
-            {loading ? "LOADING..." : "LOGIN"}
+            {loading ? "Loading..." : "Login"}
           </button>
 
-          <p className="text-sm text-[#9090c0] text-center pt-2">
+          <p className="text-sm text-[#4a5568] text-center pt-2">
             New player?{" "}
-            <Link href="/register" className="text-[#ff00aa] font-bold hover:underline">
-              CREATE ACCOUNT
+            <Link href="/register" className="text-[#1e90ff] font-bold hover:underline flex items-center gap-1 justify-center mt-1">
+              <Star className="w-4 h-4 text-[#ffd700] fill-[#ffd700]" />
+              Create Account
             </Link>
           </p>
         </form>
@@ -109,7 +114,7 @@ function Field({
   const id = label.toLowerCase().replace(/\s+/g, "-");
   return (
     <div>
-      <label htmlFor={id} className="block font-[var(--font-pixel)] text-xs text-[#9090c0] mb-2">
+      <label htmlFor={id} className="block font-semibold text-[#2d3436] mb-2">
         {label}
       </label>
       <input
@@ -119,7 +124,7 @@ function Field({
         onChange={(e) => onChange(e.target.value)}
         autoComplete={autoComplete}
         required={required}
-        className="w-full px-4 py-3 bg-[#0d0d1a] border-4 border-[#2d2d5a] text-[#e8e8ff] text-sm focus:outline-none focus:border-[#00d4ff] focus:shadow-[0_0_15px_rgba(0,212,255,0.3)] transition-all"
+        className="w-full px-4 py-3 bg-[#f8f8f8] border-4 border-[#c0c0c0] rounded-xl text-[#2d3436] text-sm focus:outline-none focus:border-[#1e90ff] focus:shadow-[0_0_0_4px_rgba(30,144,255,0.2)] transition-all"
       />
     </div>
   );

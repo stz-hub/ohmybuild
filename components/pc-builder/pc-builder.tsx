@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { AlertTriangle, CheckCircle2, Gamepad2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Gamepad2, Sparkles, Star } from "lucide-react";
 
 import { ComponentGroup } from "./component-group";
 import { PresetCards } from "./preset-cards";
@@ -97,18 +97,22 @@ export function PCBuilder() {
   }, [selection, total]);
 
   return (
-    <div className="min-h-screen bg-[#0d0d1a] pixel-grid-bg">
+    <div className="min-h-screen">
+      {/* Sky gradient background */}
+      <div className="fixed inset-0 bg-gradient-to-b from-[#1e90ff] via-[#87ceeb] to-[#32cd32] -z-10" />
+      <div className="fixed inset-0 clouds-bg -z-10" />
+
       {/* Header */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-6">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-4">
         <div className="flex items-center gap-4 mb-2">
-          <div className="w-12 h-12 bg-[#1a1a2e] border-4 border-[#00d4ff] flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.4)]">
-            <Gamepad2 className="w-6 h-6 text-[#00d4ff]" />
+          <div className="w-14 h-14 bg-gradient-to-br from-[#ffd700] to-[#ff8c00] border-4 border-[#b8860b] rounded-2xl flex items-center justify-center shadow-[0_4px_0_#8b6914]">
+            <Gamepad2 className="w-7 h-7 text-white drop-shadow-md" />
           </div>
           <div>
-            <h1 className="font-[var(--font-pixel)] text-xl text-[#e8e8ff]">
-              {loadedBuild ? loadedBuild.name : "PC BUILDER"}
+            <h1 className="text-2xl font-bold text-white drop-shadow-[2px_2px_0_#0066cc]">
+              {loadedBuild ? loadedBuild.name : "PC Builder"}
             </h1>
-            <p className="text-sm text-[#9090c0]">
+            <p className="text-sm text-white/80 drop-shadow-md">
               {loadedBuild
                 ? "Modify components then save to update"
                 : "Select your components - Real-time compatibility check"}
@@ -116,18 +120,18 @@ export function PCBuilder() {
           </div>
         </div>
         {loadError && (
-          <div className="mt-4 px-4 py-3 bg-[#1a1a2e] border-4 border-[#ff3366] text-sm text-[#ff3366]">
+          <div className="mt-4 px-4 py-3 bg-white border-4 border-[#e52521] rounded-xl text-sm text-[#e52521] font-medium">
             {loadError}
           </div>
         )}
       </section>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
           <div className="space-y-6">
             {/* Presets */}
             <section>
-              <Label>SELECT CLASS</Label>
+              <Label icon={Star} color="#ffd700">Quick Start Builds</Label>
               <PresetCards
                 presets={PRESETS}
                 currentSelection={selection}
@@ -138,25 +142,29 @@ export function PCBuilder() {
             {/* Compatibility Status */}
             {selectedCount > 1 &&
               (errors.length > 0 ? (
-                <div className="bg-[#1a1a2e] border-4 border-[#ff3366] p-4 shadow-[0_0_20px_rgba(255,51,102,0.3)]">
+                <div className="bg-white border-4 border-[#e52521] p-4 rounded-2xl shadow-[0_4px_0_#a01a17]">
                   <div className="flex items-center gap-3 mb-3">
-                    <AlertTriangle className="w-5 h-5 text-[#ff3366]" />
-                    <span className="font-[var(--font-pixel)] text-xs text-[#ff3366]">
-                      INCOMPATIBILITY DETECTED
+                    <div className="w-10 h-10 bg-[#fce4ec] border-3 border-[#e52521] rounded-full flex items-center justify-center">
+                      <AlertTriangle className="w-5 h-5 text-[#e52521]" />
+                    </div>
+                    <span className="font-bold text-[#e52521]">
+                      Incompatibility Detected!
                     </span>
                   </div>
                   {errors.map((err, i) => (
-                    <p key={i} className="text-sm text-[#ff6688] flex gap-2 pl-8">
-                      <span className="text-[#ff3366]">&gt;</span>
+                    <p key={i} className="text-sm text-[#c62828] flex gap-2 pl-12">
+                      <span className="text-[#e52521]">&bull;</span>
                       <span>{err}</span>
                     </p>
                   ))}
                 </div>
               ) : (
-                <div className="flex items-center gap-3 bg-[#1a1a2e] border-4 border-[#00ff88] px-4 py-3 shadow-[0_0_20px_rgba(0,255,136,0.3)]">
-                  <CheckCircle2 className="w-5 h-5 text-[#00ff88]" />
-                  <span className="font-[var(--font-pixel)] text-xs text-[#00ff88]">
-                    ALL SYSTEMS GO - NO ISSUES DETECTED
+                <div className="flex items-center gap-3 bg-white border-4 border-[#32cd32] px-4 py-3 rounded-2xl shadow-[0_4px_0_#228b22]">
+                  <div className="w-10 h-10 bg-[#e8f5e9] border-3 border-[#32cd32] rounded-full flex items-center justify-center">
+                    <CheckCircle2 className="w-5 h-5 text-[#32cd32]" />
+                  </div>
+                  <span className="font-bold text-[#32cd32]">
+                    All Systems Go - No Issues Detected!
                   </span>
                 </div>
               ))}
@@ -164,14 +172,14 @@ export function PCBuilder() {
             {/* Components */}
             <section>
               <div className="flex items-center justify-between mb-4">
-                <Label>COMPONENTS</Label>
+                <Label icon={Sparkles} color="#1e90ff">Components</Label>
                 {selectedCount > 0 && (
                   <button
                     type="button"
                     onClick={handleClearAll}
-                    className="text-xs text-[#6060a0] hover:text-[#ff3366] transition-colors px-3 py-1 border-2 border-[#2d2d5a] hover:border-[#ff3366]"
+                    className="text-sm text-white font-medium hover:text-[#ffd700] transition-colors px-3 py-1 bg-white/20 backdrop-blur-sm rounded-lg border-2 border-white/30"
                   >
-                    CLEAR ALL
+                    Clear All
                   </button>
                 )}
               </div>
@@ -191,9 +199,9 @@ export function PCBuilder() {
             {/* FPS Display */}
             <section>
               <div className="flex items-center justify-between mb-4">
-                <Label>PERFORMANCE STATS</Label>
-                <span className="text-xs text-[#6060a0] bg-[#1a1a2e] px-3 py-1 border-2 border-[#2d2d5a]">
-                  CYBERPUNK 2077 - ULTRA - NATIVE
+                <Label icon={Gamepad2} color="#e52521">Performance Stats</Label>
+                <span className="text-xs text-white font-medium bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-lg border-2 border-white/30">
+                  Cyberpunk 2077 - Ultra
                 </span>
               </div>
               <FpsDisplay gpu={selectedGpu} cpu={selectedCpu} />
@@ -209,7 +217,7 @@ export function PCBuilder() {
                 onCopy={handleCopy}
               />
               {mounted && (
-                <div className="bg-[#1a1a2e] border-4 border-[#2d2d5a] p-4">
+                <div className="bg-white border-4 border-[#c0c0c0] p-4 rounded-2xl shadow-[0_4px_0_#808080]">
                   <SaveBuildButton
                     selection={selection}
                     selectedCount={selectedCount}
@@ -227,10 +235,10 @@ export function PCBuilder() {
       </main>
 
       {/* Mobile Bottom Bar */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-[#1a1a2e]/95 backdrop-blur border-t-4 border-[#2d2d5a] px-4 py-3 flex items-center justify-between z-50">
+      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur border-t-4 border-[#c0c0c0] px-4 py-3 flex items-center justify-between z-50">
         <div>
-          <p className="text-xs text-[#6060a0]">TOTAL COST</p>
-          <p className="font-[var(--font-pixel)] text-lg text-[#00d4ff]">
+          <p className="text-xs text-[#4a5568] font-medium">Total Cost</p>
+          <p className="text-xl font-bold text-[#1e90ff]">
             {total > 0 ? `${total.toLocaleString("fr-FR")} EUR` : "---"}
           </p>
         </div>
@@ -238,21 +246,21 @@ export function PCBuilder() {
           type="button"
           onClick={handleCopy}
           disabled={selectedCount === 0}
-          className="px-6 py-3 bg-[#00d4ff] border-4 border-[#00d4ff] text-[#0d0d1a] font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#00ffcc] transition-colors"
+          className="px-6 py-3 bg-gradient-to-b from-[#ffd700] to-[#ff8c00] border-4 border-[#b8860b] text-[#2d3436] font-bold rounded-xl shadow-[0_4px_0_#8b6914] disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          COPY
+          Copy List
         </button>
       </div>
 
-      {/* Footer */}
-      <footer className="border-t-4 border-[#2d2d5a] py-6 bg-[#1a1a2e]">
+      {/* Footer - Grass strip */}
+      <footer className="grass-strip py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="font-[var(--font-pixel)] text-xs">
-            <span className="text-[#e8e8ff]">Oh</span>
-            <span className="text-[#00d4ff]">My</span>
-            <span className="text-[#ff00aa]">Build</span>
+          <span className="text-lg font-bold">
+            <span className="text-white drop-shadow-[1px_1px_0_#006400]">Oh</span>
+            <span className="text-[#ffd700] drop-shadow-[1px_1px_0_#b8860b]">My</span>
+            <span className="text-[#87ceeb] drop-shadow-[1px_1px_0_#0066cc]">Build</span>
           </span>
-          <p className="text-xs text-[#6060a0]">
+          <p className="text-xs text-white/80">
             FPS: TechPowerUp - Hardware Unboxed - Digital Foundry | Indicative prices
           </p>
         </div>
@@ -261,10 +269,15 @@ export function PCBuilder() {
   );
 }
 
-function Label({ children }: { children: React.ReactNode }) {
+function Label({ children, icon: Icon, color }: { children: React.ReactNode; icon: React.ComponentType<{ className?: string }>; color: string }) {
   return (
-    <h2 className="font-[var(--font-pixel)] text-xs text-[#9090c0] mb-4 flex items-center gap-2">
-      <span className="w-2 h-2 bg-[#00d4ff]" />
+    <h2 className="text-lg font-bold text-white drop-shadow-[1px_1px_0_#0066cc] mb-4 flex items-center gap-2">
+      <div 
+        className="w-8 h-8 rounded-lg flex items-center justify-center border-2"
+        style={{ backgroundColor: `${color}30`, borderColor: color }}
+      >
+        <Icon className="w-4 h-4" style={{ color }} />
+      </div>
       {children}
     </h2>
   );

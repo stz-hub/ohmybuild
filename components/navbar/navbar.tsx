@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { LogOut, User, Gamepad2 } from "lucide-react";
+import { LogOut, User, Gamepad2, Star } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/", label: "HOME" },
-  { href: "/configurateur", label: "BUILD" },
+  { href: "/", label: "Home" },
+  { href: "/configurateur", label: "Build PC" },
 ];
 
 export function Navbar() {
@@ -18,22 +18,22 @@ export function Navbar() {
   const isAuthed = status === "authenticated";
 
   return (
-    <header className="sticky top-0 z-50 bg-[#0d0d1a]/95 backdrop-blur border-b-4 border-[#2d2d5a]">
+    <header className="sticky top-0 z-50 bg-gradient-to-r from-[#1e90ff] via-[#4da6ff] to-[#1e90ff] border-b-4 border-[#0066cc] shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 bg-[#1a1a2e] border-4 border-[#00d4ff] flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.5)] group-hover:shadow-[0_0_30px_rgba(0,212,255,0.8)] transition-shadow">
-            <Gamepad2 className="w-5 h-5 text-[#00d4ff]" />
+          <div className="w-12 h-12 bg-gradient-to-br from-[#ffd700] to-[#ff8c00] border-4 border-[#b8860b] rounded-full flex items-center justify-center shadow-[0_4px_0_#8b6914] group-hover:scale-105 transition-transform">
+            <Gamepad2 className="w-6 h-6 text-white drop-shadow-md" />
           </div>
-          <span className="font-[var(--font-pixel)] text-xs tracking-wider">
-            <span className="text-[#e8e8ff]">Oh</span>
-            <span className="text-[#00d4ff] drop-shadow-[0_0_10px_rgba(0,212,255,0.8)]">My</span>
-            <span className="text-[#ff00aa] drop-shadow-[0_0_10px_rgba(255,0,170,0.8)]">Build</span>
+          <span className="text-xl font-bold tracking-tight">
+            <span className="text-white drop-shadow-[2px_2px_0_#0066cc]">Oh</span>
+            <span className="text-[#ffd700] drop-shadow-[2px_2px_0_#b8860b]">My</span>
+            <span className="text-[#32cd32] drop-shadow-[2px_2px_0_#006400]">Build</span>
           </span>
         </Link>
 
         {/* Navigation */}
-        <nav className="flex items-center gap-1">
+        <nav className="flex items-center gap-2">
           {links.map(({ href, label }) => (
             <NavLink key={href} href={href} active={pathname === href} label={label} />
           ))}
@@ -41,7 +41,7 @@ export function Navbar() {
             <NavLink
               href="/mes-configs"
               active={pathname === "/mes-configs"}
-              label="SAVES"
+              label="My Builds"
             />
           )}
         </nav>
@@ -49,35 +49,36 @@ export function Navbar() {
         {/* Auth Section */}
         <div className="flex items-center gap-2">
           {status === "loading" ? (
-            <span className="text-xs text-[#6060a0] animate-pulse">LOADING...</span>
+            <span className="text-sm text-white/80 animate-pulse">Loading...</span>
           ) : isAuthed ? (
             <>
-              <span className="hidden sm:inline-flex items-center gap-2 text-sm text-[#9090c0] bg-[#1a1a2e] border-2 border-[#2d2d5a] px-3 py-1">
-                <User className="w-4 h-4 text-[#00ff88]" />
+              <span className="hidden sm:inline-flex items-center gap-2 text-sm text-white bg-white/20 backdrop-blur-sm border-2 border-white/30 px-3 py-1.5 rounded-full">
+                <User className="w-4 h-4" />
                 <span className="truncate max-w-24">{session?.user?.name ?? session?.user?.email}</span>
               </span>
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
                 aria-label="Se deconnecter"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[#1a1a2e] border-4 border-[#ff3366] text-[#ff3366] text-sm hover:bg-[#ff3366] hover:text-[#0d0d1a] hover:shadow-[0_0_20px_rgba(255,51,102,0.5)] transition-all"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-b from-[#ff6b6b] to-[#e52521] border-4 border-[#a01a17] text-white text-sm font-bold rounded-xl shadow-[0_4px_0_#7a1410] hover:translate-y-[-2px] hover:shadow-[0_6px_0_#7a1410] active:translate-y-[2px] active:shadow-[0_2px_0_#7a1410] transition-all"
               >
                 <LogOut className="w-4 h-4" />
-                <span className="hidden sm:inline">QUIT</span>
+                <span className="hidden sm:inline">Logout</span>
               </button>
             </>
           ) : (
             <>
               <Link
                 href="/login"
-                className="px-4 py-2 bg-[#1a1a2e] border-4 border-[#2d2d5a] text-sm text-[#9090c0] hover:border-[#00d4ff] hover:text-[#00d4ff] hover:shadow-[0_0_15px_rgba(0,212,255,0.3)] transition-all"
+                className="px-4 py-2 bg-white/20 backdrop-blur-sm border-2 border-white/40 text-white text-sm font-semibold rounded-xl hover:bg-white/30 transition-all"
               >
-                LOGIN
+                Login
               </Link>
               <Link
                 href="/register"
-                className="px-4 py-2 bg-[#00d4ff] border-4 border-[#00d4ff] text-sm text-[#0d0d1a] font-bold hover:bg-[#00ffcc] hover:border-[#00ffcc] hover:shadow-[0_0_20px_rgba(0,255,204,0.5)] transition-all"
+                className="px-4 py-2 bg-gradient-to-b from-[#ffd700] to-[#ff8c00] border-4 border-[#b8860b] text-[#2d3436] text-sm font-bold rounded-xl shadow-[0_4px_0_#8b6914] hover:translate-y-[-2px] hover:shadow-[0_6px_0_#8b6914] active:translate-y-[2px] active:shadow-[0_2px_0_#8b6914] transition-all flex items-center gap-1"
               >
-                JOIN
+                <Star className="w-4 h-4" />
+                Join!
               </Link>
             </>
           )}
@@ -92,10 +93,10 @@ function NavLink({ href, active, label }: { href: string; active: boolean; label
     <Link
       href={href}
       className={cn(
-        "px-4 py-2 text-sm transition-all border-4",
+        "px-4 py-2 text-sm font-semibold transition-all rounded-xl border-4",
         active
-          ? "bg-[#00d4ff] border-[#00d4ff] text-[#0d0d1a] shadow-[0_0_20px_rgba(0,212,255,0.5)]"
-          : "bg-[#1a1a2e] border-[#2d2d5a] text-[#9090c0] hover:border-[#00d4ff] hover:text-[#00d4ff] hover:shadow-[0_0_15px_rgba(0,212,255,0.3)]",
+          ? "bg-white text-[#1e90ff] border-[#c0c0c0] shadow-[0_4px_0_#808080]"
+          : "bg-white/20 backdrop-blur-sm text-white border-white/30 hover:bg-white/30",
       )}
     >
       {label}

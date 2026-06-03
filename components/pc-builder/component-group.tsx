@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
+import { X, Zap } from "lucide-react";
 import { ComponentCard } from "./component-card";
 import type { ComponentGroup as Group, ComponentKey, Selection } from "@/lib/pc-data";
 import { getSocketHint, getCompatibilityErrors } from "@/lib/pc-data";
@@ -23,20 +23,27 @@ export function ComponentGroup({ group, selection, onSelect, onClear }: Props) {
 
   return (
     <div className={cn(
-      "bg-[#1a1a2e] border-4 transition-all",
+      "bg-white border-4 rounded-2xl transition-all overflow-hidden",
       selectedItem 
-        ? "border-[#00d4ff] shadow-[0_0_15px_rgba(0,212,255,0.2)]" 
+        ? "border-[#32cd32] shadow-[0_4px_0_#228b22]" 
         : hasError 
-        ? "border-[#ff3366] shadow-[0_0_15px_rgba(255,51,102,0.2)]" 
-        : "border-[#2d2d5a]"
+        ? "border-[#e52521] shadow-[0_4px_0_#a01a17]" 
+        : "border-[#c0c0c0] shadow-[0_4px_0_#808080]"
     )}>
 
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b-4 border-[#2d2d5a] bg-[#0d0d1a]/50">
+      <div className={cn(
+        "flex items-center justify-between px-4 py-3 border-b-4",
+        selectedItem 
+          ? "bg-gradient-to-r from-[#e8f5e9] to-[#c8e6c9] border-[#32cd32]" 
+          : hasError
+          ? "bg-gradient-to-r from-[#fce4ec] to-[#f8bbd9] border-[#e52521]"
+          : "bg-gradient-to-r from-[#f8f8f0] to-[#e8e8e0] border-[#c0c0c0]"
+      )}>
         <div className="flex items-center gap-3">
-          <span className="font-[var(--font-pixel)] text-xs text-[#e8e8ff]">{group.label}</span>
+          <span className="font-bold text-[#2d3436]">{group.label}</span>
           {socketHint && (
-            <span className="px-2 py-1 text-[10px] font-bold tracking-wider bg-[#00ff88]/20 text-[#00ff88] border-2 border-[#00ff88]">
+            <span className="px-2 py-1 text-[10px] font-bold bg-[#e3f2fd] text-[#1e90ff] border-2 border-[#1e90ff] rounded-full">
               {socketHint}
             </span>
           )}
@@ -45,25 +52,26 @@ export function ComponentGroup({ group, selection, onSelect, onClear }: Props) {
         <div className="flex items-center gap-3">
           {selectedItem ? (
             <>
-              <span className="font-[var(--font-pixel)] text-sm text-[#ffdd00]">
-                {selectedItem.price > 0 ? `${selectedItem.price} EUR` : "INCLUDED"}
+              <span className="font-bold text-[#ff8c00] flex items-center gap-1">
+                <Zap className="w-4 h-4" />
+                {selectedItem.price > 0 ? `${selectedItem.price} EUR` : "Included"}
               </span>
               <button
                 onClick={() => onClear(group.key)}
                 aria-label={`Remove ${group.label}`}
-                className="w-8 h-8 bg-[#1a1a2e] border-2 border-[#ff3366] flex items-center justify-center text-[#ff3366] hover:bg-[#ff3366] hover:text-[#0d0d1a] transition-colors"
+                className="w-8 h-8 bg-gradient-to-b from-[#ff6b6b] to-[#e52521] border-3 border-[#a01a17] rounded-lg flex items-center justify-center text-white shadow-[0_2px_0_#7a1410] hover:translate-y-[-1px] hover:shadow-[0_3px_0_#7a1410] active:translate-y-[1px] active:shadow-[0_1px_0_#7a1410] transition-all"
               >
                 <X className="w-4 h-4" />
               </button>
             </>
           ) : (
-            <span className="text-xs text-[#6060a0] italic">NOT SELECTED</span>
+            <span className="text-sm text-[#808080] italic">Not selected</span>
           )}
         </div>
       </div>
 
       {/* Items Scroll */}
-      <div className="flex gap-4 px-4 py-4 overflow-x-auto">
+      <div className="flex gap-4 px-4 py-4 overflow-x-auto bg-gradient-to-b from-[#f8f8f8] to-[#f0f0f0]">
         {group.items.map(item => (
           <ComponentCard
             key={item.id}

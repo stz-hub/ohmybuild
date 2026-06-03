@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Trash2, ArrowRight, Plus, Gamepad2 } from "lucide-react";
+import { Trash2, ArrowRight, Plus, Gamepad2, Star, Zap } from "lucide-react";
 
 import {
   GROUPS,
@@ -43,22 +43,22 @@ export function MyBuildsList({ initialBuilds }: { initialBuilds: Build[] }) {
 
   if (builds.length === 0) {
     return (
-      <div className="bg-[#1a1a2e] border-4 border-dashed border-[#2d2d5a] p-10 text-center">
-        <div className="w-16 h-16 bg-[#0d0d1a] border-4 border-[#2d2d5a] flex items-center justify-center mx-auto mb-4">
-          <Gamepad2 className="w-8 h-8 text-[#6060a0]" />
+      <div className="bg-white border-4 border-dashed border-[#c0c0c0] p-10 rounded-2xl text-center">
+        <div className="w-20 h-20 bg-[#f0f0f0] border-4 border-[#c0c0c0] rounded-full flex items-center justify-center mx-auto mb-4">
+          <Gamepad2 className="w-10 h-10 text-[#a0a0a0]" />
         </div>
-        <p className="font-[var(--font-pixel)] text-sm text-[#9090c0] mb-2">
-          NO SAVED BUILDS
+        <p className="text-xl font-bold text-[#4a5568] mb-2">
+          No Saved Builds
         </p>
-        <p className="text-xs text-[#6060a0] mb-6">
+        <p className="text-sm text-[#808080] mb-6">
           Configure your first PC, then click &quot;Save Build&quot;.
         </p>
         <Link
           href="/configurateur"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-[#00d4ff] border-4 border-[#00d4ff] text-[#0d0d1a] font-bold hover:bg-[#00ffcc] hover:shadow-[0_0_20px_rgba(0,255,204,0.4)] transition-all"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-b from-[#ffd700] to-[#ff8c00] border-4 border-[#b8860b] text-[#2d3436] font-bold rounded-xl shadow-[0_4px_0_#8b6914] hover:translate-y-[-2px] hover:shadow-[0_6px_0_#8b6914] transition-all"
         >
           <Plus className="w-5 h-5" />
-          NEW BUILD
+          New Build
         </Link>
       </div>
     );
@@ -70,23 +70,30 @@ export function MyBuildsList({ initialBuilds }: { initialBuilds: Build[] }) {
         const sel = b.selection ?? {};
         const total = calculateTotal(sel);
         const count = getSelectedCount(sel);
-        const colors = ["#00d4ff", "#ff00aa", "#00ff88"];
-        const color = colors[index % colors.length];
+        const styles = [
+          { border: "#32cd32", shadow: "#228b22", bg: "from-[#e8f5e9] to-[#c8e6c9]" },
+          { border: "#1e90ff", shadow: "#0066cc", bg: "from-[#e3f2fd] to-[#bbdefb]" },
+          { border: "#ff8c00", shadow: "#cc7000", bg: "from-[#fff3e0] to-[#ffe0b2]" },
+        ];
+        const style = styles[index % styles.length];
 
         return (
           <article 
             key={b.id} 
-            className="bg-[#1a1a2e] border-4 border-[#2d2d5a] overflow-hidden hover:border-current transition-colors"
-            style={{ '--card-color': color } as React.CSSProperties}
+            className="bg-white border-4 rounded-2xl overflow-hidden shadow-[0_4px_0_#808080] hover:translate-y-[-2px] hover:shadow-[0_6px_0_#808080] transition-all"
+            style={{ borderColor: style.border }}
           >
             {/* Header */}
             <header 
-              className="px-4 py-3 border-b-4 border-[#2d2d5a] flex items-center justify-between"
-              style={{ backgroundColor: `${color}20` }}
+              className={`px-4 py-3 border-b-4 flex items-center justify-between bg-gradient-to-r ${style.bg}`}
+              style={{ borderColor: style.border }}
             >
               <div>
-                <h2 className="font-[var(--font-pixel)] text-xs text-[#e8e8ff] truncate">{b.name}</h2>
-                <p className="text-[10px] text-[#6060a0]">
+                <h2 className="font-bold text-[#2d3436] truncate flex items-center gap-2">
+                  <Star className="w-4 h-4 text-[#ffd700] fill-[#ffd700]" />
+                  {b.name}
+                </h2>
+                <p className="text-xs text-[#4a5568]">
                   {new Date(b.createdAt).toLocaleDateString("fr-FR", {
                     day: "2-digit",
                     month: "short",
@@ -96,47 +103,48 @@ export function MyBuildsList({ initialBuilds }: { initialBuilds: Build[] }) {
                 </p>
               </div>
               <span 
-                className="font-[var(--font-pixel)] text-sm"
-                style={{ color }}
+                className="font-bold text-lg flex items-center gap-1"
+                style={{ color: style.border }}
               >
+                <Zap className="w-4 h-4" />
                 {total.toLocaleString("fr-FR")} EUR
               </span>
             </header>
 
             {/* Parts list */}
-            <ul className="divide-y-2 divide-[#2d2d5a]">
+            <ul className="divide-y-2 divide-[#e0e0e0]">
               {GROUPS.map((g) => {
                 const item = g.items.find((i) => i.id === sel[g.key]);
                 if (!item) return null;
                 return (
                   <li key={g.key} className="px-4 py-2 flex items-center justify-between">
-                    <span className="text-[10px] text-[#6060a0] uppercase tracking-wider">
+                    <span className="text-xs text-[#808080] uppercase font-medium">
                       {g.label}
                     </span>
-                    <span className="text-xs text-[#9090c0] truncate ml-3">{item.name}</span>
+                    <span className="text-sm text-[#2d3436] truncate ml-3 font-medium">{item.name}</span>
                   </li>
                 );
               })}
             </ul>
 
             {/* Footer */}
-            <footer className="px-4 py-3 border-t-4 border-[#2d2d5a] flex items-center justify-between bg-[#0d0d1a]/50">
+            <footer className="px-4 py-3 border-t-2 border-[#e0e0e0] flex items-center justify-between bg-[#f8f8f8]">
               <Link
                 href={`/configurateur?build=${b.id}`}
-                className="inline-flex items-center gap-2 text-xs font-bold hover:underline"
-                style={{ color }}
+                className="inline-flex items-center gap-2 text-sm font-bold hover:underline"
+                style={{ color: style.border }}
               >
-                OPEN IN BUILDER
-                <ArrowRight className="w-3 h-3" />
+                Open in Builder
+                <ArrowRight className="w-4 h-4" />
               </Link>
               <button
                 onClick={() => handleDelete(b.id)}
                 disabled={pendingId === b.id}
                 aria-label="Delete"
-                className="inline-flex items-center gap-1 text-xs text-[#6060a0] hover:text-[#ff3366] disabled:opacity-50 transition-colors px-2 py-1 border-2 border-transparent hover:border-[#ff3366]"
+                className="inline-flex items-center gap-1 text-sm text-[#808080] font-medium hover:text-[#e52521] disabled:opacity-50 transition-colors px-3 py-1 rounded-lg hover:bg-[#fce4ec]"
               >
                 <Trash2 className="w-4 h-4" />
-                DELETE
+                Delete
               </button>
             </footer>
           </article>
