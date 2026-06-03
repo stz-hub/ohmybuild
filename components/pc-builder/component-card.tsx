@@ -21,50 +21,56 @@ export function ComponentCard({ item, groupKey, isSelected, selection, onSelect 
     <div
       onClick={() => !isConflict && onSelect()}
       className={cn(
-        "relative flex flex-col gap-2 p-3 rounded-xl border min-w-[180px] transition-all",
+        "relative flex flex-col gap-2 p-4 border-4 min-w-[200px] transition-all",
         isSelected
-          ? "bg-blue-50 border-blue-300 shadow-sm"
+          ? "bg-[#00d4ff]/10 border-[#00d4ff] shadow-[0_0_20px_rgba(0,212,255,0.4)]"
           : isConflict
-          ? "bg-zinc-50 border-zinc-200 opacity-40 cursor-not-allowed"
-          : "bg-white border-[#e8e8e4] hover:border-blue-200 hover:bg-blue-50/30 cursor-pointer"
+          ? "bg-[#1a1a2e] border-[#2d2d5a] opacity-40 cursor-not-allowed"
+          : "bg-[#1a1a2e] border-[#2d2d5a] hover:border-[#00d4ff] hover:shadow-[0_0_15px_rgba(0,212,255,0.2)] cursor-pointer"
       )}
     >
       {item.badge && (
         <span className={cn(
-          "absolute -top-2 right-2 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded-full",
-          isSelected ? "bg-blue-600 text-white" : "bg-zinc-100 text-zinc-500"
+          "absolute -top-3 right-3 px-2 py-1 text-[10px] font-bold tracking-wider border-2",
+          isSelected 
+            ? "bg-[#00d4ff] border-[#00d4ff] text-[#0d0d1a]" 
+            : "bg-[#ff00aa] border-[#ff00aa] text-[#e8e8ff]"
         )}>
           {item.badge}
         </span>
       )}
 
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-2">
         <span className={cn(
-          "text-xs font-medium leading-tight",
-          isSelected ? "text-blue-700" : "text-zinc-700"
+          "text-sm leading-tight",
+          isSelected ? "text-[#00d4ff]" : "text-[#e8e8ff]"
         )}>
           {item.name}
         </span>
-        {isSelected && <Check className="w-3.5 h-3.5 text-blue-600 shrink-0 ml-2 mt-0.5" />}
-        {isConflict && <AlertTriangle className="w-3.5 h-3.5 text-zinc-400 shrink-0 ml-2 mt-0.5" />}
+        {isSelected && (
+          <div className="w-5 h-5 bg-[#00d4ff] flex items-center justify-center shrink-0">
+            <Check className="w-3 h-3 text-[#0d0d1a]" />
+          </div>
+        )}
+        {isConflict && <AlertTriangle className="w-4 h-4 text-[#ff3366] shrink-0" />}
       </div>
 
-      <div className="flex items-end justify-between mt-auto">
+      <div className="flex items-end justify-between mt-auto pt-2">
         <span className={cn(
-          "text-base font-bold tabular-nums",
-          isSelected ? "text-blue-600" : "text-zinc-800"
+          "font-[var(--font-pixel)] text-sm",
+          isSelected ? "text-[#00d4ff]" : "text-[#ffdd00]"
         )}>
-          {item.price > 0 ? `${item.price} €` : "Inclus"}
+          {item.price > 0 ? `${item.price} EUR` : "INCLUDED"}
         </span>
 
         {item.tier && (
-          <div className="flex gap-0.5">
+          <div className="flex gap-1">
             {[1, 2, 3].map(n => (
               <div key={n} className={cn(
-                "w-1.5 h-1.5 rounded-full",
+                "w-2 h-2",
                 n <= item.tier!
-                  ? isSelected ? "bg-blue-500" : "bg-zinc-400"
-                  : "bg-zinc-200"
+                  ? isSelected ? "bg-[#00d4ff]" : "bg-[#00ff88]"
+                  : "bg-[#2d2d5a]"
               )} />
             ))}
           </div>
@@ -77,10 +83,10 @@ export function ComponentCard({ item, groupKey, isSelected, selection, onSelect 
           target="_blank"
           rel="noopener noreferrer"
           onClick={e => e.stopPropagation()}
-          className="flex items-center gap-1 text-[10px] text-blue-500 hover:text-blue-700 transition-colors"
+          className="flex items-center gap-1 text-xs text-[#ff00aa] hover:text-[#ff33bb] transition-colors mt-1"
         >
           <ExternalLink className="w-3 h-3" />
-          Voir sur Idealo
+          VIEW ON IDEALO
         </a>
       )}
     </div>

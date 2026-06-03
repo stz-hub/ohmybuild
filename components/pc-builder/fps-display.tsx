@@ -6,14 +6,27 @@ import type { GPU, CPU } from "@/lib/pc-data";
 import { getFpsLevel } from "@/lib/pc-data";
 
 const LEVEL_STYLES = {
-  excellent: { number: "text-green-600",  bar: "bg-green-500",  tag: "bg-green-50 text-green-700 border-green-200",   label: "Excellent" },
-  good:      { number: "text-blue-600",   bar: "bg-blue-500",   tag: "bg-blue-50 text-blue-700 border-blue-200",      label: "Fluide"    },
-  poor:      { number: "text-orange-500", bar: "bg-orange-400", tag: "bg-orange-50 text-orange-700 border-orange-200", label: "Limité"   },
+  excellent: { 
+    color: "#00ff88", 
+    label: "EXCELLENT",
+    glow: "0 0 20px rgba(0,255,136,0.5)"
+  },
+  good: { 
+    color: "#00d4ff", 
+    label: "SMOOTH",
+    glow: "0 0 20px rgba(0,212,255,0.5)"
+  },
+  poor: { 
+    color: "#ffdd00", 
+    label: "LIMITED",
+    glow: "0 0 20px rgba(255,221,0,0.5)"
+  },
 };
 
 function FpsCard({ resolution, fps, src }: { resolution: string; fps: number; src: string }) {
-  const styles = LEVEL_STYLES[getFpsLevel(fps)];
-  const pct    = Math.min(100, Math.round((fps / 180) * 100));
+  const level = getFpsLevel(fps);
+  const styles = LEVEL_STYLES[level];
+  const pct = Math.min(100, Math.round((fps / 180) * 100));
 
   const [displayed, setDisplayed] = useState(0);
   useEffect(() => {
@@ -29,18 +42,44 @@ function FpsCard({ resolution, fps, src }: { resolution: string; fps: number; sr
   }, [fps]);
 
   return (
-    <div className="relative bg-white rounded-xl border border-[#e8e8e4] p-5 overflow-hidden">
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-zinc-400">{resolution}</span>
-        <span className={cn("px-2 py-0.5 rounded border text-[10px] font-semibold uppercase tracking-wider", styles.tag)}>
+    <div 
+      className="relative bg-[#1a1a2e] border-4 border-[#2d2d5a] p-5 overflow-hidden"
+      style={{ boxShadow: styles.glow }}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <span className="font-[var(--font-pixel)] text-xs text-[#9090c0]">{resolution}</span>
+        <span 
+          className="px-3 py-1 text-[10px] font-bold tracking-wider border-2"
+          style={{ 
+            color: styles.color, 
+            borderColor: styles.color,
+            backgroundColor: `${styles.color}20`
+          }}
+        >
           {styles.label}
         </span>
       </div>
-      <div className={cn("text-5xl font-bold tabular-nums leading-none mb-1", styles.number)}>{displayed}</div>
-      <div className="text-xs text-zinc-400 mb-0.5">FPS · Ultra · Natif</div>
-      <div className="text-[10px] text-zinc-300 italic">Source : {src}</div>
-      <div className="absolute bottom-0 inset-x-0 h-1 bg-zinc-100">
-        <div className={cn("h-full transition-all duration-700 ease-out", styles.bar)} style={{ width: `${pct}%` }} />
+
+      {/* Big FPS number */}
+      <div 
+        className="font-[var(--font-pixel)] text-4xl md:text-5xl leading-none mb-2"
+        style={{ 
+          color: styles.color,
+          textShadow: `0 0 10px ${styles.color}, 0 0 20px ${styles.color}` 
+        }}
+      >
+        {displayed}
+      </div>
+      <div className="text-xs text-[#6060a0] mb-1">FPS - ULTRA - NATIVE</div>
+      <div className="text-[10px] text-[#4a4a8a]">Source: {src}</div>
+
+      {/* Progress bar */}
+      <div className="absolute bottom-0 inset-x-0 h-2 bg-[#0d0d1a]">
+        <div 
+          className="h-full transition-all duration-700 ease-out"
+          style={{ width: `${pct}%`, backgroundColor: styles.color }}
+        />
       </div>
     </div>
   );
@@ -54,9 +93,18 @@ interface Props {
 export function FpsDisplay({ gpu, cpu }: Props) {
   if (!gpu) {
     return (
-      <div className="rounded-xl border border-dashed border-[#e8e8e4] bg-white p-10 text-center">
-        <p className="text-sm font-semibold text-zinc-400 mb-1">Sélectionnez une carte graphique</p>
-        <p className="text-xs text-zinc-300">Les performances estimées apparaîtront ici</p>
+      <div className="bg-[#1a1a2e] border-4 border-dashed border-[#2d2d5a] p-10 text-center">
+        <div className="font-[var(--font-pixel)] text-sm text-[#6060a0] mb-2">
+          SELECT A GPU
+        </div>
+        <p className="text-xs text-[#4a4a8a]">
+          Performance estimates will appear here
+        </p>
+        <div className="flex justify-center gap-2 mt-4">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="w-3 h-3 bg-[#2d2d5a] animate-pulse" style={{ animationDelay: `${i * 200}ms` }} />
+          ))}
+        </div>
       </div>
     );
   }
@@ -64,7 +112,7 @@ export function FpsDisplay({ gpu, cpu }: Props) {
   const mult = cpu?.fps_mult ?? 1;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <FpsCard resolution="1080p" fps={Math.round(gpu.fps["1080p"] * mult)} src={gpu.src} />
       <FpsCard resolution="1440p" fps={Math.round(gpu.fps["1440p"] * mult)} src={gpu.src} />
       <FpsCard resolution="4K"    fps={Math.round(gpu.fps["4K"]    * mult)} src={gpu.src} />

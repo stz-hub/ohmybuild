@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { Gamepad2 } from "lucide-react";
 
 export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
   const router = useRouter();
@@ -24,7 +25,7 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
     });
     setLoading(false);
     if (res?.error) {
-      setError("Email ou mot de passe incorrect.");
+      setError("Invalid email or password.");
       return;
     }
     router.push(callbackUrl);
@@ -32,45 +33,61 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4" noValidate>
-      <Field
-        label="Email"
-        type="email"
-        value={email}
-        onChange={setEmail}
-        autoComplete="email"
-        required
-      />
-      <Field
-        label="Mot de passe"
-        type="password"
-        value={password}
-        onChange={setPassword}
-        autoComplete="current-password"
-        required
-      />
+    <div className="min-h-screen bg-[#0d0d1a] pixel-grid-bg flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-[#1a1a2e] border-4 border-[#00d4ff] flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(0,212,255,0.5)]">
+            <Gamepad2 className="w-8 h-8 text-[#00d4ff]" />
+          </div>
+          <h1 className="font-[var(--font-pixel)] text-xl text-[#e8e8ff] mb-2">
+            PLAYER LOGIN
+          </h1>
+          <p className="text-sm text-[#9090c0]">Enter your credentials to continue</p>
+        </div>
 
-      {error && (
-        <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
-          {error}
-        </p>
-      )}
+        {/* Form */}
+        <form onSubmit={onSubmit} className="bg-[#1a1a2e] border-4 border-[#2d2d5a] p-6 space-y-5" noValidate>
+          <Field
+            label="EMAIL"
+            type="email"
+            value={email}
+            onChange={setEmail}
+            autoComplete="email"
+            required
+          />
+          <Field
+            label="PASSWORD"
+            type="password"
+            value={password}
+            onChange={setPassword}
+            autoComplete="current-password"
+            required
+          />
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full px-4 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 disabled:opacity-50 transition-colors"
-      >
-        {loading ? "Connexion…" : "Se connecter"}
-      </button>
+          {error && (
+            <div className="px-4 py-3 bg-[#ff3366]/10 border-4 border-[#ff3366] text-sm text-[#ff3366]">
+              {error}
+            </div>
+          )}
 
-      <p className="text-sm text-zinc-500 text-center">
-        Pas encore de compte ?{" "}
-        <Link href="/register" className="text-blue-600 font-medium hover:underline">
-          S&apos;inscrire
-        </Link>
-      </p>
-    </form>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full px-4 py-3 bg-[#00d4ff] border-4 border-[#00d4ff] text-[#0d0d1a] font-bold disabled:opacity-50 hover:bg-[#00ffcc] hover:border-[#00ffcc] hover:shadow-[0_0_20px_rgba(0,255,204,0.4)] transition-all"
+          >
+            {loading ? "LOADING..." : "LOGIN"}
+          </button>
+
+          <p className="text-sm text-[#9090c0] text-center pt-2">
+            New player?{" "}
+            <Link href="/register" className="text-[#ff00aa] font-bold hover:underline">
+              CREATE ACCOUNT
+            </Link>
+          </p>
+        </form>
+      </div>
+    </div>
   );
 }
 
@@ -92,7 +109,7 @@ function Field({
   const id = label.toLowerCase().replace(/\s+/g, "-");
   return (
     <div>
-      <label htmlFor={id} className="block text-xs font-semibold text-zinc-600 mb-1">
+      <label htmlFor={id} className="block font-[var(--font-pixel)] text-xs text-[#9090c0] mb-2">
         {label}
       </label>
       <input
@@ -102,7 +119,7 @@ function Field({
         onChange={(e) => onChange(e.target.value)}
         autoComplete={autoComplete}
         required={required}
-        className="w-full px-3 py-2 rounded-lg border border-[#e8e8e4] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400"
+        className="w-full px-4 py-3 bg-[#0d0d1a] border-4 border-[#2d2d5a] text-[#e8e8ff] text-sm focus:outline-none focus:border-[#00d4ff] focus:shadow-[0_0_15px_rgba(0,212,255,0.3)] transition-all"
       />
     </div>
   );

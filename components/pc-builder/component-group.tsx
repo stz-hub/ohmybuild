@@ -23,15 +23,20 @@ export function ComponentGroup({ group, selection, onSelect, onClear }: Props) {
 
   return (
     <div className={cn(
-      "rounded-xl border bg-white transition-colors",
-      selectedItem ? "border-blue-200" : hasError ? "border-red-200" : "border-[#e8e8e4]"
+      "bg-[#1a1a2e] border-4 transition-all",
+      selectedItem 
+        ? "border-[#00d4ff] shadow-[0_0_15px_rgba(0,212,255,0.2)]" 
+        : hasError 
+        ? "border-[#ff3366] shadow-[0_0_15px_rgba(255,51,102,0.2)]" 
+        : "border-[#2d2d5a]"
     )}>
 
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[#f0f0ec]">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold">{group.label}</span>
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b-4 border-[#2d2d5a] bg-[#0d0d1a]/50">
+        <div className="flex items-center gap-3">
+          <span className="font-[var(--font-pixel)] text-xs text-[#e8e8ff]">{group.label}</span>
           {socketHint && (
-            <span className="px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded bg-green-50 text-green-700 border border-green-200">
+            <span className="px-2 py-1 text-[10px] font-bold tracking-wider bg-[#00ff88]/20 text-[#00ff88] border-2 border-[#00ff88]">
               {socketHint}
             </span>
           )}
@@ -40,24 +45,25 @@ export function ComponentGroup({ group, selection, onSelect, onClear }: Props) {
         <div className="flex items-center gap-3">
           {selectedItem ? (
             <>
-              <span className="text-sm font-bold text-blue-600 tabular-nums">
-                {selectedItem.price > 0 ? `${selectedItem.price} €` : "Inclus"}
+              <span className="font-[var(--font-pixel)] text-sm text-[#ffdd00]">
+                {selectedItem.price > 0 ? `${selectedItem.price} EUR` : "INCLUDED"}
               </span>
               <button
                 onClick={() => onClear(group.key)}
-                aria-label={`Retirer ${group.label}`}
-                className="w-6 h-6 rounded-md bg-zinc-100 hover:bg-red-50 hover:text-red-600 flex items-center justify-center transition-colors"
+                aria-label={`Remove ${group.label}`}
+                className="w-8 h-8 bg-[#1a1a2e] border-2 border-[#ff3366] flex items-center justify-center text-[#ff3366] hover:bg-[#ff3366] hover:text-[#0d0d1a] transition-colors"
               >
-                <X className="w-3.5 h-3.5" />
+                <X className="w-4 h-4" />
               </button>
             </>
           ) : (
-            <span className="text-xs text-zinc-400 italic">Non sélectionné</span>
+            <span className="text-xs text-[#6060a0] italic">NOT SELECTED</span>
           )}
         </div>
       </div>
 
-      <div className="flex gap-3 px-4 py-3 overflow-x-auto">
+      {/* Items Scroll */}
+      <div className="flex gap-4 px-4 py-4 overflow-x-auto">
         {group.items.map(item => (
           <ComponentCard
             key={item.id}
@@ -69,7 +75,6 @@ export function ComponentGroup({ group, selection, onSelect, onClear }: Props) {
           />
         ))}
       </div>
-
     </div>
   );
 }

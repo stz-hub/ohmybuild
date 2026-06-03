@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { Gamepad2 } from "lucide-react";
 
 type FieldError = { field?: string; message: string };
 
@@ -37,13 +38,12 @@ export function RegisterForm() {
             })),
           );
         } else {
-          setErrors([{ message: body?.error?.message ?? "Inscription impossible." }]);
+          setErrors([{ message: body?.error?.message ?? "Registration failed." }]);
         }
         setLoading(false);
         return;
       }
 
-      // Inscription OK → auto-login.
       const signin = await signIn("credentials", {
         email,
         password,
@@ -58,7 +58,7 @@ export function RegisterForm() {
       router.refresh();
     } catch {
       setLoading(false);
-      setErrors([{ message: "Erreur réseau, réessayez." }]);
+      setErrors([{ message: "Network error, try again." }]);
     }
   }
 
@@ -66,59 +66,75 @@ export function RegisterForm() {
   const generalErrors = errors.filter((e) => !e.field);
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4" noValidate>
-      <Field
-        label="Nom"
-        type="text"
-        value={name}
-        onChange={setName}
-        autoComplete="name"
-        error={errorFor("name")}
-        required
-      />
-      <Field
-        label="Email"
-        type="email"
-        value={email}
-        onChange={setEmail}
-        autoComplete="email"
-        error={errorFor("email")}
-        required
-      />
-      <Field
-        label="Mot de passe"
-        type="password"
-        value={password}
-        onChange={setPassword}
-        autoComplete="new-password"
-        error={errorFor("password")}
-        hint="12 caractères minimum, avec majuscules, chiffres et caractères spéciaux."
-        required
-      />
+    <div className="min-h-screen bg-[#0d0d1a] pixel-grid-bg flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-[#1a1a2e] border-4 border-[#ff00aa] flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(255,0,170,0.5)]">
+            <Gamepad2 className="w-8 h-8 text-[#ff00aa]" />
+          </div>
+          <h1 className="font-[var(--font-pixel)] text-xl text-[#e8e8ff] mb-2">
+            NEW PLAYER
+          </h1>
+          <p className="text-sm text-[#9090c0]">Create your account to save builds</p>
+        </div>
 
-      {generalErrors.length > 0 && (
-        <ul role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 space-y-0.5">
-          {generalErrors.map((e, i) => (
-            <li key={i}>{e.message}</li>
-          ))}
-        </ul>
-      )}
+        {/* Form */}
+        <form onSubmit={onSubmit} className="bg-[#1a1a2e] border-4 border-[#2d2d5a] p-6 space-y-5" noValidate>
+          <Field
+            label="NAME"
+            type="text"
+            value={name}
+            onChange={setName}
+            autoComplete="name"
+            error={errorFor("name")}
+            required
+          />
+          <Field
+            label="EMAIL"
+            type="email"
+            value={email}
+            onChange={setEmail}
+            autoComplete="email"
+            error={errorFor("email")}
+            required
+          />
+          <Field
+            label="PASSWORD"
+            type="password"
+            value={password}
+            onChange={setPassword}
+            autoComplete="new-password"
+            error={errorFor("password")}
+            hint="Min 12 chars with uppercase, numbers, and special chars."
+            required
+          />
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full px-4 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 disabled:opacity-50 transition-colors"
-      >
-        {loading ? "Création…" : "Créer mon compte"}
-      </button>
+          {generalErrors.length > 0 && (
+            <div className="px-4 py-3 bg-[#ff3366]/10 border-4 border-[#ff3366] text-sm text-[#ff3366] space-y-1">
+              {generalErrors.map((e, i) => (
+                <p key={i}>{e.message}</p>
+              ))}
+            </div>
+          )}
 
-      <p className="text-sm text-zinc-500 text-center">
-        Déjà un compte ?{" "}
-        <Link href="/login" className="text-blue-600 font-medium hover:underline">
-          Se connecter
-        </Link>
-      </p>
-    </form>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full px-4 py-3 bg-[#ff00aa] border-4 border-[#ff00aa] text-[#e8e8ff] font-bold disabled:opacity-50 hover:bg-[#ff33bb] hover:shadow-[0_0_20px_rgba(255,0,170,0.4)] transition-all"
+          >
+            {loading ? "CREATING..." : "CREATE ACCOUNT"}
+          </button>
+
+          <p className="text-sm text-[#9090c0] text-center pt-2">
+            Already have an account?{" "}
+            <Link href="/login" className="text-[#00d4ff] font-bold hover:underline">
+              LOGIN
+            </Link>
+          </p>
+        </form>
+      </div>
+    </div>
   );
 }
 
@@ -144,7 +160,7 @@ function Field({
   const id = label.toLowerCase().replace(/\s+/g, "-");
   return (
     <div>
-      <label htmlFor={id} className="block text-xs font-semibold text-zinc-600 mb-1">
+      <label htmlFor={id} className="block font-[var(--font-pixel)] text-xs text-[#9090c0] mb-2">
         {label}
       </label>
       <input
@@ -156,17 +172,19 @@ function Field({
         required={required}
         aria-invalid={!!error}
         aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}
-        className={`w-full px-3 py-2 rounded-lg border bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 ${
-          error ? "border-red-400" : "border-[#e8e8e4] focus:border-blue-400"
+        className={`w-full px-4 py-3 bg-[#0d0d1a] border-4 text-[#e8e8ff] text-sm focus:outline-none transition-all ${
+          error 
+            ? "border-[#ff3366] shadow-[0_0_15px_rgba(255,51,102,0.3)]" 
+            : "border-[#2d2d5a] focus:border-[#ff00aa] focus:shadow-[0_0_15px_rgba(255,0,170,0.3)]"
         }`}
       />
       {hint && !error && (
-        <p id={`${id}-hint`} className="text-[11px] text-zinc-400 mt-1">
+        <p id={`${id}-hint`} className="text-[10px] text-[#6060a0] mt-2">
           {hint}
         </p>
       )}
       {error && (
-        <p id={`${id}-error`} className="text-[11px] text-red-600 mt-1">
+        <p id={`${id}-error`} className="text-[10px] text-[#ff3366] mt-2">
           {error}
         </p>
       )}
