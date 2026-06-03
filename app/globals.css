@@ -1,113 +1,145 @@
 @import "tailwindcss";
 
 @theme {
-  /* ── Palette rétro arcade ──────────────────────────────────────────── */
-  --color-background: #fff9e8;
-  --color-surface: #ffffff;
-  --color-ink: #0b1020;
-  --color-border: #0b1020;
-  --color-text: #0b1020;
-  --color-muted: #545878;
+  /* ── Palette arcade Y2K / newgrounds ──────────────────────────────────
+     Deep teal + néons sobres + cream. Pas de primary cartoon.
+  ──────────────────────────────────────────────────────────────────── */
+  --color-deep: #0a0e27;          /* fond très foncé, presque noir bleu */
+  --color-night: #102441;          /* navy nocturne */
+  --color-teal: #0d2a3a;
+  --color-teal-light: #14405a;
 
-  /* Palette principale rétro */
-  --color-grass: #1eb053;        /* vert herbe */
-  --color-grass-dark: #149242;
-  --color-grass-light: #b8f5cb;
-  --color-sky: #2dadff;          /* bleu ciel */
-  --color-sky-dark: #1b7fc6;
-  --color-sky-light: #d9efff;
-  --color-ring: #ffcc00;         /* jaune ring */
-  --color-ring-dark: #d99e00;
-  --color-sunset: #ff7a2a;       /* orange sunset */
-  --color-cherry: #ff3868;       /* rose cerise */
+  --color-cream: #fff4d6;          /* cream papier vintage */
+  --color-cream-2: #ffe8a8;
+  --color-cream-3: #f6e4b0;
+
+  --color-cyan: #00d4ff;           /* néon cyan principal */
+  --color-cyan-dark: #0098bd;
+  --color-mint: #00ff9d;           /* arcade green / pickup */
+  --color-mint-dark: #00cc7d;
+  --color-amber: #ffb800;          /* "coin" amber */
+  --color-amber-dark: #d99700;
+  --color-magenta: #ff3d8a;        /* accent agressif */
+  --color-magenta-dark: #cc2e6f;
   --color-violet: #8b5cf6;
 
-  /* Aliases utilitaires */
-  --color-blue: #2dadff;
-  --color-blue-light: #d9efff;
-  --color-green: #1eb053;
-  --color-red: #ff3868;
+  --color-ink: #0a0e27;            /* trait/bordure */
+  --color-paper: #fff4d6;
+  --color-text: #0a0e27;
+  --color-muted: #4a5878;
+  --color-line: #1a2745;
+
+  /* Aliases pour compat existante */
+  --color-background: var(--color-paper);
+  --color-surface: #ffffff;
+  --color-border: var(--color-ink);
+  --color-blue: var(--color-cyan-dark);
+  --color-blue-light: #d6f3ff;
+  --color-green: var(--color-mint-dark);
+  --color-red: var(--color-magenta-dark);
 
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Bricolage Grotesque", "Inter", ui-sans-serif, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-mono: ui-monospace, "Cascadia Code", "Fira Code", Menlo, monospace;
 }
 
 @layer base {
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
   html { -webkit-font-smoothing: antialiased; }
 
   body {
     background:
-      radial-gradient(ellipse 1100px 600px at 50% -10%, #ffe070 0%, transparent 60%),
-      linear-gradient(180deg, #fff9e8 0%, #ffe9c2 100%);
+      radial-gradient(ellipse 900px 500px at 50% -5%, #1a3a5c 0%, transparent 60%),
+      linear-gradient(180deg, #0a0e27 0%, #102441 60%, #0d2a3a 100%);
     background-attachment: fixed;
-    color: var(--color-text);
+    color: var(--color-cream);
     font-family: var(--font-sans);
-    line-height: 1.5;
+    line-height: 1.55;
     min-height: 100vh;
   }
 
-  /* Damier de fond subtil pour rappeler les niveaux rétro */
+  /* Scanlines CRT subtiles */
   body::before {
     content: "";
     position: fixed;
     inset: 0;
     pointer-events: none;
-    background-image:
-      linear-gradient(45deg, rgba(11, 16, 32, 0.025) 25%, transparent 25%, transparent 75%, rgba(11, 16, 32, 0.025) 75%),
-      linear-gradient(45deg, rgba(11, 16, 32, 0.025) 25%, transparent 25%, transparent 75%, rgba(11, 16, 32, 0.025) 75%);
-    background-size: 24px 24px;
-    background-position: 0 0, 12px 12px;
-    z-index: 0;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      rgba(255, 244, 214, 0.025) 0,
+      rgba(255, 244, 214, 0.025) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    z-index: 1;
   }
 
-  ::-webkit-scrollbar { width: 8px; height: 8px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb {
-    background: var(--color-ink);
-    border-radius: 4px;
-    border: 2px solid var(--color-background);
+  /* Vignette CRT — assombrit les bords */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse 80% 70% at center, transparent 50%, rgba(0, 0, 0, 0.45) 100%);
+    z-index: 1;
   }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--color-teal); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-cyan);
+    border-radius: 0;
+    border: 1px solid var(--color-ink);
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-mint); }
 
   ::selection {
-    background: var(--color-ring);
+    background: var(--color-amber);
     color: var(--color-ink);
   }
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
+    color: var(--color-cream);
   }
 }
 
-/* ── Composants utilitaires rétro ─────────────────────────────────────── */
 @layer components {
-  /* Card avec bordure épaisse + shadow décalée (style chunky arcade) */
+  /* Card crème style "manuel d'arcade" */
   .retro-card {
-    background: var(--color-surface);
+    background: linear-gradient(180deg, #fff4d6 0%, #f6e4b0 100%);
+    color: var(--color-ink);
     border: 2.5px solid var(--color-ink);
-    border-radius: 16px;
-    box-shadow: 5px 5px 0 0 var(--color-ink);
-    transition: transform 120ms ease, box-shadow 120ms ease;
+    border-radius: 6px;
+    box-shadow:
+      0 0 0 1px rgba(255, 244, 214, 0.15),
+      6px 6px 0 0 var(--color-ink),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transition: transform 120ms cubic-bezier(0.25, 1, 0.5, 1),
+                box-shadow 120ms cubic-bezier(0.25, 1, 0.5, 1);
   }
 
   .retro-card:hover {
     transform: translate(-2px, -2px);
-    box-shadow: 7px 7px 0 0 var(--color-ink);
+    box-shadow:
+      0 0 0 1px rgba(255, 244, 214, 0.2),
+      8px 8px 0 0 var(--color-ink),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
   }
 
-  .retro-card-active {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 0 var(--color-ink);
+  .retro-card-dark {
+    background: linear-gradient(180deg, #14405a 0%, #0d2a3a 100%);
+    color: var(--color-cream);
+    border-color: var(--color-cyan);
+    box-shadow:
+      0 0 0 1px rgba(0, 212, 255, 0.2),
+      6px 6px 0 0 var(--color-ink),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
-  /* Bouton chunky */
+  /* Bouton chunky façon insert-coin */
   .retro-btn {
     display: inline-flex;
     align-items: center;
@@ -115,25 +147,35 @@
     gap: 0.5rem;
     padding: 0.75rem 1.25rem;
     border: 2.5px solid var(--color-ink);
-    border-radius: 14px;
-    background: var(--color-ring);
+    border-radius: 6px;
+    background: var(--color-amber);
     color: var(--color-ink);
-    font-weight: 700;
+    font-weight: 800;
     font-family: var(--font-display);
-    box-shadow: 4px 4px 0 0 var(--color-ink);
-    transition: all 100ms ease;
+    letter-spacing: 0.01em;
+    box-shadow:
+      4px 4px 0 0 var(--color-ink),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -3px 0 rgba(0, 0, 0, 0.15);
+    transition: all 100ms cubic-bezier(0.25, 1, 0.5, 1);
     cursor: pointer;
     text-decoration: none;
   }
 
   .retro-btn:hover:not(:disabled) {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 0 var(--color-ink);
+    transform: translate(-1px, -1px);
+    box-shadow:
+      5px 5px 0 0 var(--color-ink),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -3px 0 rgba(0, 0, 0, 0.15);
   }
 
   .retro-btn:active:not(:disabled) {
     transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 0 var(--color-ink);
+    box-shadow:
+      2px 2px 0 0 var(--color-ink),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -3px 0 rgba(0, 0, 0, 0.15);
   }
 
   .retro-btn:disabled {
@@ -142,76 +184,124 @@
     box-shadow: 4px 4px 0 0 var(--color-ink);
   }
 
-  .retro-btn-blue { background: var(--color-sky); color: white; }
-  .retro-btn-green { background: var(--color-grass); color: white; }
-  .retro-btn-cherry { background: var(--color-cherry); color: white; }
-  .retro-btn-ink { background: var(--color-ink); color: white; }
-  .retro-btn-white { background: white; }
+  .retro-btn-cyan {
+    background: linear-gradient(180deg, #00d4ff 0%, #0098bd 100%);
+    color: var(--color-ink);
+  }
+  .retro-btn-mint {
+    background: linear-gradient(180deg, #00ff9d 0%, #00cc7d 100%);
+    color: var(--color-ink);
+  }
+  .retro-btn-magenta {
+    background: linear-gradient(180deg, #ff3d8a 0%, #cc2e6f 100%);
+    color: var(--color-cream);
+  }
+  .retro-btn-amber {
+    background: linear-gradient(180deg, #ffb800 0%, #d99700 100%);
+  }
+  .retro-btn-ink {
+    background: linear-gradient(180deg, #102441 0%, #0a0e27 100%);
+    color: var(--color-cream);
+  }
+  .retro-btn-paper {
+    background: linear-gradient(180deg, #ffffff 0%, #fff4d6 100%);
+  }
 
-  /* Tag/badge rétro */
+  /* Badge type LCD/insert-coin */
   .retro-tag {
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
-    padding: 0.25rem 0.625rem;
+    gap: 0.35rem;
+    padding: 0.3rem 0.65rem;
     border: 2px solid var(--color-ink);
-    border-radius: 999px;
-    background: var(--color-ring);
+    border-radius: 4px;
+    background: var(--color-amber);
     color: var(--color-ink);
-    font-weight: 700;
+    font-family: var(--font-display);
+    font-weight: 800;
     font-size: 10px;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    box-shadow: 2px 2px 0 0 var(--color-ink);
+    box-shadow:
+      2px 2px 0 0 var(--color-ink),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
   }
 
-  /* Input rétro */
+  /* Input style "écran LCD" */
   .retro-input {
     width: 100%;
-    padding: 0.625rem 0.875rem;
+    padding: 0.7rem 0.875rem;
     border: 2.5px solid var(--color-ink);
-    border-radius: 12px;
-    background: white;
+    border-radius: 4px;
+    background: #fff;
+    color: var(--color-ink);
     font-family: var(--font-sans);
-    box-shadow: 3px 3px 0 0 var(--color-ink);
-    transition: all 100ms ease;
+    box-shadow:
+      3px 3px 0 0 var(--color-ink),
+      inset 0 2px 0 rgba(0, 0, 0, 0.06);
+    transition: all 100ms cubic-bezier(0.25, 1, 0.5, 1);
   }
 
   .retro-input:focus {
     outline: none;
     transform: translate(-1px, -1px);
-    box-shadow: 4px 4px 0 0 var(--color-ink);
+    box-shadow:
+      4px 4px 0 0 var(--color-ink),
+      0 0 0 2px var(--color-cyan),
+      inset 0 2px 0 rgba(0, 0, 0, 0.06);
   }
 
-  /* Banner rétro (titres encadrés) */
+  /* Bandeau type "marquee" / titre arcade */
   .retro-banner {
     display: inline-block;
-    padding: 0.375rem 0.875rem;
+    padding: 0.35rem 0.75rem;
     background: var(--color-ink);
-    color: var(--color-ring);
+    color: var(--color-amber);
     font-family: var(--font-display);
     font-weight: 800;
     font-size: 11px;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
+    border: 2px solid var(--color-ink);
+    border-radius: 4px;
+    box-shadow:
+      3px 3px 0 0 var(--color-amber),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  /* Glow néon */
+  .glow-cyan { text-shadow: 0 0 8px rgba(0, 212, 255, 0.6), 0 0 18px rgba(0, 212, 255, 0.35); }
+  .glow-mint { text-shadow: 0 0 8px rgba(0, 255, 157, 0.55), 0 0 18px rgba(0, 255, 157, 0.3); }
+  .glow-magenta { text-shadow: 0 0 8px rgba(255, 61, 138, 0.55), 0 0 18px rgba(255, 61, 138, 0.3); }
+  .glow-amber { text-shadow: 0 0 6px rgba(255, 184, 0, 0.55), 0 0 16px rgba(255, 184, 0, 0.3); }
+
+  /* "Stickers" type sticki-arcade */
+  .sticker {
+    border: 2.5px solid var(--color-ink);
     border-radius: 6px;
+    box-shadow:
+      3px 3px 0 0 var(--color-ink),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+
+  /* Bandeau bas façon marquee défilante (statique pour perf) */
+  .marquee-strip {
+    background:
+      repeating-linear-gradient(
+        135deg,
+        var(--color-ink) 0,
+        var(--color-ink) 12px,
+        var(--color-amber) 12px,
+        var(--color-amber) 24px
+      );
   }
 }
 
-/* ── Pixel ring SVG (anneau Sonic-like) ────────────────────────────── */
-.ring {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle, transparent 30%, var(--color-ring) 30%, var(--color-ring) 65%, var(--color-ring-dark) 65%);
-  filter: drop-shadow(2px 2px 0 var(--color-ink));
-}
+@keyframes blink { 50% { opacity: 0; } }
+.blink { animation: blink 1s steps(2) infinite; }
 
-/* Anim spin pour ring/star */
-@keyframes ring-spin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
-.ring-anim { animation: ring-spin 2s linear infinite; }
+@keyframes float-y { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+.float-y { animation: float-y 3s ease-in-out infinite; }
 
-/* Wrapper pour que body::before n'écrase pas le contenu */
-.content-layer { position: relative; z-index: 1; }
+/* Wrapper z-index sur le contenu pour passer au-dessus des scanlines */
+.content-layer { position: relative; z-index: 2; }
