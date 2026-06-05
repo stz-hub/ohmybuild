@@ -1,0 +1,12 @@
+# Gitleaks config — étend les règles par défaut.
+title = "OhMyBuild gitleaks config"
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Chemins ignorés (pas de secrets réels)"
+paths = [
+  '''(.*?)(jpg|jpeg|png|ico|svg|lock)$''',
+  '''package-lock\.json''',
+  '''prisma/seed\.ts''',   # mot de passe démo factice
+]

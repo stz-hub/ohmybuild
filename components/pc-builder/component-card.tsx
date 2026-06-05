@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Check, AlertTriangle, ExternalLink } from "lucide-react";
 import type { Component, ComponentKey, Selection } from "@/lib/pc-data";
 import { IDEALO_URLS, wouldCreateError } from "@/lib/pc-data";
 
@@ -15,57 +14,65 @@ interface Props {
 
 export function ComponentCard({ item, groupKey, isSelected, selection, onSelect }: Props) {
   const isConflict = !isSelected && wouldCreateError(selection, groupKey, item.id);
-  const idealoUrl  = IDEALO_URLS[item.id];
+  const idealoUrl = IDEALO_URLS[item.id];
 
   return (
     <div
       onClick={() => !isConflict && onSelect()}
       className={cn(
-        "relative flex flex-col gap-2 p-3 rounded-xl border min-w-[180px] transition-all",
+        "relative flex flex-col gap-1 p-2 border min-w-[180px] transition-all",
         isSelected
-          ? "bg-blue-50 border-blue-300 shadow-sm"
+          ? "bg-[#C1D2EE] border-[#316AC5]"
           : isConflict
-          ? "bg-zinc-50 border-zinc-200 opacity-40 cursor-not-allowed"
-          : "bg-white border-[#e8e8e4] hover:border-blue-200 hover:bg-blue-50/30 cursor-pointer"
+          ? "bg-[#F5F5F5] border-[#C0C0C0] opacity-50 cursor-not-allowed"
+          : "bg-white border-[#7F9DB9] hover:bg-[#E8EEF7] hover:border-[#316AC5] cursor-pointer"
       )}
     >
       {item.badge && (
         <span className={cn(
-          "absolute -top-2 right-2 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded-full",
-          isSelected ? "bg-blue-600 text-white" : "bg-zinc-100 text-zinc-500"
+          "absolute -top-2 right-2 px-2 py-0.5 text-[9px] font-bold border",
+          isSelected 
+            ? "bg-[#316AC5] border-[#003399] text-white" 
+            : "bg-[#FFFFCC] border-[#CCCC66] text-[#000]"
         )}>
           {item.badge}
         </span>
       )}
 
-      <div className="flex items-start justify-between">
-        <span className={cn(
-          "text-xs font-medium leading-tight",
-          isSelected ? "text-blue-700" : "text-zinc-700"
-        )}>
+      <div className="flex items-start justify-between gap-2">
+        <span className="text-[11px] font-semibold text-[#000] leading-tight">
           {item.name}
         </span>
-        {isSelected && <Check className="w-3.5 h-3.5 text-blue-600 shrink-0 ml-2 mt-0.5" />}
-        {isConflict && <AlertTriangle className="w-3.5 h-3.5 text-zinc-400 shrink-0 ml-2 mt-0.5" />}
+        {isSelected && (
+          <span className="text-[12px] text-[#008000] font-bold shrink-0">&#10003;</span>
+        )}
+        {isConflict && (
+          <span className="text-[12px] text-[#FF0000] font-bold shrink-0">&#9888;</span>
+        )}
       </div>
 
-      <div className="flex items-end justify-between mt-auto">
+      <div className="flex items-end justify-between mt-auto pt-1">
         <span className={cn(
-          "text-base font-bold tabular-nums",
-          isSelected ? "text-blue-600" : "text-zinc-800"
+          "text-[13px] font-bold",
+          isSelected ? "text-[#003399]" : "text-[#FF6600]"
         )}>
-          {item.price > 0 ? `${item.price} €` : "Inclus"}
+          {item.price > 0 ? `${item.price} EUR` : "Included"}
         </span>
 
         {item.tier && (
           <div className="flex gap-0.5">
             {[1, 2, 3].map(n => (
-              <div key={n} className={cn(
-                "w-1.5 h-1.5 rounded-full",
-                n <= item.tier!
-                  ? isSelected ? "bg-blue-500" : "bg-zinc-400"
-                  : "bg-zinc-200"
-              )} />
+              <span 
+                key={n} 
+                className={cn(
+                  "text-[10px]",
+                  n <= item.tier!
+                    ? "text-[#FFD700]" 
+                    : "text-[#C0C0C0]"
+                )}
+              >
+                &#9733;
+              </span>
             ))}
           </div>
         )}
@@ -77,10 +84,9 @@ export function ComponentCard({ item, groupKey, isSelected, selection, onSelect 
           target="_blank"
           rel="noopener noreferrer"
           onClick={e => e.stopPropagation()}
-          className="flex items-center gap-1 text-[10px] text-blue-500 hover:text-blue-700 transition-colors"
+          className="text-[10px] text-[#0066CC] hover:underline mt-1 flex items-center gap-1"
         >
-          <ExternalLink className="w-3 h-3" />
-          Voir sur Idealo
+          &#128279; View on Idealo
         </a>
       )}
     </div>

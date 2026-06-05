@@ -1,185 +1,304 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Zap, ShieldCheck, TrendingUp } from "lucide-react";
+import Image from "next/image";
 import { PRESETS, GROUPS, calculateTotal } from "@/lib/pc-data";
 
 const features = [
   {
-    icon: ShieldCheck,
-    title: "Compatibilité vérifiée",
-    description: "Socket CPU, génération RAM, puissance PSU — tout est vérifié automatiquement avant que tu confirmes ta config.",
+    icon: "/xp-icons/System Properties.ico",
+    title: "Compatibility Check",
+    description: "CPU socket, RAM generation, PSU power - everything is verified before you confirm your build.",
   },
   {
-    icon: TrendingUp,
-    title: "FPS réels benchmarkés",
-    description: "Les performances affichées viennent de vrais benchmarks (TechPowerUp, Hardware Unboxed, Digital Foundry) sur Cyberpunk 2077 Ultra.",
+    icon: "/xp-icons/Monitor.ico",
+    title: "Real FPS Data",
+    description: "Performance data from real benchmarks on Cyberpunk 2077 Ultra settings.",
   },
   {
-    icon: Zap,
-    title: "Meilleurs prix Idealo",
-    description: "Chaque composant sélectionné renvoie directement vers sa page Idealo pour comparer les prix en temps réel.",
+    icon: "/xp-icons/Internet Properties.ico",
+    title: "Best Prices",
+    description: "Each component links directly to Idealo for real-time price comparison.",
   },
 ];
 
 export function HomePage() {
   return (
-    <main>
-
-      {/* ── Hero ── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-16">
-        <div className="max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 mb-6">
-            <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-            <span className="text-xs font-semibold text-blue-600 tracking-wide">
-              Configurateur PC gratuit · France
-            </span>
-          </div>
-
-          <h1 className="text-5xl sm:text-6xl font-bold tracking-tight leading-[1.05] mb-5">
-            Composez votre PC
-            <span className="text-blue-600"> pièce par pièce.</span>
-          </h1>
-
-          <p className="text-lg text-zinc-500 leading-relaxed mb-8 max-w-xl">
-            Compatibilité vérifiée en temps réel, performances estimées par résolution,
-            meilleurs prix Idealo. Sans inscription, sans bullshit.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <Link
-              href="/configurateur"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors"
-            >
-              Commencer ma config
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <span className="text-sm text-zinc-400">Gratuit · Aucun compte requis</span>
-          </div>
+    <main className="min-h-screen p-4 md:p-8">
+      {/* Desktop Icons */}
+      <div className="fixed left-4 top-20 flex flex-col gap-4 z-10 hidden lg:flex">
+        <Link href="/configurateur" className="xp-desktop-icon">
+          <Image src="/xp-icons/My Computer.ico" alt="" width={48} height={48} />
+          <span>PC Builder</span>
+        </Link>
+        <Link href="/mes-configs" className="xp-desktop-icon">
+          <Image src="/xp-icons/Folder Closed.ico" alt="" width={48} height={48} />
+          <span>My Builds</span>
+        </Link>
+        <div className="xp-desktop-icon">
+          <Image src="/xp-icons/My Network Places.ico" alt="" width={48} height={48} />
+          <span>Network</span>
         </div>
-      </section>
+      </div>
 
-      {/* ── Stats bar ── */}
-      <section className="border-y border-[#e8e8e4] bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 grid grid-cols-3 divide-x divide-[#e8e8e4]">
-          {[
-            { value: "8",      label: "catégories de composants" },
-            { value: "100%",   label: "vérification de compatibilité" },
-            { value: "0 €",    label: "coût d'utilisation" },
-          ].map(({ value, label }) => (
-            <div key={label} className="px-6 text-center first:pl-0 last:pr-0">
-              <div className="text-2xl font-bold text-blue-600">{value}</div>
-              <div className="text-xs text-zinc-400 mt-0.5">{label}</div>
+      {/* Main Window */}
+      <div className="max-w-5xl mx-auto">
+        {/* Welcome Window */}
+        <div className="xp-window mb-6">
+          <div className="xp-titlebar">
+            <div className="xp-titlebar-text">
+              <Image src="/xp-logo.png" alt="" width={16} height={16} className="xp-titlebar-icon" />
+              <span>Welcome to OhMyBuild - PC Configuration Wizard</span>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Features ── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-20">
-        <h2 className="text-2xl font-bold tracking-tight mb-3">Pourquoi OhMyBuild ?</h2>
-        <p className="text-zinc-500 mb-10 max-w-xl">
-          Les autres configurateurs te noient dans les options. Ici, c'est simple, rapide, et honnête.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {features.map(({ icon: Icon, title, description }) => (
-            <div key={title} className="bg-white rounded-xl border border-[#e8e8e4] p-6">
-              <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center mb-4">
-                <Icon className="w-5 h-5 text-blue-600" />
+            <div className="xp-window-controls">
+              <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+              <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+              <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+            </div>
+          </div>
+          <div className="xp-window-content">
+            {/* Hero Content */}
+            <div className="flex flex-col md:flex-row gap-6 p-4">
+              <div className="flex-shrink-0 flex flex-col items-center gap-2">
+                <Image 
+                  src="/xp-logo.png" 
+                  alt="OhMyBuild Logo" 
+                  width={96} 
+                  height={96}
+                  className="drop-shadow-lg"
+                />
+                <div className="text-center">
+                  <span className="text-[18px] font-bold text-[#003399]">OhMyBuild</span>
+                  <div className="text-[10px] text-[#808080]">Version 2.0 XP Edition</div>
+                </div>
               </div>
-              <h3 className="font-semibold text-zinc-900 mb-2">{title}</h3>
-              <p className="text-sm text-zinc-500 leading-relaxed">{description}</p>
+              <div className="flex-1">
+                <h1 className="text-[24px] font-bold text-[#003399] mb-2">
+                  Build Your Dream PC
+                </h1>
+                <p className="text-[12px] text-[#000] leading-relaxed mb-4">
+                  Welcome to the OhMyBuild PC Configuration Wizard! This wizard will help you 
+                  select compatible components for your gaming PC with real-time compatibility 
+                  verification, performance estimates by resolution, and best Idealo prices.
+                </p>
+                
+                {/* Info Box */}
+                <div className="xp-info-box mb-4">
+                  <Image src="/xp-icons/Activate Windows.ico" alt="" width={32} height={32} />
+                  <div className="text-[11px]">
+                    <strong>Did you know?</strong> No account required to configure your PC. 
+                    Create an account to save and share your builds!
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  <Link href="/configurateur" className="xp-button xp-button-primary text-[12px] px-4 py-2 flex items-center gap-2">
+                    <Image src="/xp-icons/My Computer.ico" alt="" width={16} height={16} />
+                    Start Configuration Wizard
+                  </Link>
+                  <Link href="/register" className="xp-button text-[12px] px-4 py-2 flex items-center gap-2">
+                    <Image src="/xp-icons/User Accounts.ico" alt="" width={16} height={16} />
+                    Create Account
+                  </Link>
+                </div>
+              </div>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Presets ── */}
-      <section className="border-t border-[#e8e8e4] bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
-          <h2 className="text-2xl font-bold tracking-tight mb-2">Configurations prêtes à l&apos;emploi</h2>
-          <p className="text-zinc-500 mb-8">Un clic pour charger une config complète et équilibrée.</p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {PRESETS.map(preset => {
-              const total = calculateTotal(preset.selection);
-              const count = Object.keys(preset.selection).length;
-              return (
-                <Link
-                  key={preset.name}
-                  href="/configurateur"
-                  className="group bg-[#f9f9f7] hover:bg-blue-50 border border-[#e8e8e4] hover:border-blue-200 rounded-xl p-6 transition-all"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
-                      {preset.target}
-                    </span>
-                    <span className="text-xs text-zinc-400">{count} composants</span>
-                  </div>
-
-                  <h3 className="font-bold text-zinc-900 mb-1 group-hover:text-blue-700 transition-colors">
-                    {preset.name}
-                  </h3>
-                  <p className="text-sm text-zinc-500 mb-4">{preset.description}</p>
-
-                  <div className="space-y-1 mb-5">
-                    {GROUPS.slice(0, 4).map(group => {
-                      const item = group.items.find(i => i.id === preset.selection[group.key]);
-                      if (!item) return null;
-                      return (
-                        <div key={group.key} className="flex items-center gap-2 text-xs text-zinc-500">
-                          <CheckCircle2 className="w-3 h-3 text-green-500 shrink-0" />
-                          {item.name}
-                        </div>
-                      );
-                    })}
-                    <div className="text-xs text-zinc-400 pl-5">+ {count - 4} autres composants</div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-xl font-bold text-zinc-900">
-                      {total.toLocaleString("fr-FR")} €
-                    </span>
-                    <span className="text-xs font-semibold text-blue-600 group-hover:translate-x-0.5 transition-transform">
-                      Voir la config →
-                    </span>
-                  </div>
-                </Link>
-              );
-            })}
           </div>
         </div>
-      </section>
 
-      {/* ── CTA ── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-20">
-        <div className="rounded-2xl bg-blue-600 px-8 py-12 text-center">
-          <h2 className="text-3xl font-bold text-white mb-3">
-            Prêt à composer votre machine ?
-          </h2>
-          <p className="text-blue-100 mb-8 max-w-md mx-auto">
-            Configurez chaque pièce, vérifiez la compatibilité, exportez la liste. En 5 minutes.
-          </p>
-          <Link
-            href="/configurateur"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-blue-600 font-semibold hover:bg-blue-50 transition-colors"
-          >
-            Lancer le configurateur
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+        {/* Stats Panel */}
+        <div className="xp-window mb-6">
+          <div className="xp-titlebar">
+            <div className="xp-titlebar-text">
+              <Image src="/xp-icons/Display.ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+              <span>System Information</span>
+            </div>
+            <div className="xp-window-controls">
+              <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+              <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+              <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+            </div>
+          </div>
+          <div className="xp-window-content">
+            <div className="grid grid-cols-3 gap-4 p-2">
+              {[
+                { icon: "/xp-icons/System Properties.ico", value: "8", label: "Component Categories" },
+                { icon: "/xp-icons/Activate Windows.ico", value: "100%", label: "Compatibility Check" },
+                { icon: "/xp-icons/User Support.ico", value: "0 EUR", label: "Usage Cost" },
+              ].map(({ icon, value, label }) => (
+                <div key={label} className="xp-panel text-center p-3">
+                  <Image src={icon} alt="" width={32} height={32} className="mx-auto mb-2" />
+                  <div className="text-[18px] font-bold text-[#003399]">{value}</div>
+                  <div className="text-[10px] text-[#808080] mt-1">{label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-      </section>
 
-      {/* ── Footer ── */}
-      <footer className="border-t border-[#e8e8e4] py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="text-sm font-bold">
-            Oh<span className="text-blue-600">My</span>Build
-          </span>
-          <p className="text-xs text-zinc-400 text-center">
-            Benchmarks : TechPowerUp · Hardware Unboxed · Digital Foundry · Prix indicatifs via Idealo
-          </p>
+        {/* Features Window */}
+        <div className="xp-window mb-6">
+          <div className="xp-titlebar">
+            <div className="xp-titlebar-text">
+              <Image src="/xp-icons/Manage your Server.ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+              <span>Why OhMyBuild?</span>
+            </div>
+            <div className="xp-window-controls">
+              <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+              <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+              <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+            </div>
+          </div>
+          <div className="xp-window-content">
+            <p className="text-[11px] text-[#808080] p-2 mb-2">
+              Other configurators drown you in options. Here, it&apos;s simple, fast, and honest!
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-2">
+              {features.map(({ icon, title, description }) => (
+                <div key={title} className="xp-panel p-4 flex flex-col items-center text-center">
+                  <Image src={icon} alt="" width={48} height={48} className="mb-3" />
+                  <h3 className="text-[12px] font-bold text-[#003399] mb-2">{title}</h3>
+                  <p className="text-[11px] text-[#000] leading-relaxed">{description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-      </footer>
 
+        {/* Presets Window */}
+        <div className="xp-window mb-6">
+          <div className="xp-titlebar">
+            <div className="xp-titlebar-text">
+              <Image src="/xp-icons/Game Controller.ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+              <span>Choose Your Build - Quick Start Configurations</span>
+            </div>
+            <div className="xp-window-controls">
+              <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+              <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+              <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+            </div>
+          </div>
+          <div className="xp-window-content">
+            <p className="text-[11px] text-[#808080] p-2 mb-2">
+              Select a preset configuration to get started quickly. Click &quot;Load Configuration&quot; to customize.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-2">
+              {PRESETS.map((preset, index) => {
+                const total = calculateTotal(preset.selection);
+                const count = Object.keys(preset.selection).length;
+                const icons = [
+                  "/xp-icons/Laptop.ico",
+                  "/xp-icons/My Computer.ico",
+                  "/xp-icons/Network Computers.ico",
+                ];
+
+                return (
+                  <div key={preset.name} className="xp-panel p-4">
+                    <div className="flex items-start gap-3 mb-3">
+                      <Image src={icons[index]} alt="" width={32} height={32} />
+                      <div>
+                        <div className="text-[10px] font-bold text-white bg-[#316AC5] px-2 py-0.5 rounded-sm inline-block mb-1">
+                          {preset.target}
+                        </div>
+                        <h3 className="text-[12px] font-bold text-[#003399]">{preset.name}</h3>
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-[#000] mb-3">{preset.description}</p>
+                    
+                    <div className="xp-listview mb-3">
+                      {GROUPS.slice(0, 3).map(group => {
+                        const item = group.items.find(i => i.id === preset.selection[group.key]);
+                        if (!item) return null;
+                        return (
+                          <div key={group.key} className="xp-listview-item text-[10px] flex items-center gap-2">
+                            <span className="text-[#008000]">&#10003;</span>
+                            <span className="truncate">{item.name}</span>
+                          </div>
+                        );
+                      })}
+                      <div className="xp-listview-item text-[10px] text-[#808080]">
+                        + {count - 3} more components...
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between border-t border-[#919B9C] pt-3">
+                      <span className="text-[14px] font-bold text-[#003399]">
+                        {total.toLocaleString("fr-FR")} EUR
+                      </span>
+                      <Link href="/configurateur" className="xp-button text-[11px] px-3 py-1">
+                        Load Configuration &rarr;
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* CTA Window */}
+        <div className="xp-window mb-6">
+          <div className="xp-titlebar">
+            <div className="xp-titlebar-text">
+              <Image src="/xp-icons/Activate Windows.ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+              <span>Ready to Build?</span>
+            </div>
+            <div className="xp-window-controls">
+              <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+              <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+              <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+            </div>
+          </div>
+          <div className="xp-window-content">
+            <div className="p-6 text-center">
+              <Image src="/xp-icons/My Computer.ico" alt="" width={64} height={64} className="mx-auto mb-4" />
+              <h2 className="text-[18px] font-bold text-[#003399] mb-2">
+                Ready to Level Up?
+              </h2>
+              <p className="text-[11px] text-[#808080] mb-6 max-w-md mx-auto">
+                Configure each component, verify compatibility, export the list. In just 5 minutes!
+              </p>
+              <Link
+                href="/configurateur"
+                className="xp-button xp-button-primary text-[14px] px-6 py-2 inline-flex items-center gap-2"
+              >
+                <Image src="/xp-icons/Game Controller.ico" alt="" width={16} height={16} />
+                Launch Configuration Wizard
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <footer className="xp-window">
+          <div className="xp-titlebar">
+            <div className="xp-titlebar-text">
+              <Image src="/xp-icons/Earth (fixed).ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+              <span>About OhMyBuild</span>
+            </div>
+            <div className="xp-window-controls">
+              <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+              <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+              <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+            </div>
+          </div>
+          <div className="xp-window-content">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-3 text-[11px]">
+              <div className="flex items-center gap-2">
+                <Image src="/xp-logo.png" alt="" width={24} height={24} />
+                <span className="font-bold text-[#003399]">OhMyBuild</span>
+                <span className="text-[#808080]">XP Edition</span>
+              </div>
+              <p className="text-[#808080] text-center">
+                Benchmarks: TechPowerUp - Hardware Unboxed - Digital Foundry | Prices via Idealo
+              </p>
+              <div className="flex gap-1">
+                {["#0054E3", "#3C9A40", "#FF6600", "#FF0000"].map((c, i) => (
+                  <div key={i} className="w-3 h-3 border border-[#808080]" style={{ backgroundColor: c }} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
     </main>
   );
 }

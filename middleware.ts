@@ -1,25 +1,26 @@
-/**
- * Middleware Next.js — protège `/mes-configs` en redirigeant les visiteurs
- * non connectés vers `/login`. Les routes API gèrent leur auth eux-mêmes.
- */
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-import { auth } from "@/auth";
-
-export default auth((req) => {
-  const isAuthed = !!req.auth?.user;
+export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
 
-  if (!isAuthed && path.startsWith("/mes-configs")) {
-    const url = new URL("/login", req.nextUrl.origin);
-    url.searchParams.set("callbackUrl", req.nextUrl.pathname);
-    return NextResponse.redirect(url);
+  if (path.startsWith("/mes-configs")) {
+    const session = await getToken({ 
+      req, 
+      secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET 
+    });
+
+    if (!session) {
+      const url = new URL("/login", req.nextUrl.origin);
+      url.searchParams.set("callbackUrl", req.nextUrl.pathname);
+      return NextResponse.redirect(url);
+    }
   }
 
   return NextResponse.next();
-});
+}
 
 export const config = {
-  // Limite le middleware aux routes app, exclut assets et API.
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)"],
 };

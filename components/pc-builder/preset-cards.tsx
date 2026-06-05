@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import type { Preset, Selection } from "@/lib/pc-data";
 import { GROUPS, calculateTotal } from "@/lib/pc-data";
 
@@ -15,42 +16,65 @@ export function PresetCards({ presets, currentSelection, onApply }: Props) {
     return GROUPS.every(g => (currentSelection[g.key] ?? null) === (preset.selection[g.key] ?? null));
   }
 
+  const icons = [
+    "/xp-icons/Laptop.ico",
+    "/xp-icons/My Computer.ico",
+    "/xp-icons/Network Computers.ico",
+  ];
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-      {presets.map(preset => {
+      {presets.map((preset, index) => {
         const active = isActive(preset);
-        const total  = calculateTotal(preset.selection);
+        const total = calculateTotal(preset.selection);
 
         return (
           <button
             key={preset.name}
             onClick={() => onApply(preset)}
             className={cn(
-              "relative text-left p-5 rounded-xl border transition-all overflow-hidden",
+              "text-left p-3 border transition-all",
               active
-                ? "bg-blue-50 border-blue-300 shadow-sm"
-                : "bg-white border-[#e8e8e4] hover:border-blue-200 hover:bg-blue-50/20"
+                ? "bg-[#C1D2EE] border-[#316AC5]"
+                : "bg-white border-[#7F9DB9] hover:bg-[#E8EEF7] hover:border-[#316AC5]"
             )}
           >
-            <div className={cn(
-              "absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500 transition-transform origin-left",
-              active ? "scale-x-100" : "scale-x-0"
-            )} />
+            <div className="flex items-start gap-3 mb-2">
+              <Image src={icons[index]} alt="" width={32} height={32} />
+              <div className="flex-1 min-w-0">
+                <div className="text-[9px] font-bold text-white bg-[#316AC5] px-2 py-0.5 inline-block mb-1">
+                  {preset.target}
+                </div>
+                <h3 className="text-[12px] font-bold text-[#003399] truncate">
+                  {preset.name}
+                </h3>
+              </div>
+              {active && (
+                <span className="text-[14px] text-[#008000] font-bold">&#10003;</span>
+              )}
+            </div>
 
-            <span className={cn(
-              "inline-block px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded mb-3",
-              active ? "bg-blue-100 text-blue-700" : "bg-zinc-100 text-zinc-500"
-            )}>
-              {preset.target}
-            </span>
+            <p className="text-[10px] text-[#808080] mb-2 line-clamp-2">{preset.description}</p>
 
-            <h3 className={cn("text-sm font-bold mb-0.5", active ? "text-blue-700" : "text-zinc-800")}>
-              {preset.name}
-            </h3>
-            <p className="text-xs text-zinc-400 mb-3">{preset.description}</p>
-
-            <div className={cn("text-xl font-bold tabular-nums", active ? "text-blue-600" : "text-zinc-800")}>
-              {total.toLocaleString("fr-FR")} €
+            <div className="flex items-center justify-between border-t border-[#C0C0C0] pt-2">
+              <span className="text-[13px] font-bold text-[#003399]">
+                {total.toLocaleString("fr-FR")} EUR
+              </span>
+              <div className="flex gap-0.5">
+                {[1, 2, 3].map(n => (
+                  <span 
+                    key={n} 
+                    className={cn(
+                      "text-[10px]",
+                      n <= index + 1 
+                        ? "text-[#FFD700]" 
+                        : "text-[#C0C0C0]"
+                    )}
+                  >
+                    &#9733;
+                  </span>
+                ))}
+              </div>
             </div>
           </button>
         );

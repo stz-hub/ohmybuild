@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
 import { ComponentCard } from "./component-card";
 import type { ComponentGroup as Group, ComponentKey, Selection } from "@/lib/pc-data";
 import { getSocketHint, getCompatibilityErrors } from "@/lib/pc-data";
@@ -22,42 +21,55 @@ export function ComponentGroup({ group, selection, onSelect, onClear }: Props) {
   );
 
   return (
-    <div className={cn(
-      "rounded-xl border bg-white transition-colors",
-      selectedItem ? "border-blue-200" : hasError ? "border-red-200" : "border-[#e8e8e4]"
-    )}>
-
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[#f0f0ec]">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold">{group.label}</span>
-          {socketHint && (
-            <span className="px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded bg-green-50 text-green-700 border border-green-200">
-              {socketHint}
-            </span>
-          )}
-        </div>
-
-        <div className="flex items-center gap-3">
-          {selectedItem ? (
-            <>
-              <span className="text-sm font-bold text-blue-600 tabular-nums">
-                {selectedItem.price > 0 ? `${selectedItem.price} €` : "Inclus"}
-              </span>
-              <button
-                onClick={() => onClear(group.key)}
-                aria-label={`Retirer ${group.label}`}
-                className="w-6 h-6 rounded-md bg-zinc-100 hover:bg-red-50 hover:text-red-600 flex items-center justify-center transition-colors"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </>
-          ) : (
-            <span className="text-xs text-zinc-400 italic">Non sélectionné</span>
-          )}
-        </div>
+    <div className="xp-groupbox">
+      {/* XP-style group box title */}
+      <div className={cn(
+        "xp-groupbox-title flex items-center gap-2",
+        selectedItem 
+          ? "text-[#008000]" 
+          : hasError
+          ? "text-[#FF0000]"
+          : "text-[#003399]"
+      )}>
+        <span className="font-bold">{group.label}</span>
+        {socketHint && (
+          <span className="text-[9px] font-normal text-[#0066CC] bg-[#E8EEF7] px-1.5 py-0.5 border border-[#7F9DB9]">
+            {socketHint}
+          </span>
+        )}
+        {selectedItem && (
+          <span className="text-[10px] text-[#008000]">&#10003;</span>
+        )}
+        {hasError && !selectedItem && (
+          <span className="text-[10px] text-[#FF0000]">&#9888;</span>
+        )}
       </div>
 
-      <div className="flex gap-3 px-4 py-3 overflow-x-auto">
+      {/* Header info */}
+      <div className="flex items-center justify-between mb-2 px-1">
+        <div className="flex items-center gap-2">
+          {selectedItem ? (
+            <span className="text-[11px] font-bold text-[#FF6600]">
+              {selectedItem.price > 0 ? `${selectedItem.price} EUR` : "Included"}
+            </span>
+          ) : (
+            <span className="text-[10px] text-[#808080] italic">Select a component below</span>
+          )}
+        </div>
+
+        {selectedItem && (
+          <button
+            onClick={() => onClear(group.key)}
+            aria-label={`Remove ${group.label}`}
+            className="xp-button text-[10px] px-2 py-0.5 text-[#FF0000]"
+          >
+            X Clear
+          </button>
+        )}
+      </div>
+
+      {/* Items Scroll */}
+      <div className="flex gap-2 overflow-x-auto pb-1">
         {group.items.map(item => (
           <ComponentCard
             key={item.id}
@@ -69,7 +81,6 @@ export function ComponentGroup({ group, selection, onSelect, onClear }: Props) {
           />
         ))}
       </div>
-
     </div>
   );
 }

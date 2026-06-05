@@ -1,7 +1,7 @@
 /**
  * Config NextAuth v5 — point d'entrée racine.
  *
- * - Provider : credentials (email + mot de passe avec bcrypt).
+ * - Providers : credentials (email + bcrypt) ET Google OAuth.
  * - Strategy : JWT (obligatoire avec credentials + Prisma adapter).
  * - Pages : /login et /register côté app/.
  *
@@ -12,6 +12,7 @@
  */
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcryptjs";
 
@@ -26,6 +27,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     newUser: "/configurateur",
   },
   providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      // Lie un compte Google à un compte credentials existant partageant
+      // la même adresse email (sinon erreur OAuthAccountNotLinked).
+      allowDangerousEmailAccountLinking: true,
+    }),
     Credentials({
       name: "credentials",
       credentials: {

@@ -1,24 +1,25 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 
 import { Navbar } from "@/components/navbar/navbar";
 import { AuthSessionProvider } from "@/components/auth/session-provider";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
-  title: "OhMyBuild — Configurateur PC",
+  title: "OhMyBuild - PC Configuration Wizard",
   description:
-    "Configurez votre PC gaming sur mesure. Compatibilité vérifiée, FPS benchmarkés, meilleurs prix Idealo.",
-  keywords: "configurateur PC, PC gaming, build PC, composants PC, compatibilité",
+    "Build your ultimate gaming PC with the OhMyBuild Configuration Wizard! Compatibility verified, FPS benchmarked, best prices.",
+  keywords: "PC configurator, gaming PC, PC build, PC components, Windows XP",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0054E3",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr">
-      <body className={inter.className}>
+    <html lang="fr" className="bg-[#3A6EA5]">
+      <body className="antialiased min-h-screen">
         <AuthSessionProvider>
           <Navbar />
           {children}

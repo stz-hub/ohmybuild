@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { AlertTriangle, CheckCircle2 } from "lucide-react";
+import Image from "next/image";
 
 import { ComponentGroup } from "./component-group";
 import { PresetCards } from "./preset-cards";
@@ -25,9 +25,6 @@ export function PCBuilder() {
   const buildIdFromQuery = searchParams.get("build");
   const session = useSession();
 
-  // `mounted` évite les hydration mismatch sur la sidebar dont le contenu
-  // dépend de useSession() (status passe de "loading" à "authenticated"/"unauth"
-  // après hydratation côté client).
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -43,7 +40,7 @@ export function PCBuilder() {
       try {
         const res = await fetch(`/api/builds/${buildIdFromQuery}`);
         if (!res.ok) {
-          if (!cancelled) setLoadError("Impossible de charger cette configuration.");
+          if (!cancelled) setLoadError("Failed to load this configuration.");
           return;
         }
         const json = (await res.json()) as {
@@ -53,7 +50,7 @@ export function PCBuilder() {
         setSelection(json.data.selection ?? {});
         setLoadedBuild({ id: json.data.id, name: json.data.name });
       } catch {
-        if (!cancelled) setLoadError("Erreur réseau lors du chargement.");
+        if (!cancelled) setLoadError("Network error while loading.");
       }
     })();
     return () => {
@@ -92,125 +89,213 @@ export function PCBuilder() {
   const handleCopy = useCallback(() => {
     const lines = GROUPS.map((g) => {
       const item = g.items.find((i) => i.id === selection[g.key]);
-      return item ? `${g.label}: ${item.name} — ${item.price} €` : null;
+      return item ? `${g.label}: ${item.name} — ${item.price} EUR` : null;
     }).filter(Boolean);
     if (!lines.length) return;
-    lines.push(`\nTotal: ${total.toLocaleString("fr-FR")} €`, `\nVia OhMyBuild.fr`);
+    lines.push(`\nTotal: ${total.toLocaleString("fr-FR")} EUR`, `\nBuilt with OhMyBuild.fr`);
     navigator.clipboard?.writeText(lines.join("\n"));
   }, [selection, total]);
 
   return (
-    <div className="min-h-screen bg-[#f9f9f7]">
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-6">
-        <h1 className="text-3xl font-bold tracking-tight mb-1">
-          {loadedBuild ? loadedBuild.name : "Configurateur PC"}
-        </h1>
-        <p className="text-zinc-500 text-sm">
-          {loadedBuild
-            ? "Modifiez les composants puis sauvegardez pour mettre à jour la config."
-            : "Sélectionnez vos composants · Compatibilité vérifiée en temps réel"}
-        </p>
-        {loadError && (
-          <p className="mt-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 inline-block">
-            {loadError}
-          </p>
-        )}
-      </section>
+    <div className="min-h-screen p-4 md:p-6">
+      <main className="max-w-7xl mx-auto">
+        {/* Header Window */}
+        <div className="xp-window mb-4">
+          <div className="xp-titlebar">
+            <div className="xp-titlebar-text">
+              <Image src="/xp-icons/System Properties.ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+              <span>{loadedBuild ? loadedBuild.name : "PC Configuration Wizard"}</span>
+            </div>
+            <div className="xp-window-controls">
+              <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+              <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+              <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+            </div>
+          </div>
+          <div className="xp-window-content p-4">
+            <div className="flex items-center gap-4">
+              <Image src="/xp-icons/My Computer.ico" alt="" width={48} height={48} />
+              <div>
+                <h1 className="text-[16px] font-bold text-[#003399]">
+                  {loadedBuild ? loadedBuild.name : "New PC Configuration"}
+                </h1>
+                <p className="text-[11px] text-[#808080]">
+                  {loadedBuild
+                    ? "Modify components then click Save to update your configuration."
+                    : "Select your components below. The wizard will verify compatibility in real-time."}
+                </p>
+              </div>
+            </div>
+            {loadError && (
+              <div className="xp-error-box mt-4">
+                <span className="text-[14px]">&#9888;</span>
+                <span className="text-[11px]">{loadError}</span>
+              </div>
+            )}
+          </div>
+        </div>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8">
-          <div className="space-y-6">
-            <section>
-              <Label>Configurations prédéfinies</Label>
-              <PresetCards
-                presets={PRESETS}
-                currentSelection={selection}
-                onApply={handleApplyPreset}
-              />
-            </section>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4">
+          <div className="space-y-4">
+            {/* Presets Window */}
+            <div className="xp-window">
+              <div className="xp-titlebar">
+                <div className="xp-titlebar-text">
+                  <Image src="/xp-icons/Folder Open.ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+                  <span>Quick Start - Preset Configurations</span>
+                </div>
+                <div className="xp-window-controls">
+                  <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+                  <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+                  <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+                </div>
+              </div>
+              <div className="xp-window-content p-3">
+                <PresetCards
+                  presets={PRESETS}
+                  currentSelection={selection}
+                  onApply={handleApplyPreset}
+                />
+              </div>
+            </div>
 
-            {selectedCount > 1 &&
-              (errors.length > 0 ? (
-                <div className="rounded-xl border border-red-200 bg-red-50 p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
-                    <span className="text-sm font-semibold text-red-700">
-                      Incompatibilité détectée
-                    </span>
+            {/* Compatibility Status */}
+            {selectedCount > 1 && (
+              <div className="xp-window">
+                <div className="xp-titlebar">
+                  <div className="xp-titlebar-text">
+                    <Image 
+                      src={errors.length > 0 ? "/xp-icons/Activate Windows.ico" : "/xp-icons/Activate Windows.ico"} 
+                      alt="" 
+                      width={16} 
+                      height={16} 
+                      className="xp-titlebar-icon" 
+                    />
+                    <span>Compatibility Check</span>
                   </div>
-                  {errors.map((err, i) => (
-                    <p key={i} className="text-sm text-red-600 flex gap-2 pl-6">
-                      <span>—</span>
-                      <span>{err}</span>
-                    </p>
+                  <div className="xp-window-controls">
+                    <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+                    <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+                    <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+                  </div>
+                </div>
+                <div className="xp-window-content p-3">
+                  {errors.length > 0 ? (
+                    <div className="xp-error-box">
+                      <span className="text-[18px]">&#9888;</span>
+                      <div>
+                        <strong className="text-[11px]">Incompatibility Detected!</strong>
+                        {errors.map((err, i) => (
+                          <p key={i} className="text-[11px] mt-1">&#8226; {err}</p>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="xp-success-box">
+                      <span className="text-[18px] text-[#008000]">&#10003;</span>
+                      <div>
+                        <strong className="text-[11px] text-[#008000]">All Systems Go!</strong>
+                        <p className="text-[11px] mt-1">All selected components are compatible.</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Components Window */}
+            <div className="xp-window">
+              <div className="xp-titlebar">
+                <div className="xp-titlebar-text">
+                  <Image src="/xp-icons/System Properties.ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+                  <span>Select Components ({selectedCount}/{GROUPS.length})</span>
+                </div>
+                <div className="xp-window-controls">
+                  <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+                  <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+                  <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+                </div>
+              </div>
+              <div className="xp-window-content p-3">
+                <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#919B9C]">
+                  <p className="text-[11px] text-[#808080]">
+                    Click on a component to select it. Click again to deselect.
+                  </p>
+                  {selectedCount > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleClearAll}
+                      className="xp-button text-[11px] px-2 py-0.5"
+                    >
+                      Clear All
+                    </button>
+                  )}
+                </div>
+                <div className="space-y-3">
+                  {GROUPS.map((group) => (
+                    <ComponentGroup
+                      key={group.key}
+                      group={group}
+                      selection={selection}
+                      onSelect={handleSelect}
+                      onClear={handleClear}
+                    />
                   ))}
                 </div>
-              ) : (
-                <div className="flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 px-4 py-3">
-                  <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" />
-                  <span className="text-sm font-medium text-green-700">
-                    Compatibilité : aucun problème détecté.
-                  </span>
+              </div>
+            </div>
+
+            {/* FPS Display Window */}
+            <div className="xp-window">
+              <div className="xp-titlebar">
+                <div className="xp-titlebar-text">
+                  <Image src="/xp-icons/Game Controller.ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+                  <span>Performance Estimates - Cyberpunk 2077 Ultra</span>
                 </div>
-              ))}
-
-            <section>
-              <div className="flex items-center justify-between mb-4">
-                <Label>Composants</Label>
-                {selectedCount > 0 && (
-                  <button
-                    type="button"
-                    onClick={handleClearAll}
-                    className="text-xs text-zinc-400 hover:text-zinc-700 transition-colors"
-                  >
-                    Tout effacer
-                  </button>
-                )}
+                <div className="xp-window-controls">
+                  <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+                  <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+                  <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+                </div>
               </div>
-              <div className="space-y-3">
-                {GROUPS.map((group) => (
-                  <ComponentGroup
-                    key={group.key}
-                    group={group}
-                    selection={selection}
-                    onSelect={handleSelect}
-                    onClear={handleClear}
-                  />
-                ))}
+              <div className="xp-window-content p-3">
+                <FpsDisplay gpu={selectedGpu} cpu={selectedCpu} />
               </div>
-            </section>
-
-            <section>
-              <div className="flex items-center justify-between mb-4">
-                <Label>Performances estimées</Label>
-                <span className="text-xs text-zinc-400">
-                  Cyberpunk 2077 · Ultra · Natif
-                </span>
-              </div>
-              <FpsDisplay gpu={selectedGpu} cpu={selectedCpu} />
-            </section>
+            </div>
           </div>
 
-          {/* Sidebar : Récap + Save dans UN SEUL bloc sticky pour qu'ils
-              défilent ensemble et restent visibles quand on scrolle. */}
+          {/* Sidebar */}
           <aside className="hidden lg:block">
-            <div className="sticky top-20 space-y-3">
+            <div className="sticky top-12 space-y-4">
               <SummarySidebar
                 selection={selection}
                 onClear={handleClearAll}
                 onCopy={handleCopy}
               />
               {mounted && (
-                <div className="rounded-xl border border-[#e8e8e4] bg-white p-4">
-                  <SaveBuildButton
-                    selection={selection}
-                    selectedCount={selectedCount}
-                    hasErrors={errors.length > 0}
-                    isAuthed={session.status === "authenticated"}
-                    authStatus={session.status}
-                    initialName={loadedBuild?.name}
-                    initialBuildId={loadedBuild?.id}
-                  />
+                <div className="xp-window">
+                  <div className="xp-titlebar">
+                    <div className="xp-titlebar-text">
+                      <Image src="/xp-icons/Folder Closed.ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+                      <span>Save Configuration</span>
+                    </div>
+                    <div className="xp-window-controls">
+                      <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+                      <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+                      <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+                    </div>
+                  </div>
+                  <div className="xp-window-content p-3">
+                    <SaveBuildButton
+                      selection={selection}
+                      selectedCount={selectedCount}
+                      hasErrors={errors.length > 0}
+                      isAuthed={session.status === "authenticated"}
+                      authStatus={session.status}
+                      initialName={loadedBuild?.name}
+                      initialBuildId={loadedBuild?.id}
+                    />
+                  </div>
                 </div>
               )}
             </div>
@@ -218,41 +303,52 @@ export function PCBuilder() {
         </div>
       </main>
 
-      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur border-t border-[#e8e8e4] px-4 py-3 flex items-center justify-between z-50">
-        <div>
-          <p className="text-xs text-zinc-400">Total estimé</p>
-          <p className="text-xl font-bold text-blue-600 tabular-nums">
-            {total > 0 ? `${total.toLocaleString("fr-FR")} €` : "—"}
+      {/* Mobile Bottom Bar */}
+      <div className="lg:hidden fixed bottom-0 inset-x-0 xp-taskbar px-4 py-2 flex items-center justify-between z-50">
+        <div className="text-white">
+          <p className="text-[10px]">Total Cost</p>
+          <p className="text-[14px] font-bold">
+            {total > 0 ? `${total.toLocaleString("fr-FR")} EUR` : "---"}
           </p>
         </div>
         <button
           type="button"
           onClick={handleCopy}
           disabled={selectedCount === 0}
-          className="px-5 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold disabled:opacity-40 transition-opacity"
+          className="xp-button text-[11px] px-4 py-1 disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          Copier
+          Copy Build List
         </button>
       </div>
 
-      <footer className="border-t border-[#e8e8e4] py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="text-sm font-bold">
-            Oh<span className="text-blue-600">My</span>Build
-          </span>
-          <p className="text-xs text-zinc-400">
-            FPS : TechPowerUp · Hardware Unboxed · Digital Foundry · Prix indicatifs
-          </p>
+      {/* Footer */}
+      <footer className="max-w-7xl mx-auto mt-6">
+        <div className="xp-window">
+          <div className="xp-titlebar">
+            <div className="xp-titlebar-text">
+              <Image src="/xp-icons/Earth (fixed).ico" alt="" width={16} height={16} className="xp-titlebar-icon" />
+              <span>About</span>
+            </div>
+            <div className="xp-window-controls">
+              <button className="xp-control-btn xp-minimize-btn" aria-label="Minimize">_</button>
+              <button className="xp-control-btn xp-maximize-btn" aria-label="Maximize">[ ]</button>
+              <button className="xp-control-btn xp-close-btn" aria-label="Close">X</button>
+            </div>
+          </div>
+          <div className="xp-window-content p-3">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px]">
+              <div className="flex items-center gap-2">
+                <Image src="/xp-logo.png" alt="" width={20} height={20} />
+                <span className="font-bold text-[#003399]">OhMyBuild</span>
+                <span className="text-[#808080]">XP Edition</span>
+              </div>
+              <p className="text-[#808080]">
+                FPS: TechPowerUp - Hardware Unboxed - Digital Foundry | Indicative prices
+              </p>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
-  );
-}
-
-function Label({ children }: { children: React.ReactNode }) {
-  return (
-    <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-4">
-      {children}
-    </h2>
   );
 }

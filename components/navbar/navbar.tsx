@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { LogOut, User } from "lucide-react";
+import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/", label: "Accueil" },
-  { href: "/configurateur", label: "Configurateur" },
+  { href: "/", label: "Home", icon: "/xp-icons/My Computer.ico" },
+  { href: "/configurateur", label: "PC Builder", icon: "/xp-icons/System Properties.ico" },
 ];
 
 export function Navbar() {
@@ -18,82 +18,136 @@ export function Navbar() {
   const isAuthed = status === "authenticated";
 
   return (
-    <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-[#e8e8e4]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center">
-            <span className="text-white text-xs font-black">O</span>
-          </div>
-          <span className="text-sm font-bold tracking-tight">
-            Oh<span className="text-blue-600">My</span>Build
-          </span>
+    <header className="xp-taskbar sticky top-0 z-50 shadow-lg">
+      <div className="max-w-7xl mx-auto px-2 flex items-center justify-between h-[30px]">
+        {/* Start Button / Logo */}
+        <Link href="/" className="xp-start-button flex items-center gap-2 h-[26px] -ml-2">
+          <Image 
+            src="/xp-logo.png" 
+            alt="Windows XP Logo" 
+            width={20} 
+            height={20}
+            className="drop-shadow-md"
+          />
+          <span>OhMyBuild</span>
         </Link>
 
-        <nav className="flex items-center gap-1">
-          {links.map(({ href, label }) => (
-            <NavLink key={href} href={href} active={pathname === href} label={label} />
+        {/* Navigation - Quick Launch */}
+        <nav className="flex items-center gap-1 ml-4">
+          {links.map(({ href, label, icon }) => (
+            <TaskbarButton 
+              key={href} 
+              href={href} 
+              active={pathname === href} 
+              label={label} 
+              icon={icon}
+            />
           ))}
           {isAuthed && (
-            <NavLink
+            <TaskbarButton
               href="/mes-configs"
               active={pathname === "/mes-configs"}
-              label="Mes configs"
+              label="My Builds"
+              icon="/xp-icons/Folder Closed.ico"
             />
           )}
         </nav>
 
-        <div className="flex items-center gap-2">
+        {/* System Tray */}
+        <div className="flex items-center gap-2 ml-auto">
           {status === "loading" ? (
-            <span className="text-xs text-zinc-400">…</span>
+            <span className="text-[11px] text-white/80 animate-pulse px-2">Loading...</span>
           ) : isAuthed ? (
             <>
-              <span className="hidden sm:inline-flex items-center gap-1 text-xs text-zinc-500">
-                <User className="w-3.5 h-3.5" />
-                {session?.user?.name ?? session?.user?.email}
-              </span>
+              <div className="hidden sm:flex items-center gap-1 text-[11px] text-white bg-[#1D4EAC] px-2 py-0.5 rounded-sm border border-[#0D3E9C]">
+                <Image 
+                  src="/xp-icons/User 1.ico" 
+                  alt="User" 
+                  width={16} 
+                  height={16}
+                />
+                <span className="truncate max-w-24">{session?.user?.name ?? session?.user?.email}</span>
+              </div>
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
-                aria-label="Se déconnecter"
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 transition-colors"
+                aria-label="Sign Out"
+                className="xp-button text-[11px] flex items-center gap-1 py-0.5 px-2"
               >
-                <LogOut className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Déconnexion</span>
+                <span className="text-red-600">X</span>
+                <span className="hidden sm:inline">Sign Out</span>
               </button>
             </>
           ) : (
             <>
               <Link
                 href="/login"
-                className="px-3 py-1.5 rounded-lg text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 transition-colors"
+                className="xp-button text-[11px] py-0.5 px-2"
               >
-                Se connecter
+                Log In
               </Link>
               <Link
                 href="/register"
-                className="px-4 py-1.5 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors"
+                className="xp-button xp-button-primary text-[11px] py-0.5 px-2 flex items-center gap-1"
               >
-                S&apos;inscrire
+                <Image 
+                  src="/xp-icons/User Accounts.ico" 
+                  alt="" 
+                  width={14} 
+                  height={14}
+                />
+                Register
               </Link>
             </>
           )}
+          
+          {/* Clock */}
+          <div className="bg-[#1D4EAC] border border-[#0D3E9C] px-2 py-0.5 text-[11px] text-white font-normal rounded-sm ml-2">
+            <Clock />
+          </div>
         </div>
       </div>
     </header>
   );
 }
 
-function NavLink({ href, active, label }: { href: string; active: boolean; label: string }) {
+function TaskbarButton({ 
+  href, 
+  active, 
+  label, 
+  icon 
+}: { 
+  href: string; 
+  active: boolean; 
+  label: string;
+  icon: string;
+}) {
   return (
     <Link
       href={href}
       className={cn(
-        "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
+        "flex items-center gap-1 px-2 py-0.5 text-[11px] font-normal text-white rounded-sm transition-all",
         active
-          ? "bg-blue-50 text-blue-600"
-          : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50",
+          ? "bg-[#1D4EAC] border border-[#0D3E9C] shadow-inner"
+          : "hover:bg-[#3366CC] border border-transparent"
       )}
     >
-      {label}
+      <Image 
+        src={icon} 
+        alt="" 
+        width={16} 
+        height={16}
+        className="drop-shadow-sm"
+      />
+      <span className="hidden md:inline">{label}</span>
     </Link>
   );
+}
+
+function Clock() {
+  // Simple clock that updates via client
+  const time = new Date().toLocaleTimeString('fr-FR', { 
+    hour: '2-digit', 
+    minute: '2-digit' 
+  });
+  return <span suppressHydrationWarning>{time}</span>;
 }
