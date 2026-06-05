@@ -21,6 +21,12 @@ import { LoginSchema } from "@/lib/schemas";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
+  // v5 ne lit que AUTH_SECRET par défaut : on fournit le secret explicitement
+  // (sinon chaque instance serverless en génère un, et le callback OAuth casse
+  // avec error=Configuration car le state/PKCE devient invérifiable).
+  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
+  // Indispensable derrière le proxy Vercel quand AUTH_URL n'est pas figé.
+  trustHost: true,
   session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 7 }, // 7 jours
   pages: {
     signIn: "/login",
